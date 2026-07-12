@@ -1,0 +1,32 @@
+@echo off
+REM Setup script für Tensura Modpack Optimization Repo (Windows)
+
+echo.
+echo ====================================================================
+echo Tensura Modpack Optimization - GitHub Push Setup
+echo ====================================================================
+echo.
+
+REM Git konfigurieren
+git config user.email noreply@anthropic.com
+git config user.name Claude
+
+REM Remote hinzufügen
+git remote add origin https://github.com/weeeedddd/tensura-modpack-optimization.git 2>nul
+if errorlevel 1 (
+    git remote set-url origin https://github.com/weeeedddd/tensura-modpack-optimization.git
+)
+
+REM Branch zu main umbenennen
+git branch -M main
+
+REM Pushen
+echo.
+echo Pushe zu GitHub...
+git push -u origin main
+
+echo.
+echo ====================================================================
+echo OK! Repo ist unter https://github.com/weeeedddd/tensura-modpack-optimization
+echo ====================================================================
+pause
