@@ -1,0 +1,103 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — EP SCALING KONFIGURATION
+═══════════════════════════════════════════════════════════
+
+EP Scaling skaliert Gegner-HP und Schaden dynamisch basierend
+auf dem Fortschritt der Spieler. Ziel: Challenge bleibt
+ohne absurde HP-Sponges.
+
+CONFIG-PFAD (im Instanz-Ordner):
+  config/ep_scaling.toml   (oder config/epscaling/)
+
+── WICHTIGE EINSTELLUNGEN ────────────────────────────────
+
+Typische Werte und Empfehlungen:
+
+  [scaling]
+  # Multiplikator-Basis (1.0 = vanilla)
+  # Empfehlung: 1.2–1.5 für leichtes Up-Scaling
+  baseMultiplier = 1.3
+
+  # Skalierung pro Spieler-Fortschritt-Einheit
+  # Zu hoch = HP-Sponges, zu niedrig = trivialer Midgame
+  scalingPerLevel = 0.08
+
+  # Maximale Skalierung (Cap)
+  # Verhindert unbesiegbare Gegner im Late-Game
+  maxMultiplier = 4.0
+
+  # Nur Bosse skalieren? (false = alle Mobs)
+  bossesOnly = false
+
+  # Spieler-Anzahl Skalierung (Multiplayer)
+  # Empfehlung: 0.3–0.5 (nicht linear skalieren)
+  playerCountBonus = 0.35
+
+── TENSURA + EP SCALING BALANCING ────────────────────────
+
+Problem: Mit Tensura-Skills können Spieler sehr schnell
+sehr stark werden. EP Scaling muss darauf reagieren.
+
+Empfohlene Strategie:
+  1. baseMultiplier niedrig starten (1.1–1.2)
+  2. Erst nach Spieler-Feedback erhöhen
+  3. Ice and Fire Drachen NICHT durch EP Scaling skalieren
+     lassen → in Ice and Fire Config separat einstellen
+
+── ICE AND FIRE CE — DRACHEN-STÄRKE ────────────────────
+
+Config-Pfad: config/iceandfire/
+
+  [dragon]
+  dragonScaleMultiplier = 1.2    # Größen-Skalierung
+  dragonHealthMultiplier = 1.0   # HP (1.0 = vanilla)
+  dragonDamageMultiplier = 1.0   # Schaden
+
+  Empfehlung für Tensura Abyss:
+  - Tier 1 Drachen (Stage 1-3): vanilla Werte
+  - Tier 2 Drachen (Stage 4-5): 1.5x HP und Schaden
+  - Diese Werte GETRENNT von EP Scaling setzen!
+
+── GATEWAYS TO ETERNITY — GATEWAY TUNING ────────────────
+
+Config-Pfad: config/gateways/gateways/
+
+Jedes Gateway ist eine separate JSON5-Datei.
+Beispiel für ein Early-Game Tensura-Gateway:
+
+  {
+    "waves": 3,
+    "wave_entities": [
+      { "entity": "minecraft:zombie", "count": 5 }
+    ],
+    "rewards": [
+      { "type": "item", "item": "minecraft:diamond", "count": 1 }
+    ],
+    "time_limit": 600,
+    "fail_penalty": { "type": "none" }
+  }
+
+── SERENE SEASONS — JAHRESZEITEN-TUNING ────────────────
+
+Config-Pfad: config/sereneseasons/
+
+  [length]
+  # Tage pro Jahreszeit (vanilla = 7)
+  springLength = 14   # Empfehlung: 14 für Tensura
+  summerLength = 14
+  autumnLength = 14
+  winterLength = 14
+
+  # Achtung: Längere Jahreszeiten = langsamere Crop-Ernte
+  # Gut für Colony-Building, schlecht für schnelle Progression
+
+── ZUSAMMENFASSUNG: EMPFOHLENE REIHENFOLGE ─────────────
+
+  1. EP Scaling: baseMultiplier = 1.2 starten
+  2. Spiel 2-3 Stunden testen
+  3. Falls Bosse zu leicht: +0.1–0.2 erhöhen
+  4. Ice and Fire Drachen GETRENNT tunen (IaF-Config)
+  5. Gateways: Rewards anpassen (Items aus Tensura nutzen)
+  6. Serene Seasons: 14 Tage pro Saison für bessere Pacing
+
+═══════════════════════════════════════════════════════════
