@@ -1,736 +1,741 @@
-<title>Tensura Abyss — Modpack Optimierung & Guide</title>
+<title>Tensura Abyss — Modpack</title>
 <style>
-  :root {
-    --bg: #0c1018;
-    --bg-surface: #131a26;
-    --bg-card: #1a2235;
-    --bg-card-hover: #1f2940;
-    --border: #2a3550;
-    --border-accent: #3a4a6a;
-    --text-primary: #d8dce8;
-    --text-secondary: #8a95b0;
-    --text-muted: #5a6580;
-    --accent: #4ac8db;
-    --accent-dim: #2a8a9a;
-    --accent-glow: rgba(74, 200, 219, 0.12);
-    --warn: #e8a445;
-    --warn-dim: rgba(232, 164, 69, 0.15);
-    --good: #5ad89a;
-    --good-dim: rgba(90, 216, 154, 0.12);
-    --danger: #db5a5a;
-    --danger-dim: rgba(219, 90, 90, 0.12);
-    --code-bg: #0f1520;
-    --shadow: 0 2px 12px rgba(0,0,0,0.35);
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f0f2f5; --bg-surface: #ffffff; --bg-card: #ffffff;
-      --bg-card-hover: #f7f8fa; --border: #d8dce5; --border-accent: #b8c0d0;
-      --text-primary: #1a2235; --text-secondary: #5a6580; --text-muted: #8a95b0;
-      --accent: #1a8a9a; --accent-dim: #4ac8db; --accent-glow: rgba(26, 138, 154, 0.08);
-      --warn: #c07a20; --warn-dim: rgba(192, 122, 32, 0.1);
-      --good: #2a9a5a; --good-dim: rgba(42, 154, 90, 0.08);
-      --danger: #c04040; --danger-dim: rgba(192, 64, 64, 0.08);
-      --code-bg: #f5f6f8; --shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #f0f2f5; --bg-surface: #ffffff; --bg-card: #ffffff;
-    --bg-card-hover: #f7f8fa; --border: #d8dce5; --border-accent: #b8c0d0;
-    --text-primary: #1a2235; --text-secondary: #5a6580; --text-muted: #8a95b0;
-    --accent: #1a8a9a; --accent-dim: #4ac8db; --accent-glow: rgba(26, 138, 154, 0.08);
-    --warn: #c07a20; --warn-dim: rgba(192, 122, 32, 0.1);
-    --good: #2a9a5a; --good-dim: rgba(42, 154, 90, 0.08);
-    --danger: #c04040; --danger-dim: rgba(192, 64, 64, 0.08);
-    --code-bg: #f5f6f8; --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
-  :root[data-theme="dark"] {
-    --bg: #0c1018; --bg-surface: #131a26; --bg-card: #1a2235;
-    --bg-card-hover: #1f2940; --border: #2a3550; --border-accent: #3a4a6a;
-    --text-primary: #d8dce8; --text-secondary: #8a95b0; --text-muted: #5a6580;
-    --accent: #4ac8db; --accent-dim: #2a8a9a; --accent-glow: rgba(74, 200, 219, 0.12);
-    --warn: #e8a445; --warn-dim: rgba(232, 164, 69, 0.15);
-    --good: #5ad89a; --good-dim: rgba(90, 216, 154, 0.12);
-    --danger: #db5a5a; --danger-dim: rgba(219, 90, 90, 0.12);
-    --code-bg: #0f1520; --shadow: 0 2px 12px rgba(0,0,0,0.35);
-  }
+/* ─── Design Tokens ─── */
+:root {
+  --bg:#0c1018; --bg-s:#131a26; --bg-c:#1a2235; --bg-ch:#1f2940;
+  --brd:#2a3550; --brd-a:#3a4a6a;
+  --txt:#d8dce8; --txt-s:#8a95b0; --txt-m:#5a6580;
+  --acc:#4ac8db; --acc-d:#2a8a9a; --acc-g:rgba(74,200,219,.12);
+  --warn:#e8a445; --warn-d:rgba(232,164,69,.15);
+  --good:#5ad89a; --good-d:rgba(90,216,154,.12);
+  --danger:#db5a5a; --danger-d:rgba(219,90,90,.12);
+  --code-bg:#0f1520; --shd:0 2px 12px rgba(0,0,0,.35); --r:6px;
+}
+@media(prefers-color-scheme:light){:root{
+  --bg:#f0f2f5;--bg-s:#fff;--bg-c:#fff;--bg-ch:#f7f8fa;
+  --brd:#d8dce5;--brd-a:#b8c0d0;
+  --txt:#1a2235;--txt-s:#5a6580;--txt-m:#8a95b0;
+  --acc:#1a8a9a;--acc-d:#4ac8db;--acc-g:rgba(26,138,154,.08);
+  --warn:#c07a20;--warn-d:rgba(192,122,32,.1);
+  --good:#2a9a5a;--good-d:rgba(42,154,90,.08);
+  --danger:#c04040;--danger-d:rgba(192,64,64,.08);
+  --code-bg:#f5f6f8;--shd:0 2px 12px rgba(0,0,0,.08);
+}}
+:root[data-theme=light]{
+  --bg:#f0f2f5;--bg-s:#fff;--bg-c:#fff;--bg-ch:#f7f8fa;
+  --brd:#d8dce5;--brd-a:#b8c0d0;
+  --txt:#1a2235;--txt-s:#5a6580;--txt-m:#8a95b0;
+  --acc:#1a8a9a;--acc-d:#4ac8db;--acc-g:rgba(26,138,154,.08);
+  --warn:#c07a20;--warn-d:rgba(192,122,32,.1);
+  --good:#2a9a5a;--good-d:rgba(42,154,90,.08);
+  --danger:#c04040;--danger-d:rgba(192,64,64,.08);
+  --code-bg:#f5f6f8;--shd:0 2px 12px rgba(0,0,0,.08);
+}
+:root[data-theme=dark]{
+  --bg:#0c1018;--bg-s:#131a26;--bg-c:#1a2235;--bg-ch:#1f2940;
+  --brd:#2a3550;--brd-a:#3a4a6a;
+  --txt:#d8dce8;--txt-s:#8a95b0;--txt-m:#5a6580;
+  --acc:#4ac8db;--acc-d:#2a8a9a;--acc-g:rgba(74,200,219,.12);
+  --warn:#e8a445;--warn-d:rgba(232,164,69,.15);
+  --good:#5ad89a;--good-d:rgba(90,216,154,.12);
+  --danger:#db5a5a;--danger-d:rgba(219,90,90,.12);
+  --code-bg:#0f1520;--shd:0 2px 12px rgba(0,0,0,.35);
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg); color: var(--text-primary);
-    line-height: 1.65; -webkit-font-smoothing: antialiased;
-  }
-  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
 
-  /* Hero */
-  .hero { text-align: center; padding: 2.5rem 1rem 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
-  .hero-badge {
-    display: inline-block; font-size: 0.68rem; font-weight: 600;
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
-    background: var(--accent-glow); border: 1px solid var(--accent-dim);
-    border-radius: 3px; padding: 0.2rem 0.6rem; margin-bottom: 0.8rem;
-  }
-  .hero h1 { font-size: 1.6rem; font-weight: 700; line-height: 1.25; text-wrap: balance; margin-bottom: 0.4rem; }
-  .hero h1 span { color: var(--accent); }
-  .hero p { color: var(--text-secondary); font-size: 0.88rem; max-width: 540px; margin: 0 auto; }
+/* ─── Top Bar ─── */
+#topbar{position:sticky;top:0;z-index:100;background:var(--bg-s);border-bottom:1px solid var(--brd);box-shadow:0 1px 8px rgba(0,0,0,.2)}
+.tb-inner{max-width:960px;margin:0 auto;padding:.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.tb-brand{font-weight:800;font-size:.85rem;letter-spacing:.05em;color:var(--acc)}
+.tb-actions{display:flex;align-items:center;gap:.7rem}
+.lang-sw{display:flex;background:var(--bg-c);border:1px solid var(--brd);border-radius:4px;overflow:hidden}
+.lb{background:none;border:none;padding:.25rem .6rem;font-size:.72rem;font-weight:700;letter-spacing:.07em;cursor:pointer;color:var(--txt-m);transition:all .15s}
+.lb.active{background:var(--acc-g);color:var(--acc)}
+.lb:hover:not(.active){color:var(--txt)}
+.theme-btn{background:var(--bg-c);border:1px solid var(--brd);border-radius:4px;padding:.25rem .5rem;font-size:.82rem;cursor:pointer;color:var(--txt-s);line-height:1;transition:border-color .15s}
+.theme-btn:hover{border-color:var(--brd-a);color:var(--txt)}
 
-  /* TOC */
-  .toc {
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
-    padding: 1rem 1.2rem; margin-bottom: 2.5rem; box-shadow: var(--shadow);
-  }
-  .toc h3 { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
-  .toc-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 1.5rem; }
-  .toc-list li { font-size: 0.82rem; }
-  .toc-list a { color: var(--accent); text-decoration: none; }
-  .toc-list a:hover { text-decoration: underline; }
-  .toc-num { color: var(--text-muted); font-weight: 600; margin-right: 0.3rem; font-variant-numeric: tabular-nums; }
+/* ─── Page ─── */
+.page{max-width:960px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
 
-  /* Sections */
-  .section { margin-bottom: 2.5rem; }
-  .section-header {
-    display: flex; align-items: center; gap: 0.6rem;
-    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
-  }
-  .section-num {
-    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--accent); background: var(--accent-glow); border: 1px solid var(--accent-dim);
-    border-radius: 3px; padding: 0.18rem 0.45rem; flex-shrink: 0;
-  }
-  .section-header h2 { font-size: 1.1rem; font-weight: 600; }
+/* ─── Hero ─── */
+.hero{text-align:center;padding:3.5rem 1rem 2.5rem;border-bottom:1px solid var(--brd);margin-bottom:2.5rem}
+.hero-badge{display:inline-block;font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);background:var(--acc-g);border:1px solid var(--acc-d);border-radius:3px;padding:.22rem .65rem;margin-bottom:1rem}
+.hero-title{font-size:2.4rem;font-weight:800;line-height:1.12;margin-bottom:.65rem}
+.hero-title span{color:var(--acc)}
+.hero-sub{color:var(--txt-s);font-size:.93rem;max-width:480px;margin:0 auto 1.6rem;line-height:1.65}
+.stat-pills{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center}
+.pill{font-size:.67rem;font-weight:700;letter-spacing:.04em;padding:.23rem .65rem;border-radius:20px}
+.pill-acc{background:var(--acc-g);color:var(--acc);border:1px solid var(--acc-d)}
+.pill-good{background:var(--good-d);color:var(--good);border:1px solid var(--good)}
+.pill-warn{background:var(--warn-d);color:var(--warn);border:1px solid var(--warn)}
 
-  /* Cards */
-  .card {
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
-    padding: 0.9rem 1.1rem; margin-bottom: 0.6rem; box-shadow: var(--shadow);
-    transition: border-color 0.15s;
-  }
-  .card:hover { border-color: var(--border-accent); }
-  .card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
-  .card p, .card li { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55; }
-  .card ul { padding-left: 1rem; }
-  .card li { margin-bottom: 0.15rem; }
-  .card-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
-  .card-meta a { color: var(--accent); text-decoration: none; }
+/* ─── Sections ─── */
+.section{margin-bottom:2.5rem}
+.sec-header{display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--brd)}
+.sec-num{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--acc-g);border:1px solid var(--acc-d);border-radius:3px;padding:.18rem .45rem;flex-shrink:0}
+.sec-title{font-size:1.1rem;font-weight:700}
+.sub{font-size:.86rem;font-weight:700;margin:1.1rem 0 .55rem;color:var(--txt)}
+.body-txt{font-size:.81rem;color:var(--txt-s);margin-bottom:.6rem;line-height:1.62}
+.body-txt strong{color:var(--txt);font-weight:600}
 
-  /* Tags */
-  .tag {
-    display: inline-block; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.03em;
-    padding: 0.12rem 0.4rem; border-radius: 3px; vertical-align: middle; white-space: nowrap;
-  }
-  .tag-good { background: var(--good-dim); color: var(--good); border: 1px solid var(--good); }
-  .tag-warn { background: var(--warn-dim); color: var(--warn); border: 1px solid var(--warn); }
-  .tag-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
-  .tag-info { background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent-dim); }
+/* ─── Feature Grid ─── */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.feat-card{background:var(--bg-c);border:1px solid var(--brd);border-radius:var(--r);padding:1.05rem 1.15rem;box-shadow:var(--shd);transition:border-color .15s}
+.feat-card:hover{border-color:var(--brd-a)}
+.feat-icon{font-size:1.3rem;margin-bottom:.5rem}
+.feat-card h3{font-size:.87rem;font-weight:700;margin-bottom:.3rem}
+.feat-card p{font-size:.78rem;color:var(--txt-s);line-height:1.55}
 
-  /* Code */
-  .code-block {
-    background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px;
-    padding: 0.7rem 0.9rem; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-    font-size: 0.75rem; line-height: 1.7; overflow-x: auto; color: var(--text-primary);
-    margin: 0.5rem 0; white-space: pre;
-  }
-  .code-block .c { color: var(--text-muted); }
-  .code-block .k { color: var(--accent); }
-  .code-block .v { color: var(--warn); }
+/* ─── Tables ─── */
+.tbl-wrap{overflow-x:auto;margin:.5rem 0}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{text-align:left;font-weight:600;font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;color:var(--txt-m);padding:.45rem .65rem;border-bottom:2px solid var(--brd)}
+td{padding:.45rem .65rem;border-bottom:1px solid var(--brd);color:var(--txt-s);vertical-align:middle}
+tr:hover td{background:var(--bg-ch)}
 
-  /* Tables */
-  .table-wrap { overflow-x: auto; margin: 0.5rem 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
-  th {
-    text-align: left; font-weight: 600; font-size: 0.68rem; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--text-muted); padding: 0.45rem 0.6rem;
-    border-bottom: 2px solid var(--border);
-  }
-  td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
-  tr:hover td { background: var(--bg-card-hover); }
+/* ─── Tags ─── */
+.tag{display:inline-block;font-size:.6rem;font-weight:700;padding:.1rem .35rem;border-radius:3px;vertical-align:middle;letter-spacing:.03em}
+.tag-acc{background:var(--acc-g);color:var(--acc);border:1px solid var(--acc-d)}
+.tag-good{background:var(--good-d);color:var(--good);border:1px solid var(--good)}
+.tag-warn{background:var(--warn-d);color:var(--warn);border:1px solid var(--warn)}
+.tag-danger{background:var(--danger-d);color:var(--danger);border:1px solid var(--danger)}
+.tier-s{background:#ffd700;color:#4a3000;font-weight:800}
+.tier-a{background:#b8c0cc;color:#1a2235;font-weight:800}
+.tier-b{background:#cd7f32;color:#fff;font-weight:800}
 
-  /* Callouts */
-  .callout {
-    display: flex; gap: 0.6rem; align-items: flex-start;
-    padding: 0.7rem 0.9rem; border-radius: 5px; margin: 0.7rem 0;
-    font-size: 0.8rem; line-height: 1.5;
-  }
-  .callout-icon { font-size: 0.95rem; flex-shrink: 0; margin-top: 0.02rem; }
-  .callout-warn { background: var(--warn-dim); border-left: 3px solid var(--warn); }
-  .callout-good { background: var(--good-dim); border-left: 3px solid var(--good); }
-  .callout-danger { background: var(--danger-dim); border-left: 3px solid var(--danger); }
-  .callout-info { background: var(--accent-glow); border-left: 3px solid var(--accent); }
+/* ─── Callouts ─── */
+.callout{display:flex;gap:.65rem;align-items:flex-start;padding:.75rem 1rem;border-radius:5px;margin:.7rem 0;font-size:.8rem;line-height:1.55}
+.callout-icon{flex-shrink:0;font-size:.95rem;margin-top:.05rem}
+.cl-good{background:var(--good-d);border-left:3px solid var(--good)}
+.cl-warn{background:var(--warn-d);border-left:3px solid var(--warn)}
+.cl-info{background:var(--acc-g);border-left:3px solid var(--acc)}
+.cl-danger{background:var(--danger-d);border-left:3px solid var(--danger)}
 
-  /* Steps */
-  .step { display: flex; gap: 0.7rem; margin-bottom: 0.7rem; }
-  .step-marker {
-    width: 20px; height: 20px; border-radius: 50%;
-    background: var(--accent-glow); border: 1.5px solid var(--accent-dim);
-    color: var(--accent); font-size: 0.65rem; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 0.15rem;
-  }
-  .step-content { flex: 1; }
-  .step-content p { font-size: 0.8rem; color: var(--text-secondary); }
+/* ─── Steps ─── */
+.step-list{display:flex;flex-direction:column;gap:.75rem}
+.step{display:flex;gap:.85rem;align-items:flex-start}
+.step-n{width:24px;height:24px;border-radius:50%;background:var(--acc-g);border:1.5px solid var(--acc-d);color:var(--acc);font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.step-body{flex:1}
+.step-body strong{font-size:.84rem;color:var(--txt);display:block;margin-bottom:.15rem}
+.step-body p{font-size:.78rem;color:var(--txt-s)}
 
-  .sub-heading { font-size: 0.88rem; font-weight: 600; margin: 1rem 0 0.4rem; }
-  .body-text { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; }
-  .body-text strong { color: var(--text-primary); font-weight: 600; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+/* ─── Check List ─── */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.check-list li{font-size:.8rem;color:var(--txt-s);padding:.35rem .7rem;border-radius:4px;background:var(--bg-c);border:1px solid var(--brd);display:flex;gap:.55rem;align-items:flex-start}
+.check-list li::before{content:"✓";color:var(--good);font-weight:700;flex-shrink:0;margin-top:.05rem}
+.check-list li.li-x::before{content:"✗";color:var(--danger)}
+.check-list li.li-w::before{content:"⚠";color:var(--warn)}
 
-  .addon-grid { display: grid; gap: 0.6rem; }
+/* ─── Code ─── */
+code{font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:.75rem;background:var(--code-bg);border:1px solid var(--brd);border-radius:3px;padding:.1rem .3rem;color:var(--acc)}
+.code-block{background:var(--code-bg);border:1px solid var(--brd);border-radius:4px;padding:.7rem .9rem;font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:.73rem;line-height:1.75;overflow-x:auto;color:var(--txt);margin:.5rem 0;white-space:pre}
+.cm{color:var(--txt-m)} .ck{color:var(--acc)} .cv{color:var(--warn)}
 
-  .footer { margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); text-align: center; }
-  .footer p { font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.03em; }
+/* ─── Divider ─── */
+.divider{border:none;border-top:1px solid var(--brd);margin:2rem 0}
 
-  @media (max-width: 600px) {
-    .page { padding: 1rem 0.8rem 3rem; }
-    .hero h1 { font-size: 1.3rem; }
-    .hero { padding: 1.5rem 0.5rem 1.5rem; }
-    .toc-list { grid-template-columns: 1fr; }
-  }
+/* ─── Footer ─── */
+.footer{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--brd);text-align:center}
+.footer p{font-size:.67rem;color:var(--txt-m);letter-spacing:.03em;margin-bottom:.35rem}
+
+/* ─── Responsive ─── */
+@media(max-width:640px){
+  .page{padding:1rem .9rem 3rem}
+  .hero-title{font-size:1.7rem}
+  .hero{padding:2.5rem .5rem 2rem}
+  .feat-grid{grid-template-columns:1fr}
+  .tb-inner{padding:.5rem 1rem}
+}
 </style>
+
+<!-- ═══ TOP BAR ═══ -->
+<div id="topbar">
+  <div class="tb-inner">
+    <div class="tb-brand">&#9889; Tensura Abyss</div>
+    <div class="tb-actions">
+      <div class="lang-sw">
+        <button class="lb active" id="btn-de" onclick="setLang('de')">DE</button>
+        <button class="lb" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9680;</button>
+    </div>
+  </div>
+</div>
 
 <div class="page">
 
-  <header class="hero">
-    <div class="hero-badge">Modpack Guide &middot; Juli 2026</div>
-    <h1>Tensura Abyss <span>Optimierung</span></h1>
-    <p>Updates, Crash-Check, 24+ Add-ons, Mouse-Fix, Performance &amp; Grafik-Tuning.</p>
-  </header>
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-badge" data-i18n="hero_badge"></div>
+  <h1 class="hero-title">Tensura <span>Abyss</span></h1>
+  <p class="hero-sub" data-i18n="hero_sub"></p>
+  <div class="stat-pills">
+    <span class="pill pill-acc">MC 1.21.1</span>
+    <span class="pill pill-acc">NeoForge</span>
+    <span class="pill pill-acc">v3.1.5</span>
+    <span class="pill pill-good" data-i18n="stat_quests"></span>
+    <span class="pill pill-acc" data-i18n="stat_chapters"></span>
+    <span class="pill pill-warn" data-i18n="stat_wip"></span>
+  </div>
+</header>
 
-  <nav class="toc">
-    <h3>Inhalt</h3>
-    <ul class="toc-list">
-      <li><span class="toc-num">01</span> <a href="#s1">Updates &amp; Crash-Check</a></li>
-      <li><span class="toc-num">02</span> <a href="#s2">Tensura Add-ons (24+)</a></li>
-      <li><span class="toc-num">03</span> <a href="#s3">Maus-Sensitivity-Fix</a></li>
-      <li><span class="toc-num">04</span> <a href="#s4">Grafik &amp; Performance</a></li>
-    </ul>
-  </nav>
-
-  <!-- ═══ 01 UPDATES ═══ -->
-  <section class="section" id="s1">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <h2>Updates &amp; Crash-Check</h2>
+<!-- ═══ 01 FEATURES ═══ -->
+<section class="section" id="features">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title" data-i18n="sec_features"></h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">&#9889;</div>
+      <h3 data-i18n="f1_title"></h3>
+      <p data-i18n="f1_desc"></p>
     </div>
-
-    <p class="body-text"><strong>Tensura: Reincarnated</strong> ist die aktiv entwickelte Hauptmod (1.8M+ Downloads). Die neueste Version ist <strong>2.0.1.1</strong> (5. Juli 2026). Die Mod ist von Forge auf <strong>NeoForge + Fabric</strong> gewechselt.</p>
-
-    <h4 class="sub-heading">Versionsstatus</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>MC-Version</th><th>Loader</th><th>Mod-Version</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>1.21.1</td><td>NeoForge</td><td>2.0.1.1</td><td><span class="tag tag-good">Aktuell</span></td></tr>
-          <tr><td>1.21.1</td><td>Fabric</td><td>2.0.1.1</td><td><span class="tag tag-good">Aktuell</span></td></tr>
-          <tr><td>1.19.2</td><td>Forge</td><td>1.0.2.6</td><td><span class="tag tag-warn">Legacy</span></td></tr>
-          <tr><td>1.20.x</td><td>&mdash;</td><td>&mdash;</td><td><span class="tag tag-danger">Kein Port</span></td></tr>
-        </tbody>
-      </table>
+    <div class="feat-card">
+      <div class="feat-icon">&#127984;</div>
+      <h3 data-i18n="f2_title"></h3>
+      <p data-i18n="f2_desc"></p>
     </div>
-
-    <h4 class="sub-heading">Pflicht-Dependencies</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Library</th><th>Funktion</th><th>Downloads</th></tr></thead>
-        <tbody>
-          <tr><td><strong>ManasCore</strong></td><td>Core-Library von ManasMods</td><td>~1.5M</td></tr>
-          <tr><td><strong>GeckoLib</strong></td><td>Animation-Engine</td><td>&mdash;</td></tr>
-          <tr><td><strong>TerraBlender</strong></td><td>Biom-Generierung</td><td>&mdash;</td></tr>
-        </tbody>
-      </table>
+    <div class="feat-card">
+      <div class="feat-icon">&#9881;&#65039;</div>
+      <h3 data-i18n="f3_title"></h3>
+      <p data-i18n="f3_desc"></p>
     </div>
-
-    <h4 class="sub-heading">Bekannte Crash-Verursacher</h4>
-
-    <div class="card">
-      <h3><span class="tag tag-danger">Crash</span> Oh The Biomes You&rsquo;ll Go (BYG)</h3>
-      <p><code>Feature order cycle</code>-Fehler bei Weltgenerierung &mdash; Endlosschleife durch doppelte Biom-Injection.</p>
-      <p class="card-meta"><strong>Fix:</strong> <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-byg">Tensura-BYG</a> Patch installieren (nur 1.19.2)</p>
+    <div class="feat-card">
+      <div class="feat-icon">&#128302;</div>
+      <h3 data-i18n="f4_title"></h3>
+      <p data-i18n="f4_desc"></p>
     </div>
-
-    <div class="card">
-      <h3><span class="tag tag-danger">Crash</span> Eldritch End</h3>
-      <p><code>Multiple entries with same key</code> &mdash; Duplicate Chest Boat Registry.</p>
-      <p class="card-meta"><strong>Fix:</strong> Eldritch End entfernen oder auf Update warten</p>
+    <div class="feat-card">
+      <div class="feat-icon">&#128122;</div>
+      <h3 data-i18n="f5_title"></h3>
+      <p data-i18n="f5_desc"></p>
     </div>
-
-    <div class="card">
-      <h3><span class="tag tag-warn">Conflict</span> Epic Fight Mod</h3>
-      <p>Custom Player-Armature kollidiert mit Tensura-Armor-Rendering und Gr&ouml;&szlig;en-Modifikationen.</p>
-      <p class="card-meta"><strong>Fix:</strong> <a href="https://modrinth.com/project/zGfXXac2">Tensura Epic Fight Compatibility</a> Datapack + <a href="https://www.curseforge.com/minecraft/mc-mods/epic-fight-x-better-lock-on-better-third-person-qol-fixes">Epic Fight x Better Lock On</a></p>
+    <div class="feat-card">
+      <div class="feat-icon">&#128640;</div>
+      <h3 data-i18n="f6_title"></h3>
+      <p data-i18n="f6_desc"></p>
     </div>
+  </div>
+</section>
 
-    <div class="card">
-      <h3><span class="tag tag-warn">Conflict</span> Curios / Sophisticated Backpacks / Jade / YIGD</h3>
-      <p>Diverse Kompatibilit&auml;tsprobleme mit diesen beliebten Utility-Mods.</p>
-      <p class="card-meta"><strong>Fix:</strong> <a href="https://www.curseforge.com/minecraft/mc-mods/neo-otherworld-compatibility-fix">Neo Otherworld Compatibility Fix</a> behebt alle vier</p>
-    </div>
+<!-- ═══ 02 MODS ═══ -->
+<section class="section" id="mods">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title" data-i18n="sec_mods"></h2>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="col_mod"></th>
+          <th data-i18n="col_func"></th>
+          <th data-i18n="col_cat"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Tensura: Magic Growth</strong></td><td data-i18n="m01"></td><td><span class="tag tag-acc" data-i18n="cat_core"></span></td></tr>
+        <tr><td><strong>EP Scaling</strong></td><td data-i18n="m02"></td><td><span class="tag tag-warn" data-i18n="cat_balance"></span></td></tr>
+        <tr><td><strong>MineColonies</strong></td><td data-i18n="m03"></td><td><span class="tag tag-acc" data-i18n="cat_build"></span></td></tr>
+        <tr><td><strong>MCA Reborn</strong></td><td data-i18n="m04"></td><td><span class="tag tag-acc" data-i18n="cat_build"></span></td></tr>
+        <tr><td><strong>Create</strong></td><td data-i18n="m05"></td><td><span class="tag tag-acc" data-i18n="cat_ind"></span></td></tr>
+        <tr><td><strong>Steam 'n' Rails</strong></td><td data-i18n="m06"></td><td><span class="tag tag-acc" data-i18n="cat_ind"></span></td></tr>
+        <tr><td><strong>Ice and Fire CE</strong></td><td data-i18n="m07"></td><td><span class="tag tag-danger" data-i18n="cat_boss"></span></td></tr>
+        <tr><td><strong>Gateways to Eternity</strong></td><td data-i18n="m08"></td><td><span class="tag tag-danger" data-i18n="cat_boss"></span></td></tr>
+        <tr><td><strong>Cataclysm Loot</strong></td><td data-i18n="m09"></td><td><span class="tag tag-danger" data-i18n="cat_boss"></span></td></tr>
+        <tr><td><strong>Serene Seasons</strong></td><td data-i18n="m10"></td><td><span class="tag tag-good" data-i18n="cat_world"></span></td></tr>
+        <tr><td><strong>RUNIC: Enchants</strong></td><td data-i18n="m11"></td><td><span class="tag tag-good" data-i18n="cat_magic"></span></td></tr>
+        <tr><td><strong>YDM's Weapon Master</strong></td><td data-i18n="m12"></td><td><span class="tag tag-good" data-i18n="cat_combat"></span></td></tr>
+        <tr><td><strong>Embeddium + Oculus</strong></td><td data-i18n="m13"></td><td><span class="tag tag-good" data-i18n="cat_perf"></span></td></tr>
+        <tr><td><strong>ModernFix + FerriteCore</strong></td><td data-i18n="m14"></td><td><span class="tag tag-good" data-i18n="cat_perf"></span></td></tr>
+        <tr><td><strong>Entity Culling</strong></td><td data-i18n="m15"></td><td><span class="tag tag-good" data-i18n="cat_perf"></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="card">
-      <h3><span class="tag tag-warn">Conflict</span> Apotheosis</h3>
-      <p>Mixin-Injection-Konflikt mit <code>CombatRules</code>-Klasse.</p>
-      <p class="card-meta"><strong>Fix:</strong> Mod-Ladereihenfolge anpassen (Apotheosis vor Tensura)</p>
-    </div>
+<!-- ═══ 03 EXPANSION ═══ -->
+<section class="section" id="expansion">
+  <div class="sec-header">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title" data-i18n="sec_expansion"></h2>
+  </div>
 
-    <div class="callout callout-good">
-      <span class="callout-icon">&#10003;</span>
-      <div><strong>Empfehlung:</strong> Installiere <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-modifications">Tensura Modifications</a> (Bugfix-Patch, 27K+ Downloads) und <a href="https://www.curseforge.com/minecraft/mc-mods/tensuraaifix">TensuraAIFix</a> (AI/Pathfinding-Bugfixes).</div>
-    </div>
-  </section>
+  <h3 class="sub" data-i18n="exp_magic_h"></h3>
+  <p class="body-txt" data-i18n="exp_magic_intro"></p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Mod</th><th data-i18n="col_fit"></th><th data-i18n="col_compat"></th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Ars Nouveau</strong></td>
+          <td data-i18n="ars_fit"></td>
+          <td><span class="tag tag-good">1.21.1 &#10003;</span></td>
+        </tr>
+        <tr>
+          <td><strong>Iron's Spells 'n Spellbooks</strong></td>
+          <td data-i18n="iron_fit"></td>
+          <td><span class="tag tag-good">1.21.1 &#10003;</span></td>
+        </tr>
+        <tr>
+          <td><strong>Malum</strong></td>
+          <td data-i18n="malum_fit"></td>
+          <td><span class="tag tag-warn" data-i18n="compat_test"></span></td>
+        </tr>
+        <tr>
+          <td><strong>Apotheosis</strong></td>
+          <td data-i18n="apo_fit"></td>
+          <td><span class="tag tag-warn" data-i18n="compat_order"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══ 02 ADD-ONS ═══ -->
-  <section class="section" id="s2">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2>Tensura Add-ons &amp; Sub-Mods</h2>
-    </div>
+  <h3 class="sub" data-i18n="exp_addon_h"></h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tier</th><th>Addon</th><th data-i18n="col_highlight"></th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tier-s">S</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-mysticism" target="_blank">Tensura: Mysticism</a></td><td data-i18n="add1"></td></tr>
+        <tr><td><span class="tag tier-s">S</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-slimethrone-extras" target="_blank">SlimeThrone Extras</a></td><td data-i18n="add2"></td></tr>
+        <tr><td><span class="tag tier-s">S</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-not-enough-bosses" target="_blank">Not Enough Bosses</a></td><td data-i18n="add3"></td></tr>
+        <tr><td><span class="tag tier-a">A</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tr-addon" target="_blank">Reincarnated Addon</a></td><td data-i18n="add4"></td></tr>
+        <tr><td><span class="tag tier-a">A</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-better-subordinates" target="_blank">Better Subordinates</a></td><td data-i18n="add5"></td></tr>
+        <tr><td><span class="tag tier-a">A</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-no-game-no-life" target="_blank">No Game No Life</a></td><td data-i18n="add6"></td></tr>
+        <tr><td><span class="tag tier-a">A</span></td><td><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-ascensions" target="_blank">Tensura: Ascension</a></td><td data-i18n="add7"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout cl-warn">
+    <span class="callout-icon">&#9888;</span>
+    <div data-i18n="exp_warn"></div>
+  </div>
+</section>
 
-    <p class="body-text">Vollst&auml;ndige &Uuml;bersicht aller 24+ verf&uuml;gbaren Add-ons. Sortiert nach Qualit&auml;t, Downloads und Gameplay-Erweiterung. Alle von ManasMods selbst oder verifizierten Community-Entwicklern.</p>
+<!-- ═══ 04 PERFORMANCE ═══ -->
+<section class="section" id="performance">
+  <div class="sec-header">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title" data-i18n="sec_perf"></h2>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Mod</th><th data-i18n="col_role"></th><th data-i18n="col_prio"></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Embeddium</strong></td><td data-i18n="p01"></td><td><span class="tag tag-danger" data-i18n="prio_req"></span></td></tr>
+        <tr><td><strong>Oculus / NeOculus</strong></td><td data-i18n="p02"></td><td><span class="tag tag-good" data-i18n="prio_rec"></span></td></tr>
+        <tr><td><strong>FerriteCore</strong></td><td data-i18n="p03"></td><td><span class="tag tag-good" data-i18n="prio_rec"></span></td></tr>
+        <tr><td><strong>ModernFix</strong></td><td data-i18n="p04"></td><td><span class="tag tag-good" data-i18n="prio_rec"></span></td></tr>
+        <tr><td><strong>Entity Culling</strong></td><td data-i18n="p05"></td><td><span class="tag tag-good" data-i18n="prio_rec"></span></td></tr>
+        <tr><td><strong>ImmediatelyFast</strong></td><td data-i18n="p06"></td><td><span class="tag tag-acc" data-i18n="prio_opt"></span></td></tr>
+        <tr><td><strong>Clumps</strong></td><td data-i18n="p07"></td><td><span class="tag tag-acc" data-i18n="prio_opt"></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout cl-info">
+    <span class="callout-icon">&#9432;</span>
+    <div data-i18n="perf_ram"></div>
+  </div>
+  <div class="callout cl-danger">
+    <span class="callout-icon">&#10007;</span>
+    <div data-i18n="perf_noop"></div>
+  </div>
+  <h3 class="sub" data-i18n="perf_shader_h"></h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th data-i18n="col_shader"></th><th data-i18n="col_gpu"></th><th data-i18n="col_note"></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Complementary Unbound</strong></td><td data-i18n="sh1_gpu"></td><td data-i18n="sh1_note"></td></tr>
+        <tr><td><strong>BSL v10.1.3</strong></td><td data-i18n="sh2_gpu"></td><td data-i18n="sh2_note"></td></tr>
+        <tr><td><strong>Sildur's Vibrant Lite</strong></td><td data-i18n="sh3_gpu"></td><td data-i18n="sh3_note"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <!-- Tier S -->
-    <h4 class="sub-heading">Tier S &mdash; Must-Have</h4>
-
-    <div class="addon-grid">
-      <div class="card">
-        <h3>Tensura: Mysticism <span class="tag tag-good">1M+ DL</span></h3>
-        <ul>
-          <li><strong>9+ neue Rassen:</strong> Dragonoid, Direwolf, Insect, Lesser Spirit, Lesser Angel, Phantom, Wyrm, Forgotten, Restricted Human</li>
-          <li>29 Ultimate Skills, 18 Unique Skills, 8 Extra Skills, 9 Intrinsic Skills</li>
-          <li>Verf&uuml;gbar f&uuml;r 1.21.1 + 1.19.2 (NeoForge/Fabric/Forge)</li>
-          <li>Eigenes Wiki: <a href="https://trmysticism.wiki.gg/">trmysticism.wiki.gg</a></li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-mysticism">CurseForge</a> &middot; <a href="https://modrinth.com/project/bjvFzLV3">Modrinth</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Not Enough Bosses <span class="tag tag-good">963K DL</span> <span class="tag tag-info">Offiziell</span></h3>
-        <ul>
-          <li>Neue Boss-K&auml;mpfe: Rimuru, Carrion, Luminous</li>
-          <li>Von ManasMods (offizielle Erweiterung)</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-not-enough-bosses">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: SlimeThrone Extras <span class="tag tag-good">200K+ DL</span></h3>
-        <ul>
-          <li>Skill Locking, &uuml;berarbeitetes Prestige-System</li>
-          <li>Neue Rassen, Items (Sword of Tempest, Veldora&rsquo;s Scale)</li>
-          <li>Boss-Kill-System (Charybdis, Hinata, Orc Lord u.a.)</li>
-          <li><strong>Eingebauter Config-Patcher</strong> &mdash; konfiguriert sich automatisch</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-slimethrone-extras">CurseForge</a> &middot; <a href="https://modrinth.com/mod/tensura-slimethrone-extras">Modrinth</a></p>
-      </div>
-    </div>
-
-    <!-- Tier A -->
-    <h4 class="sub-heading">Tier A &mdash; Starke Erweiterungen</h4>
-
-    <div class="addon-grid">
-      <div class="card">
-        <h3>Tensura Compat: Open Parties &amp; Claims <span class="tag tag-info">785K DL</span> <span class="tag tag-info">Offiziell</span></h3>
-        <p>Tensura-Skills respektieren geclaimte Chunks. Pflicht f&uuml;r Server.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-compat-open-parties-and-claims">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Reincarnated Addon <span class="tag tag-info">664K DL</span></h3>
-        <ul>
-          <li>Neue Slime-Evolution: Slime &rarr; Dark Slime &rarr; Abyss Slime &rarr; Eldritch Slime</li>
-          <li>1 Ultimate Skill, 4 Unique Skills, 4 Intrinsic Skills, 1 Battlewill</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tr-addon">CurseForge</a> &middot; <a href="https://modrinth.com/mod/tr-addon/versions">Modrinth</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Ani&rsquo;s Tensura Add-on <span class="tag tag-info">621K DL</span></h3>
-        <ul>
-          <li>11 einzigartige Drachen-Rassen mit zwei Evolutions-Pfaden</li>
-          <li>8 Elementtypen f&uuml;r Elemental Dragons</li>
-          <li>Angels, Fallen Angels, Phantoms</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/anis-tensura-add-on">CurseForge</a> &middot; Nur 1.19.2 Forge</p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Dungeon <span class="tag tag-info">418K DL</span></h3>
-        <ul>
-          <li>10-st&ouml;ckiger, prozedural generierter Dungeon (Rimurus Labyrinth)</li>
-          <li>Fallen, Bosse, Shrine Challenges, Elite Mobs, Custom Gear</li>
-          <li>Nightmare Mode verf&uuml;gbar</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-dungeon">CurseForge</a> &middot; Nur 1.19.2 Forge</p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Origins <span class="tag tag-info">Rassen</span></h3>
-        <ul>
-          <li>True Dragon Race, Primordial Daemon Race, Origin Angel Race</li>
-          <li>Divine Protection-Mechanik</li>
-          <li>Daemon startet mit Chant Annulment + Thought Acceleration</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-origins">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: No Game No Life <span class="tag tag-info">374K DL</span></h3>
-        <ul>
-          <li>Cross-Anime-Addon (NGNL)</li>
-          <li>Neue Rassen: Ex-Machina, Fl&uuml;gel, Dwarf, Dragonia</li>
-          <li>Ultimate Skills: Losen, Tengeki</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-no-game-no-life">CurseForge</a> &middot; 1.21.1 + 1.19.2</p>
-      </div>
-    </div>
-
-    <!-- Tier B -->
-    <h4 class="sub-heading">Tier B &mdash; Solide Erg&auml;nzungen</h4>
-
-    <div class="addon-grid">
-      <div class="card">
-        <h3>Tensura Reincarnated Nightmares <span class="tag tag-warn">264K DL</span></h3>
-        <p>H&ouml;herer Schwierigkeitsgrad, Ultimate Skill Amaterasu.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated-nightmares">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura Compat: FTB <span class="tag tag-info">209K DL</span> <span class="tag tag-info">Offiziell</span></h3>
-        <p>FTB Chunks/Teams/Quests-Integration. Verhindert Skill-Griefing in Claims.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-compat-ftb">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>TenSura Boss Structure <span class="tag tag-info">203K DL</span></h3>
-        <p>Strukturen f&uuml;r Tensura-Bosse per Kartograph-Maps finden (statt Random Spawn). Braucht Not Enough Bosses.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-boss-structure">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Better Subordinates <span class="tag tag-info">167K DL</span></h3>
-        <ul>
-          <li>Trainiere Untergebene: Skills wie Poison, Self-Regeneration, Gravity Manipulation</li>
-          <li>Eigenes Skills-UI-Tab, Lernfortschritt und Mastery-System</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-better-subordinates">CurseForge</a> &middot; 1.21.1 NeoForge/Fabric</p>
-      </div>
-
-      <div class="card">
-        <h3>TensuraMoreSkills <span class="tag tag-info">123K DL</span></h3>
-        <ul>
-          <li>Anime-inspirierte F&auml;higkeiten aus Overlord, Jujutsu Kaisen, Re:Zero</li>
-          <li>Bloodfiend Race, Paths Dimension, AI-powered <code>/raphael</code> Command</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensuramoreskills">CurseForge</a> &middot; 1.21.1 + 1.19.2</p>
-      </div>
-
-      <div class="card">
-        <h3>Elite Tensura Addon <span class="tag tag-info">114K DL</span></h3>
-        <p>Server-fokussiert: 180+ Titel, Walpurgis Council Events, Saiyan Races, Loot Crates. Braucht FTB Chunks + Create.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/elite-tensura-mod">CurseForge</a> &middot; 1.21.1 NeoForge</p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: Ascension <span class="tag tag-info">90K DL</span></h3>
-        <ul>
-          <li>10 Custom Race Lines (Angel, Frog, Kitsune, Bloodfiend, Whisper Djinn u.a.)</li>
-          <li>Hyperbolic Chamber Training-Dimension</li>
-          <li>Cross-Mod Boss Stat Integration</li>
-        </ul>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-ascensions">CurseForge</a> &middot; 1.21.1 NeoForge</p>
-      </div>
-    </div>
-
-    <!-- Tier C -->
-    <h4 class="sub-heading">Tier C &mdash; Nische / Utility</h4>
-
-    <div class="addon-grid">
-      <div class="card">
-        <h3>Tensura: Creation <span class="tag tag-info">61K DL</span></h3>
-        <p>15 custom Unique Skills (Accelerator, Avenger, Cursed Speech u.a.). Braucht Ice and Fire. Nur 1.19.2.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-creation">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>TenSura Smoothcraft <span class="tag tag-good">Performance</span> <span class="tag tag-info">51K DL</span></h3>
-        <p>Tensura-spezifische Performance-Optimierung. Fixt Lag durch zu viele Skills, ~5x FPS-Verbesserung mit vielen Entities. Nur 1.19.2.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-smoothcraft">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura Wiki <span class="tag tag-info">Utility</span></h3>
-        <p>In-Game-Guidebook f&uuml;r alle Unique und Ultimate Skills.</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-wiki">CurseForge</a></p>
-      </div>
-
-      <div class="card">
-        <h3>Tensura: KumoDesu <span class="tag tag-info">Crossover</span></h3>
-        <p>Crossover mit &bdquo;So I&rsquo;m a Spider, So What?&rdquo;</p>
-        <p class="card-meta"><a href="https://www.curseforge.com/minecraft/mc-mods/tensura-kumodesu">CurseForge</a></p>
-      </div>
-    </div>
-
-    <div class="callout callout-warn">
-      <span class="callout-icon">&#9888;</span>
-      <div><strong>Versions-Check:</strong> Nicht alle Add-ons sind f&uuml;r 1.21.1 verf&uuml;gbar. Ani&rsquo;s Addon, Dungeon, Creation und Smoothcraft existieren nur f&uuml;r 1.19.2 Forge. Pr&uuml;fe die Dateiliste auf CurseForge vor der Installation.</div>
-    </div>
-  </section>
-
-  <!-- ═══ 03 MOUSE FIX ═══ -->
-  <section class="section" id="s3">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <h2>Maus-Sensitivity-Bug &mdash; Permanenter Fix</h2>
-    </div>
-
-    <p class="body-text">Der Bug, bei dem die Maus-Sensitivit&auml;t auf <strong>0 zur&uuml;ckgesetzt</strong> wird, hat mehrere dokumentierte Ursachen. Tensura selbst verursacht diesen Bug <strong>nicht direkt</strong> &mdash; es sind begleitende Mods oder Systemeinstellungen.</p>
-
-    <h4 class="sub-heading">Bekannte Verursacher</h4>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Mod / Ursache</th><th>Problem</th><th>Belege</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>OptiFine</strong></td>
-            <td>Zuf&auml;llige Sensitivity-Spikes, Kamera-Spins bei Chunk-Loads</td>
-            <td>Dutzende GitHub-Issues (#394, #1528, #2602, #5287, #7080)</td>
-          </tr>
-          <tr>
-            <td><strong>BetterFPS</strong></td>
-            <td>Alternative Sin/Cos-Algorithmus st&ouml;rt Maus-Berechnung</td>
-            <td>Hypixel Forums, best&auml;tigt</td>
-          </tr>
-          <tr>
-            <td><strong>Controllable</strong></td>
-            <td>Virtual Mouse/Cursor interferiert auch ohne Controller</td>
-            <td>GitHub-Issues #187, #261, #371, #525, #569</td>
-          </tr>
-          <tr>
-            <td><strong>Modpack-Launcher</strong></td>
-            <td>CurseForge/Prism &uuml;berschreiben options.txt bei Updates</td>
-            <td>PrismLauncher Issue #1501</td>
-          </tr>
-          <tr>
-            <td><strong>Windows Game Mode</strong></td>
-            <td>St&ouml;rt Mouse-Smoothing auf Systemebene</td>
-            <td>Minecraft Forum, breit dokumentiert</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h4 class="sub-heading">Fix-Anleitung</h4>
-
+<!-- ═══ 05 INSTALLATION ═══ -->
+<section class="section" id="install">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title" data-i18n="sec_install"></h2>
+  </div>
+  <div class="step-list">
     <div class="step">
-      <div class="step-marker">1</div>
-      <div class="step-content">
-        <p><strong>options.txt manuell setzen + sperren (zuverl&auml;ssigster Fix)</strong></p>
-        <div class="code-block"><span class="c"># Pfad:</span>
-C:\Users\dkage\curseforge\minecraft\Instances\Tensura Abyss\options.txt
-
-<span class="c"># Finde und setze:</span>
-<span class="k">mouseSensitivity</span>:<span class="v">0.5</span>        <span class="c"># 0.5 = Standard (100%)</span>
-<span class="k">rawMouseInput</span>:<span class="v">true</span>          <span class="c"># Bypassed OS-Mausbeschleunigung</span>
-
-<span class="c"># Dann: Rechtsklick &rarr; Eigenschaften &rarr; "Schreibgesch&uuml;tzt" &rarr; OK</span>
-<span class="c"># Das verhindert, dass JEDE Mod den Wert &uuml;berschreibt</span></div>
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <strong data-i18n="s1_t"></strong>
+        <p data-i18n="s1_d"></p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-marker">2</div>
-      <div class="step-content">
-        <p><strong>Mod-Configs pr&uuml;fen (im config/ Ordner)</strong></p>
-        <div class="code-block"><span class="c"># Falls Controllable installiert:</span>
-<span class="k">controllable-client.toml</span> <span class="c">&rarr; Virtual Mouse/Cursor DEAKTIVIEREN</span>
-
-<span class="c"># Falls BetterFPS installiert:</span>
-<span class="k">betterfps.cfg</span> <span class="c">&rarr; Alternative Sin/Cos Algorithmus DEAKTIVIEREN</span>
-
-<span class="c"># Falls Epic Fight installiert:</span>
-<span class="k">epicfight-client.toml</span> <span class="c">&rarr; Camera-Sensitivity pr&uuml;fen</span>
-
-<span class="c"># Tensura selbst:</span>
-<span class="k">tensura-client.toml</span> <span class="c">&rarr; Auf "sensitivity"/"mouse" Eintr&auml;ge pr&uuml;fen</span></div>
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <strong data-i18n="s2_t"></strong>
+        <p data-i18n="s2_d"></p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-marker">3</div>
-      <div class="step-content">
-        <p><strong>Windows-Einstellungen</strong></p>
-        <div class="code-block"><span class="c"># 1. Mauseinstellungen &rarr; Zeigeroptionen</span>
-<span class="c">#    &rarr; "Zeigerbeschleunigung" DEAKTIVIEREN</span>
-
-<span class="c"># 2. Einstellungen &rarr; Spielen &rarr; Spielmodus &rarr; AUS</span>
-
-<span class="c"># 3. Task-Manager &rarr; Beende Maus-Software:</span>
-<span class="c">#    Razer Synapse, Logitech G Hub, SteelSeries Engine</span>
-
-<span class="c"># 4. Launcher: Rechtsklick &rarr; Kompatibilit&auml;t</span>
-<span class="c">#    &rarr; "Hohe DPI-Skalierung &uuml;berschreiben"</span>
-<span class="c">#    &rarr; Skalierung von: "Anwendung"</span></div>
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <strong data-i18n="s3_t"></strong>
+        <p data-i18n="s3_d"></p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-marker">4</div>
-      <div class="step-content">
-        <p><strong>F8-Check:</strong> Dr&uuml;cke F8 ingame &mdash; Cinematic Camera k&ouml;nnte versehentlich aktiviert sein (f&uuml;hlt sich an wie Sensitivity 0).</p>
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <strong data-i18n="s4_t"></strong>
+        <p data-i18n="s4_d"></p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-marker">5</div>
-      <div class="step-content">
-        <p><strong>OptiFine ersetzen:</strong> Falls OptiFine installiert ist, ersetze es durch <strong>Embeddium + Oculus</strong> (Forge) oder <strong>Sodium + Iris</strong> (Fabric). OptiFine ist der h&auml;ufigste Verursacher von Sensitivity-Bugs.</p>
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <strong data-i18n="s5_t"></strong>
+        <p data-i18n="s5_d"></p>
       </div>
     </div>
+  </div>
+  <div class="callout cl-good" style="margin-top:1rem">
+    <span class="callout-icon">&#10003;</span>
+    <div data-i18n="install_tip"></div>
+  </div>
+</section>
 
-    <div class="callout callout-good">
-      <span class="callout-icon">&#10003;</span>
-      <div><strong>Quick-Fix:</strong> Schritt 1 (Read-Only) + Schritt 5 (OptiFine ersetzen) l&ouml;sen das Problem in &gt;90% der F&auml;lle dauerhaft.</div>
-    </div>
-  </section>
+<!-- ═══ 06 COMPAT & TESTING ═══ -->
+<section class="section" id="testing">
+  <div class="sec-header">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title" data-i18n="sec_compat"></h2>
+  </div>
 
-  <!-- ═══ 04 GRAFIK ═══ -->
-  <section class="section" id="s4">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <h2>Grafik &amp; Performance-Optimierung</h2>
-    </div>
+  <h3 class="sub" data-i18n="compat_known_h"></h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th data-i18n="col_mod2"></th><th data-i18n="col_issue"></th><th data-i18n="col_fix"></th></tr></thead>
+      <tbody>
+        <tr><td>Oh The Biomes You'll Go</td><td data-i18n="c1_i"></td><td data-i18n="c1_f"></td></tr>
+        <tr><td>Eldritch End</td><td data-i18n="c2_i"></td><td data-i18n="c2_f"></td></tr>
+        <tr><td>Epic Fight Mod</td><td data-i18n="c3_i"></td><td data-i18n="c3_f"></td></tr>
+        <tr><td>Apotheosis</td><td data-i18n="c4_i"></td><td data-i18n="c4_f"></td></tr>
+        <tr><td>OptiFine</td><td data-i18n="c5_i"></td><td data-i18n="c5_f"></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <p class="body-text">Ziel: <strong>Visuell sauber + stabile FPS</strong>. Getrennt nach Performance-Mods, Video-Settings, Shadern und visuellen Extras.</p>
+  <h3 class="sub" data-i18n="test_h"></h3>
+  <ul class="check-list">
+    <li data-i18n="t1"></li>
+    <li data-i18n="t2"></li>
+    <li data-i18n="t3"></li>
+    <li data-i18n="t4"></li>
+    <li data-i18n="t5"></li>
+    <li data-i18n="t6"></li>
+    <li class="li-x" data-i18n="t7"></li>
+    <li class="li-w" data-i18n="t8"></li>
+  </ul>
 
-    <h4 class="sub-heading">Performance-Mod-Stack</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Mod</th><th>Funktion</th><th>Loader</th><th>Priorit&auml;t</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Embeddium</strong></td><td>Rendering-Engine (Sodium-Port)</td><td>Forge/NeoForge</td><td><span class="tag tag-danger">Pflicht</span></td></tr>
-          <tr><td><strong>Sodium</strong></td><td>Rendering-Engine (Original)</td><td>Fabric</td><td><span class="tag tag-danger">Pflicht</span></td></tr>
-          <tr><td><strong>Oculus / NeOculus</strong></td><td>Shader-Support (Iris-Port)</td><td>Forge / NeoForge</td><td><span class="tag tag-good">Empfohlen</span></td></tr>
-          <tr><td><strong>Entity Culling</strong></td><td>Unsichtbare Entities nicht rendern</td><td>Alle</td><td><span class="tag tag-good">Empfohlen</span></td></tr>
-          <tr><td><strong>ModernFix</strong></td><td>Startup-Zeit, RAM, Code-Fixes</td><td>Alle</td><td><span class="tag tag-good">Empfohlen</span></td></tr>
-          <tr><td><strong>FerriteCore</strong></td><td>RAM-Optimierung (~50% weniger)</td><td>Alle</td><td><span class="tag tag-good">Empfohlen</span></td></tr>
-          <tr><td><strong>ImmediatelyFast</strong></td><td>GUI/Text/Entity-Rendering</td><td>Alle</td><td><span class="tag tag-good">Empfohlen</span></td></tr>
-          <tr><td><strong>Embeddium Extras</strong></td><td>Zus&auml;tzliche Optimierungen + Optionen</td><td>Forge/NeoForge</td><td><span class="tag tag-info">Optional</span></td></tr>
-          <tr><td><strong>Starlight</strong></td><td>Schnellere Licht-Engine</td><td>Alle</td><td><span class="tag tag-info">Optional</span></td></tr>
-          <tr><td><strong>Clumps</strong></td><td>XP-Orbs gruppieren</td><td>Alle</td><td><span class="tag tag-info">Optional</span></td></tr>
-          <tr><td><strong>TenSura Smoothcraft</strong></td><td>Tensura-spezifisch: Skill-Lag fix</td><td>Forge 1.19.2</td><td><span class="tag tag-good">Empfohlen*</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <h3 class="sub" data-i18n="mouse_h"></h3>
+  <div class="callout cl-good">
+    <span class="callout-icon">&#10003;</span>
+    <div data-i18n="mouse_desc"></div>
+  </div>
+  <div class="code-block"><span class="cm"># options.txt — Instanz-Ordner: .../Tensura Abyss/options.txt</span>
+<span class="ck">mouseSensitivity</span>:<span class="cv">0.5</span>        <span class="cm"># 0.5 = Standard (100%)</span>
+<span class="ck">rawMouseInput</span>:<span class="cv">true</span>          <span class="cm"># Bypasses OS mouse acceleration</span>
+<span class="cm"># Dann / Then: Rechtsklick → Eigenschaften → Schreibgeschützt (Read-Only) ✓</span></div>
+</section>
 
-    <div class="callout callout-danger">
-      <span class="callout-icon">&#10007;</span>
-      <div><strong>Niemals kombinieren:</strong> Embeddium + Rubidium, Embeddium + Sodium, Embeddium + OptiFine. Nur <em>eine</em> Rendering-Engine. Rubidium ist veraltet &mdash; nutze Embeddium.</div>
-    </div>
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <p data-i18n="footer_line"></p>
+  <p>
+    <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge</a> &middot;
+    <a href="https://github.com/weeeedddd/tensura-modpack-optimization" target="_blank">GitHub</a> &middot;
+    <a href="https://tensura.wiki.gg/" target="_blank">Tensura Wiki</a> &middot;
+    <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated" target="_blank">Tensura Mod</a>
+  </p>
+</footer>
 
-    <h4 class="sub-heading">Optimale Video-Settings</h4>
+</div><!-- .page -->
 
-    <div class="code-block"><span class="c"># ═══ Balanced Preset (empfohlen) ═══</span>
-<span class="k">renderDistance</span>:<span class="v">10</span>              <span class="c"># 8-12 = Sweet Spot f&uuml;r Modpacks</span>
-<span class="k">simulationDistance</span>:<span class="v">8</span>         <span class="c"># Nie h&ouml;her als renderDistance</span>
-<span class="k">maxFps</span>:<span class="v">260</span>                    <span class="c"># 260 = Unlimited</span>
-<span class="k">graphicsMode</span>:<span class="v">1</span>               <span class="c"># 0=Fast, 1=Fancy, 2=Fabulous</span>
-<span class="k">ao</span>:<span class="v">1</span>                          <span class="c"># 0=Off, 1=Min, 2=Max</span>
-<span class="k">biomeBlendRadius</span>:<span class="v">2</span>          <span class="c"># Default 5 &rarr; auf 2 senken</span>
-<span class="k">enableVsync</span>:<span class="v">false</span>            <span class="c"># Weniger Input-Lag</span>
-<span class="k">entityShadows</span>:<span class="v">true</span>           <span class="c"># Sch&ouml;n, kaum FPS-Kosten</span>
-<span class="k">mipmapLevels</span>:<span class="v">1</span>              <span class="c"># 0=Off, 4=Max (1 = sparsam)</span>
-<span class="k">particles</span>:<span class="v">1</span>                  <span class="c"># 0=All, 1=Decreased, 2=Minimal</span>
-<span class="k">renderClouds</span>:<span class="v">"fast"</span>          <span class="c"># "true"=Fancy, "fast", "false"=Off</span>
-<span class="k">entityDistanceScaling</span>:<span class="v">0.75</span>  <span class="c"># Entities fr&uuml;her ausblenden</span>
-<span class="k">rawMouseInput</span>:<span class="v">true</span>           <span class="c"># Wichtig f&uuml;r Mouse-Fix</span>
-<span class="k">fullscreen</span>:<span class="v">true</span>              <span class="c"># Bessere Performance als Windowed</span></div>
+<script>
+const T = {
+  de: {
+    hero_badge: 'Minecraft Modpack &middot; MC 1.21.1 &middot; NeoForge &middot; v3.1.5',
+    hero_sub: '&Uuml;berlebe. Baue dein Reich. Entwickle dich.<br>Werde ein Echter D&auml;monenlord.',
+    stat_quests: '500+ Quests',
+    stat_chapters: '15 Kapitel',
+    stat_wip: 'In Entwicklung',
 
-    <h4 class="sub-heading">Embeddium/Sodium In-Game Settings</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Setting</th><th>Wert</th><th>Warum</th></tr></thead>
-        <tbody>
-          <tr><td>Chunk Render Distance</td><td>8&ndash;12</td><td>Gr&ouml;&szlig;ter FPS-Hebel</td></tr>
-          <tr><td>Use Fog Occlusion</td><td>An</td><td>Verdeckte Chunks nicht rendern</td></tr>
-          <tr><td>Chunk Face Culling</td><td>An</td><td>Verdeckte Blockfl&auml;chen skippen</td></tr>
-          <tr><td>Animate Only Visible</td><td>An</td><td>Animations-Overhead reduzieren</td></tr>
-          <tr><td>Cloud Quality</td><td>Off / Fast</td><td>&mdash;</td></tr>
-        </tbody>
-      </table>
-    </div>
+    sec_features: 'Key Features',
+    f1_title: 'Tensura Skill-System',
+    f1_desc: 'Erlerne Unique &amp; Ultimate Skills, w&auml;hle deine Rasse und entwickle dich zum D&auml;monenlord &mdash; inspiriert von <em>Der Zeitreisende Schleim</em>.',
+    f2_title: 'Reich aufbauen',
+    f2_desc: 'Gr&uuml;nde Kolonien mit MineColonies, rekrutiere NPC-B&uuml;rger via MCA Reborn und f&uuml;hre dein eigenes Territorium.',
+    f3_title: 'Industrie &amp; Automatisierung',
+    f3_desc: 'Create-Maschinen und Steam &lsquo;n&rsquo; Rails Eisenbahn f&uuml;r vollautomatische Ressourcen-Verarbeitung und G&uuml;terverkehr.',
+    f4_title: 'Magie &amp; Kampf',
+    f4_desc: 'RUNIC Enchants, YDM&rsquo;s Weapon Master und Ars Nouveau / Iron&rsquo;s Spells bieten ein tiefes, anime-inspiriertes Magie-System.',
+    f5_title: 'Epische Bosse',
+    f5_desc: 'Besiege Ice-and-Fire-Drachen, Cataclysm-Bosse und Gateway-Portale f&uuml;r m&auml;chtigen Loot und Tensura-Progression.',
+    f6_title: 'Optimierte Performance',
+    f6_desc: 'Embeddium + Entity Culling + ModernFix + FerriteCore sorgen f&uuml;r stabile FPS &mdash; auch mit Shadern und 200+ Mods.',
 
-    <h4 class="sub-heading">Shader-Empfehlungen</h4>
+    sec_mods: 'Kern-Mods im &Uuml;berblick',
+    col_mod: 'Mod', col_func: 'Funktion', col_cat: 'Kategorie',
+    m01: 'Einzigartiges Skill-System aus dem Anime, Rassen-Evolution, D&auml;monenlord-Progression',
+    m02: 'Gegner skalieren dynamisch mit dem Fortschritt aller Spieler',
+    m03: 'Vollst&auml;ndiges Koloniebau-System mit KI-B&uuml;rgern und Geb&auml;uden',
+    m04: 'NPC-Interaktion, Handel und Familie &mdash; Dorfbewohner werden lebendig',
+    m05: 'Redstone-freie Automatisierung mit Zahnr&auml;dern, F&ouml;rderanlagen und Maschinen',
+    m06: 'Eisenbahn-Netzwerk: Z&uuml;ge, G&uuml;terverkehr und Signalsteuerung',
+    m07: 'Drachen, Greifen, Seeungeheuer &mdash; m&auml;chtige Kreaturen der Wildnis',
+    m08: 'Beschwor-Portal-Herausforderungen mit eigenen Boss-Wellen und Rewards',
+    m09: 'Seltener Loot und starke Items von Cataclysm-Boss-Drops',
+    m10: 'Jahreszeiten-System mit Auswirkungen auf Crops, Biome und Welt',
+    m11: 'Erweitertes Verzauberungs-System mit Runen und einzigartigen Effekten',
+    m12: 'Waffen-Mastery: Aufsteigen durch Kampferfahrung mit verschiedenen Waffentypen',
+    m13: 'Hochperformante Rendering-Engine + Shader-Support (ersetzt OptiFine komplett)',
+    m14: 'Startup-Zeit, RAM-Nutzung und Code-Optimierungen f&uuml;r schwere Modpacks',
+    m15: 'Unsichtbare Entities &amp; Bl&ouml;cke nicht rendern &mdash; massive FPS-Verbesserung',
+    cat_core: 'Kernmod', cat_balance: 'Balance', cat_build: 'Siedlung',
+    cat_ind: 'Industrie', cat_boss: 'Bosse', cat_world: 'Welt',
+    cat_magic: 'Magie', cat_combat: 'Kampf', cat_perf: 'Performance',
 
-    <div class="card">
-      <h3>Complementary Unbound <span class="tag tag-good">Beste Balance</span></h3>
-      <ul>
-        <li>20&ndash;40% schneller als Complementary Reimagined</li>
-        <li>GTX 1660: 80&ndash;110 FPS (High) &middot; RTX 3070: 150&ndash;200 FPS (High)</li>
-        <li><strong>Tipp:</strong> Shadow Resolution von 4096 auf 2048 &rarr; 30&ndash;50% FPS-Gewinn</li>
-      </ul>
-    </div>
+    sec_expansion: 'Erweiterungs-Plan',
+    exp_magic_h: 'Magie-Mods (thematisch passend)',
+    exp_magic_intro: 'Empfohlene Magie-Erweiterungen f&uuml;r Tensura Abyss auf 1.21.1 NeoForge &mdash; alle thematisch auf das Skill- und Evolutions-System von Tensura abgestimmt.',
+    col_fit: 'Thematischer Fit', col_compat: 'Kompatibilit&auml;t',
+    ars_fit: 'Skill-basiertes Zaubersystem &mdash; spiegelt Rimurus Skill-Absorption wider. Tiefes Crafting-Progressions-System.',
+    iron_fit: 'D&amp;D-inspirierte Kampfmagie mit Klassen und Leveln. Passt zur Tensura-Evolutions-Mechanik.',
+    malum_fit: 'Dunkle Ritual-Magie und Seelen-System &mdash; perfekt f&uuml;r das &bdquo;Abyss&ldquo;-Theme des Modpacks.',
+    apo_fit: 'Enchanting-Overhaul f&uuml;r tiefere Verzauberungen. Braucht Ladereihenfolge-Fix (vor Tensura).',
+    compat_test: 'Testen',
+    compat_order: 'Load-Order',
 
-    <div class="card">
-      <h3>BSL Shaders v10.1.3 <span class="tag tag-info">Meiste Optionen</span></h3>
-      <ul>
-        <li>Realtime Shadows, Volumetric Light, Bloom, Custom Clouds</li>
-        <li><strong>FPS-Tipp:</strong> Depth of Field + Motion Blur + Bloom AUS</li>
-        <li>Low- und Potato-Presets f&uuml;r schwache Hardware</li>
-      </ul>
-    </div>
+    exp_addon_h: 'Tensura Add-ons (Empfehlung)',
+    col_highlight: 'Highlight',
+    add1: '9+ neue Rassen, 29 Ultimate Skills, 18 Unique Skills &mdash; Must Have f&uuml;r 1.21.1',
+    add2: 'Skill Locking, Prestige-System, Boss-Kill-Mechanik &mdash; eingebauter Config-Patcher',
+    add3: 'Neue Bosse: Rimuru, Carrion, Luminous (offizielle ManasMods-Erweiterung)',
+    add4: 'Slime-Evolution: Slime &rarr; Dark Slime &rarr; Abyss Slime &rarr; Eldritch Slime',
+    add5: 'Untergebene trainieren, Skills &uuml;bertragen, eigenes Mastery-System (1.21.1)',
+    add6: 'Cross-Anime: Ex-Machina, Fl&uuml;gel, Dragonia + Ultimate Skills Losen &amp; Tengeki',
+    add7: '10 Custom Race Lines, Hyperbolic Chamber Training-Dimension, Boss Stat Integration',
+    exp_warn: '<strong>Versionscheck:</strong> Nicht alle Add-ons sind f&uuml;r 1.21.1 verf&uuml;gbar. Ani&rsquo;s Addon, Dungeon und Smoothcraft existieren nur f&uuml;r 1.19.2 Forge. Immer die Dateiliste auf CurseForge pr&uuml;fen.',
 
-    <div class="card">
-      <h3>Sildur&rsquo;s Vibrant Lite / MakeUp Ultra Fast <span class="tag tag-good">Low-End</span></h3>
-      <p>Minimale FPS-Kosten. Sildur&rsquo;s Lite l&auml;uft auf fast allem. MakeUp hat alle Effekte optional.</p>
-    </div>
+    sec_perf: 'Performance-Stack',
+    col_role: 'Funktion', col_prio: 'Priorit&auml;t',
+    p01: 'Hochperformante Rendering-Engine (Sodium-Port f&uuml;r NeoForge)',
+    p02: 'Shader-Unterst&uuml;tzung f&uuml;r Complementary, BSL, Sildur&rsquo;s u.a.',
+    p03: 'RAM-Nutzung um bis zu 50&thinsp;% reduzieren',
+    p04: 'Startup-Zeit, RAM-Nutzung und Code-Fixes f&uuml;r schwere Modpacks',
+    p05: 'Unsichtbare Entities und Bl&ouml;cke nicht rendern &mdash; gro&szlig;er FPS-Gewinn',
+    p06: 'GUI-, Text- und Entity-Rendering beschleunigen',
+    p07: 'XP-Orbs gruppieren &mdash; verhindert Entity-Lag nach K&auml;mpfen',
+    prio_req: 'Pflicht', prio_rec: 'Empfohlen', prio_opt: 'Optional',
+    perf_ram: '<strong>RAM:</strong> <strong>6&ndash;8&thinsp;GB</strong> f&uuml;r Tensura Abyss mit 200+ Mods. Java 21 verwenden (besserer GC). Mehr als 8&thinsp;GB verursacht l&auml;ngere GC-Pausen und <em>verschlechtert</em> die Performance.',
+    perf_noop: '<strong>OptiFine NIEMALS installieren!</strong> OptiFine ist inkompatibel mit Embeddium und verursacht Sensitivity-Bugs + Rendering-Konflikte mit Tensura. Einzige Alternative: Embeddium + Oculus.',
+    perf_shader_h: 'Shader-Empfehlungen',
+    col_shader: 'Shader', col_gpu: 'Hardware', col_note: 'Tipp',
+    sh1_gpu: 'GTX 1660 &ndash; RTX 3070+',
+    sh1_note: 'Beste Balance. Shadow-Resolution von 4096 &rarr; 2048 spart 30&ndash;50&thinsp;% FPS.',
+    sh2_gpu: 'RTX 2060+',
+    sh2_note: 'Maximale Optionen. Depth of Field + Motion Blur AUS f&uuml;r mehr FPS.',
+    sh3_gpu: 'Low-End / GTX 1050',
+    sh3_note: 'L&auml;uft auf fast allem. Alle Effekte optional deaktivierbar.',
 
-    <h4 class="sub-heading">Visuelle Verbesserungen (kaum FPS-Kosten)</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Mod</th><th>Effekt</th><th>Impact</th></tr></thead>
-        <tbody>
-          <tr><td>Continuity</td><td>Connected Textures (Glas etc.)</td><td><span class="tag tag-good">Minimal</span></td></tr>
-          <tr><td>LambDynamicLights</td><td>Fackeln leuchten in der Hand</td><td><span class="tag tag-good">Gering</span></td></tr>
-          <tr><td>Entity Texture Features</td><td>Random Mob-Texturen, leuchtende Augen</td><td><span class="tag tag-good">Minimal</span></td></tr>
-          <tr><td>Cull Less Leaves</td><td>Konfigurierbare Laub-Dichte</td><td><span class="tag tag-good">+FPS</span></td></tr>
-          <tr><td>Not Enough Animations</td><td>Spieler-Animationen (Essen, Trinken)</td><td><span class="tag tag-good">Minimal</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+    sec_install: 'Installation',
+    s1_t: 'CurseForge App installieren',
+    s1_d: 'Lade die CurseForge App von curseforge.com herunter und installiere sie.',
+    s2_t: 'Modpack suchen',
+    s2_d: 'In der App: Minecraft &rarr; &bdquo;Tensura Abyss&ldquo; suchen &rarr; Pack ausw&auml;hlen.',
+    s3_t: 'Installieren &amp; Herunterladen',
+    s3_d: 'Auf &bdquo;Install&ldquo; klicken &mdash; die App l&auml;dt alle Mods automatisch herunter.',
+    s4_t: 'RAM auf 6&thinsp;GB setzen',
+    s4_d: 'CurseForge App &rarr; Profil-Einstellungen &rarr; Java-Einstellungen &rarr; 6144 MB RAM.',
+    s5_t: 'Spielen',
+    s5_d: 'Pack &uuml;ber die CurseForge App starten. Erster Start dauert 3&ndash;8 Minuten. Viel Spa&szlig;!',
+    install_tip: '<strong>Wichtig:</strong> Keine Mods manuell updaten &mdash; das Pack setzt spezifische Versionen voraus. Updates kommen als neue Pack-Version via CurseForge.',
 
-    <h4 class="sub-heading">RAM-Allocation</h4>
-    <div class="callout callout-info">
-      <span class="callout-icon">&#9432;</span>
-      <div><strong>4&ndash;6 GB</strong> ist der Sweet Spot. Mehr als 8 GB verursacht l&auml;ngere GC-Pausen und <em>verschlechtert</em> die Performance. Nutze <strong>Java 21</strong> f&uuml;r besseren Garbage Collector. F&uuml;r 200+ Mods: 6&ndash;8 GB.</div>
-    </div>
-  </section>
+    sec_compat: 'Kompatibilit&auml;t &amp; Testing',
+    compat_known_h: 'Bekannte Konflikte',
+    col_mod2: 'Mod', col_issue: 'Problem', col_fix: 'L&ouml;sung',
+    c1_i: 'Feature Order Cycle &mdash; Weltgen-Crash',
+    c1_f: 'Tensura-BYG Patch installieren (nur 1.19.2)',
+    c2_i: 'Duplicate Registry-Key bei Chest Boat',
+    c2_f: 'Eldritch End entfernen oder auf Update warten',
+    c3_i: 'Armor-Rendering-Konflikt mit Tensura',
+    c3_f: 'Tensura Epic Fight Compatibility Datapack',
+    c4_i: 'Mixin-Konflikt mit CombatRules',
+    c4_f: 'Ladereihenfolge: Apotheosis vor Tensura',
+    c5_i: 'Sensitivity-Bugs, Kamera-Spins, Rendering-Konflikte',
+    c5_f: 'OptiFine komplett entfernen, Embeddium + Oculus nutzen',
+    test_h: 'Test-Checkliste vor dem Ver&ouml;ffentlichen',
+    t1: 'crash-reports/ Ordner nach neuem Start pr&uuml;fen',
+    t2: 'logs/latest.log auf ERROR und WARN filtern',
+    t3: 'F3-Screen &uuml;berpr&uuml;fen: TPS sollte &ge; 18,0 sein',
+    t4: 'Neues Spiel in Superflat testen (schnellste Weltgenerierung)',
+    t5: '/kill @e ausf&uuml;hren &rarr; TPS-Verbesserung zeigt Entity-Lag an',
+    t6: 'RAM-Monitor: Nutzung &le; 80&thinsp;% nach 30 Min. Spielzeit',
+    t7: 'OptiFine NIEMALS installieren (Konflikte mit Embeddium)',
+    t8: 'Nach Mod-Updates: Crash-Log auf Mixin-Fehler pr&uuml;fen',
+    mouse_h: 'Maus-Sensitivity-Fix',
+    mouse_desc: 'Falls die Sensitivit&auml;t nach Mod-Updates auf 0 zur&uuml;ckgesetzt wird: Werte in <code>options.txt</code> (Instanz-Ordner) setzen und die Datei <strong>schreibgesch&uuml;tzt</strong> machen.',
 
-  <!-- ═══ QUICK ACTIONS ═══ -->
-  <section class="section">
-    <div class="section-header">
-      <span class="section-num">&#10003;</span>
-      <h2>Sofort umsetzbar</h2>
-    </div>
+    footer_line: 'Tensura Abyss Modpack &middot; MC 1.21.1 NeoForge &middot; v3.1.5 &middot; 2026',
+  },
 
-    <div class="callout callout-good">
-      <span class="callout-icon">&#9889;</span>
-      <div>
-        <strong>Quick-Wins:</strong><br>
-        1. <code>mouseSensitivity:0.5</code> + <code>rawMouseInput:true</code> in options.txt &rarr; Read-Only setzen<br>
-        2. OptiFine ersetzen durch <a href="https://www.curseforge.com/minecraft/mc-mods/embeddium">Embeddium</a> + <a href="https://www.curseforge.com/minecraft/mc-mods/oculus">Oculus</a><br>
-        3. <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-modifications">Tensura Modifications</a> + <a href="https://www.curseforge.com/minecraft/mc-mods/tensuraaifix">TensuraAIFix</a> installieren<br>
-        4. <a href="https://modrinth.com/mod/modernfix">ModernFix</a> + <a href="https://www.curseforge.com/minecraft/mc-mods/entityculling">Entity Culling</a> + <a href="https://modrinth.com/mod/ferritecore">FerriteCore</a> installieren<br>
-        5. Video-Settings gem&auml;&szlig; dem Balanced Preset oben anpassen
-      </div>
-    </div>
+  en: {
+    hero_badge: 'Minecraft Modpack &middot; MC 1.21.1 &middot; NeoForge &middot; v3.1.5',
+    hero_sub: 'Survive. Build your empire. Evolve.<br>Become a True Demon Lord.',
+    stat_quests: '500+ Quests',
+    stat_chapters: '15 Chapters',
+    stat_wip: 'In Development',
 
-    <p class="body-text">F&uuml;r eine noch pr&auml;zisere Analyse brauche ich deine <strong>Mod-Liste</strong> (Inhalt des mods/-Ordners), <strong>Minecraft-Version</strong>, und eventuelle <strong>Crash-Logs</strong>. Lade sie ins Repo hoch oder paste sie hier.</p>
-  </section>
+    sec_features: 'Key Features',
+    f1_title: 'Tensura Skill System',
+    f1_desc: 'Learn Unique &amp; Ultimate Skills, choose your race and evolve into a Demon Lord &mdash; inspired by <em>That Time I Got Reincarnated as a Slime</em>.',
+    f2_title: 'Build Your Empire',
+    f2_desc: 'Found colonies with MineColonies, recruit NPC citizens via MCA Reborn, and manage your own territory.',
+    f3_title: 'Industry &amp; Automation',
+    f3_desc: 'Create machines and Steam &lsquo;n&rsquo; Rails trains for fully automated resource processing and cargo transport.',
+    f4_title: 'Magic &amp; Combat',
+    f4_desc: 'RUNIC Enchants, YDM&rsquo;s Weapon Master, Ars Nouveau and Iron&rsquo;s Spells provide a deep, anime-inspired magic system.',
+    f5_title: 'Epic Boss Fights',
+    f5_desc: 'Defeat Ice and Fire Dragons, Cataclysm Bosses, and Gateway portals for powerful loot and Tensura progression.',
+    f6_title: 'Optimized Performance',
+    f6_desc: 'Embeddium + Entity Culling + ModernFix + FerriteCore ensure stable FPS &mdash; even with shaders and 200+ mods.',
 
-  <footer class="footer">
-    <p>Tensura Abyss Modpack Guide &middot; Juli 2026</p>
-    <p style="margin-top:0.3rem">Quellen: <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated">CurseForge</a> &middot; <a href="https://modrinth.com/mod/tensura-reincarnated">Modrinth</a> &middot; <a href="https://tensura.wiki.gg/">Tensura Wiki</a> &middot; <a href="https://blog.curseforge.com/best-minecraft-performance-mods/">Performance Mods Guide</a> &middot; <a href="https://brainbound.blog/bsl-shaders-2025-guide">BSL Guide</a></p>
-  </footer>
+    sec_mods: 'Core Mods Overview',
+    col_mod: 'Mod', col_func: 'Function', col_cat: 'Category',
+    m01: 'Unique skill system from the anime, race evolution, Demon Lord progression',
+    m02: 'Enemies scale dynamically with all players&rsquo; progression',
+    m03: 'Full colony building system with AI citizens and buildings',
+    m04: 'NPC interaction, trade and family &mdash; villagers come to life',
+    m05: 'Redstone-free automation with gears, conveyors and machines',
+    m06: 'Railway network: trains, cargo transport and signal control',
+    m07: 'Dragons, griffins, sea serpents &mdash; powerful wilderness creatures',
+    m08: 'Summon portal challenges with custom boss waves and rewards',
+    m09: 'Rare loot and powerful items from Cataclysm boss drops',
+    m10: 'Season system with effects on crops, biomes and the world',
+    m11: 'Extended enchanting system with runes and unique effects',
+    m12: 'Weapon mastery: level up through combat experience with different weapon types',
+    m13: 'High-performance rendering engine + shader support (fully replaces OptiFine)',
+    m14: 'Startup time, RAM usage and code optimizations for heavy modpacks',
+    m15: 'Skip rendering invisible entities &amp; blocks &mdash; massive FPS improvement',
+    cat_core: 'Core', cat_balance: 'Balance', cat_build: 'Settlement',
+    cat_ind: 'Industry', cat_boss: 'Bosses', cat_world: 'World',
+    cat_magic: 'Magic', cat_combat: 'Combat', cat_perf: 'Performance',
 
-</div>
+    sec_expansion: 'Expansion Plan',
+    exp_magic_h: 'Magic Mods (thematic fit)',
+    exp_magic_intro: 'Recommended magic expansions for Tensura Abyss on 1.21.1 NeoForge &mdash; all thematically aligned with the skill and evolution system of Tensura.',
+    col_fit: 'Thematic Fit', col_compat: 'Compatibility',
+    ars_fit: 'Skill-based spellcasting &mdash; mirrors Rimuru&rsquo;s skill absorption. Deep crafting progression system.',
+    iron_fit: 'D&amp;D-inspired combat magic with classes and leveling. Fits the Tensura evolution mechanic.',
+    malum_fit: 'Dark ritual magic and soul system &mdash; perfect for the &ldquo;Abyss&rdquo; theme of this modpack.',
+    apo_fit: 'Enchanting overhaul for deeper enchantments. Needs load-order fix (before Tensura).',
+    compat_test: 'Test first',
+    compat_order: 'Load-Order',
+
+    exp_addon_h: 'Tensura Add-ons (Recommended)',
+    col_highlight: 'Highlight',
+    add1: '9+ new races, 29 Ultimate Skills, 18 Unique Skills &mdash; must have for 1.21.1',
+    add2: 'Skill locking, prestige system, boss-kill mechanic &mdash; auto config patcher included',
+    add3: 'New bosses: Rimuru, Carrion, Luminous (official ManasMods expansion)',
+    add4: 'Slime evolution: Slime &rarr; Dark Slime &rarr; Abyss Slime &rarr; Eldritch Slime',
+    add5: 'Train subordinates, transfer skills, own mastery system (1.21.1)',
+    add6: 'Cross-anime: Ex-Machina, Fl&uuml;gel, Dragonia + Ultimate Skills Losen &amp; Tengeki',
+    add7: '10 custom race lines, Hyperbolic Chamber training dimension, boss stat integration',
+    exp_warn: '<strong>Version check:</strong> Not all add-ons are available for 1.21.1. Ani&rsquo;s Addon, Dungeon, and Smoothcraft only exist for 1.19.2 Forge. Always check the file list on CurseForge before installing.',
+
+    sec_perf: 'Performance Stack',
+    col_role: 'Function', col_prio: 'Priority',
+    p01: 'High-performance rendering engine (Sodium port for NeoForge)',
+    p02: 'Shader support for Complementary, BSL, Sildur&rsquo;s, etc.',
+    p03: 'Reduce RAM usage by up to 50%',
+    p04: 'Startup time, RAM usage and code fixes for heavy modpacks',
+    p05: 'Skip rendering invisible entities and blocks &mdash; big FPS gain',
+    p06: 'Accelerate GUI, text and entity rendering',
+    p07: 'Group XP orbs &mdash; prevents entity lag after fights',
+    prio_req: 'Required', prio_rec: 'Recommended', prio_opt: 'Optional',
+    perf_ram: '<strong>RAM:</strong> <strong>6&ndash;8&thinsp;GB</strong> for Tensura Abyss with 200+ mods. Use Java 21 (better GC). More than 8&thinsp;GB causes longer GC pauses and <em>worsens</em> performance.',
+    perf_noop: '<strong>NEVER install OptiFine!</strong> OptiFine is incompatible with Embeddium and causes sensitivity bugs + rendering conflicts with Tensura. Only alternative: Embeddium + Oculus.',
+    perf_shader_h: 'Shader Recommendations',
+    col_shader: 'Shader', col_gpu: 'Hardware', col_note: 'Tip',
+    sh1_gpu: 'GTX 1660 &ndash; RTX 3070+',
+    sh1_note: 'Best balance. Reduce Shadow Resolution from 4096 &rarr; 2048 for 30&ndash;50% FPS gain.',
+    sh2_gpu: 'RTX 2060+',
+    sh2_note: 'Maximum options. Disable Depth of Field + Motion Blur for more FPS.',
+    sh3_gpu: 'Low-End / GTX 1050',
+    sh3_note: 'Runs on almost anything. All effects optionally disableable.',
+
+    sec_install: 'Installation',
+    s1_t: 'Install CurseForge App',
+    s1_d: 'Download and install the CurseForge App from curseforge.com.',
+    s2_t: 'Search for the Modpack',
+    s2_d: 'In the app: Minecraft &rarr; search &ldquo;Tensura Abyss&rdquo; &rarr; select the pack.',
+    s3_t: 'Install &amp; Download',
+    s3_d: 'Click &ldquo;Install&rdquo; &mdash; the app downloads all mods automatically.',
+    s4_t: 'Set RAM to 6 GB',
+    s4_d: 'CurseForge App &rarr; Profile Settings &rarr; Java Settings &rarr; 6144 MB RAM.',
+    s5_t: 'Play',
+    s5_d: 'Launch the pack via the CurseForge App. First launch takes 3&ndash;8 minutes. Enjoy!',
+    install_tip: '<strong>Important:</strong> Do not update mods manually &mdash; the pack relies on specific mod versions. Updates come as new pack versions via CurseForge.',
+
+    sec_compat: 'Compatibility &amp; Testing',
+    compat_known_h: 'Known Conflicts',
+    col_mod2: 'Mod', col_issue: 'Issue', col_fix: 'Fix',
+    c1_i: 'Feature Order Cycle &mdash; world gen crash',
+    c1_f: 'Install Tensura-BYG Patch (1.19.2 only)',
+    c2_i: 'Duplicate registry key for Chest Boat',
+    c2_f: 'Remove Eldritch End or wait for update',
+    c3_i: 'Armor rendering conflict with Tensura',
+    c3_f: 'Tensura Epic Fight Compatibility Datapack',
+    c4_i: 'Mixin conflict with CombatRules class',
+    c4_f: 'Load order: Apotheosis before Tensura',
+    c5_i: 'Sensitivity bugs, camera spins, rendering conflicts',
+    c5_f: 'Remove OptiFine completely, use Embeddium + Oculus',
+    test_h: 'Test Checklist Before Publishing',
+    t1: 'Check crash-reports/ folder after a fresh launch',
+    t2: 'Filter logs/latest.log for ERROR and WARN',
+    t3: 'Check F3 screen: TPS should be &ge; 18.0',
+    t4: 'Test a new world in Superflat (fastest world generation)',
+    t5: 'Run /kill @e &rarr; TPS improvement reveals entity lag',
+    t6: 'Memory monitor: RAM usage &le; 80% after 30 min of playtime',
+    t7: 'NEVER install OptiFine (conflicts with Embeddium)',
+    t8: 'After mod updates: check crash log for Mixin errors',
+    mouse_h: 'Mouse Sensitivity Fix',
+    mouse_desc: 'If sensitivity resets to 0 after mod updates: Set these values in <code>options.txt</code> (instance folder) and make the file <strong>read-only</strong>.',
+
+    footer_line: 'Tensura Abyss Modpack &middot; MC 1.21.1 NeoForge &middot; v3.1.5 &middot; 2026',
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = T[lang][el.dataset.i18n];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.getElementById('btn-de').classList.toggle('active', lang === 'de');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+}
+
+function toggleTheme() {
+  const r = document.documentElement;
+  const cur = r.getAttribute('data-theme') ||
+    (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+}
+
+setLang('de');
+</script>
