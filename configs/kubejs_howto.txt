@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — KUBEJS SCRIPTS EINRICHTUNG
+═══════════════════════════════════════════════════════════
+
+SCHRITT 1: KubeJS installieren
+───────────────────────────────
+KubeJS muss in deinem Modpack installiert sein.
+Für NeoForge 1.21.1: KubeJS 6 (Modrinth / CurseForge).
+
+  CurseForge: https://www.curseforge.com/minecraft/mc-mods/kubejs
+
+SCHRITT 2: Ordnerstruktur
+───────────────────────────────
+Kopiere die beiden Ordner aus diesem Repo in deinen Instanz-Ordner:
+
+  kubejs/
+  ├── server_scripts/
+  │   └── tensura_balancing.js     ← Loot & Rezepte
+  └── startup_scripts/
+      └── tensura_fixes.js         ← Item-Tags
+
+Instanz-Ordner (Standard CurseForge):
+  C:\Users\[Name]\curseforge\minecraft\Instances\Tensura Abyss\
+
+SCHRITT 3: Item-IDs herausfinden
+───────────────────────────────
+Die Scripts enthalten Platzhalter-Kommentare. Um echte Item-IDs
+zu finden:
+  1. Spiel starten
+  2. Item in die Hand nehmen
+  3. Im Chat: /kubejs hand   ← gibt die exakte Item-ID aus
+  4. ID in das Script kopieren, Kommentar entfernen
+
+Beispiel:
+  // Vorher (auskommentiert):
+  // event.add('forge:slimeballs', 'tensura_magic_growth:slime_ball');
+
+  // Nachher (aktiv, wenn ID korrekt):
+  event.add('forge:slimeballs', 'tensura_magic_growth:slime_ball');
+
+SCHRITT 4: Script testen
+───────────────────────────────
+  1. Spiel neu starten (Scripts werden beim Start geladen)
+  2. Im Chat: /kubejs reload server_scripts
+     (lädt server_scripts ohne Neustart neu)
+  3. Auf Fehler prüfen: logs/kubejs/ Ordner
+
+WICHTIG
+───────────────────────────────
+  - Keine echten Item-IDs ohne /kubejs hand verifizieren!
+    Falsche IDs führen zu stillen Fehlern oder Crashes.
+  - startup_scripts: Nur beim Spielstart geladen (kein /reload).
+  - server_scripts: Neu ladbar mit /kubejs reload server_scripts.
+
+BEISPIEL-WORKFLOW: Rezept-Gate hinzufügen
+───────────────────────────────
+Du willst, dass ein Create-Item eine Tensura-Ressource braucht:
+
+  1. Das Create-Item in die Hand nehmen → /kubejs hand
+     Ergebnis: z.B. "create:brass_ingot"
+
+  2. Das Tensura-Gate-Item in die Hand nehmen → /kubejs hand
+     Ergebnis: z.B. "tensura_magic_growth:magicule_crystal"
+
+  3. In tensura_balancing.js eintragen:
+     event.remove({ id: 'create:brass_ingot' });
+     event.shapeless('create:brass_ingot', [
+       'create:zinc_ingot',
+       'create:copper_ingot',
+       'tensura_magic_growth:magicule_crystal'
+     ]);
+
+  4. /kubejs reload server_scripts → fertig!
+
+═══════════════════════════════════════════════════════════
