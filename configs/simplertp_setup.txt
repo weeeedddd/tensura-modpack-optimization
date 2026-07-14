@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — RANDOM TELEPORT (RTP) EINRICHTUNG
+═══════════════════════════════════════════════════════════
+
+PROBLEM
+───────────────────────────────
+Ein unbegrenzter Random-Teleporter kann Spieler 50.000+ Blöcke
+weit wegteleportieren. Das erzwingt Chunk-Generation weit
+außerhalb des geladenen Bereichs → Server-Freeze/Crash durch
+extreme Chunk-Load-Spitzen.
+
+GEWÄHLTER MOD: SimpleRTP
+───────────────────────────────
+CurseForge: https://legacy.curseforge.com/minecraft/mc-mods/simplertp
+  projectID: 1438295
+  fileID (NeoForge 1.21.1): 7509301
+
+Warum SimpleRTP:
+  - Natives NeoForge 1.21.1 Build vorhanden
+  - Eingebaute Safe-Landing-Erkennung (kein Lava/Void/Ozean-Spawn)
+  - Konfigurierbare Reichweite, Cooldown, Permissions
+  - Aktiv gepflegt (Multiloader: Forge/Fabric/NeoForge)
+
+Bereits im Pack (nicht als RTP-Ersatz geeignet):
+  - FTB Essentials (projectID 410811) — hat /spawn, aber KEIN
+    verifiziertes /rtp mit Safe-Landing-Scan. SimpleRTP ergänzt
+    das Pack zusätzlich, ersetzt FTB Essentials nicht.
+
+CONFIG-PFAD (im Instanz-Ordner)
+───────────────────────────────
+  config/simplertp-common.toml
+
+  (Falls die Datei anders heißt: Nach dem ERSTEN Serverstart mit
+  installiertem Mod im config/-Ordner nach "simplertp*" suchen —
+  der exakte Dateiname wird beim ersten Start generiert.)
+
+EMPFOHLENE CONFIG-WERTE
+───────────────────────────────
+Die folgenden Keys sind ein STARTPUNKT basierend auf den
+dokumentierten Mod-Features (Reichweite, Cooldown, Safe-Landing).
+Die exakten Key-Namen können je nach Mod-Version leicht abweichen
+— nach dem ersten Start die generierte Datei öffnen und die Namen
+mit unten abgleichen, dann Werte übertragen.
+
+  [teleport]
+    # Minimale Distanz vom Ausgangspunkt (verhindert Spawn-Kämpfe)
+    minRange = 500
+
+    # WICHTIG: Maximale Distanz auf serverfreundlichen Wert begrenzen!
+    # Empfehlung: 5000–8000 statt Standard (oft 10000+ oder unbegrenzt)
+    maxRange = 6000
+
+    # Y-Höhe für die Sicherheitssuche (Overworld-Standard)
+    searchMinY = 40
+    searchMaxY = 200
+
+  [safety]
+    # Diese Flags verhindern Teleports in gefährliches Terrain.
+    # SimpleRTP wirbt mit "safe location detection" — sicherstellen,
+    # dass diese (oder äquivalente) Flags aktiv/true sind:
+    avoidLava = true
+    avoidVoid = true
+    avoidOcean = true
+    avoidUnsafeBlocks = true      # Kakteen, Feuer, etc.
+    requireSolidGround = true
+    requireHeadroom = true        # min. 2 Blöcke Luft über Landeplatz
+
+  [cooldown]
+    # Cooldown in Sekunden zwischen zwei /rtp-Nutzungen
+    cooldownSeconds = 300         # 5 Minuten — verhindert RTP-Spam
+
+  [permissions]
+    # Falls Permission-Nodes unterstützt werden (z.B. mit LuckPerms):
+    baseCommand = "simplertp.use"
+    bypassCooldown = "simplertp.cooldown.bypass"
+
+─────────────────────────────────────────────────────────
+
+WARUM DIESE WERTE FAIR SIND
+───────────────────────────────
+  - maxRange 6000: Genug Distanz für neue Erkundungsgebiete,
+    aber Chunk-Generation bleibt in einem Bereich, den moderne
+    Server-Hardware ohne spürbaren TPS-Einbruch generieren kann.
+  - minRange 500: Verhindert, dass /rtp den Spieler direkt neben
+    den eigenen Spawn oder in Kampfsituationen teleportiert.
+  - cooldownSeconds 300: Verhindert Farming-Strategien, bei denen
+    Spieler /rtp im Sekundentakt für Loot-Chunks spammen.
+
+TESTABLAUF
+───────────────────────────────
+  1. SimpleRTP installieren (Mod + Config in den Ordner legen)
+  2. Server einmal starten → config/simplertp-common.toml wird generiert
+  3. Datei öffnen, Keys mit obiger Vorlage abgleichen, Werte setzen
+  4. Server neu starten (Config wird meist nur beim Start geladen)
+  5. Im Spiel: /rtp ausführen → Cooldown + Landeposition prüfen
+  6. Test: mehrfach /rtp direkt hintereinander → Cooldown-Meldung
+     sollte erscheinen, kein Crash, keine Landung in Lava/Ozean
+
+═══════════════════════════════════════════════════════════
