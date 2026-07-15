@@ -1,4 +1,4 @@
-<title>Tensura Abyss — Modpack v3.3.0</title>
+<title>Tensura Abyss — Modpack v3.4.0</title>
 <style>
 /* ══════════════════════════════════════════
    TENSURA ABYSS — Anime RPG Design System
@@ -310,9 +310,10 @@ footer a{color:var(--teal)}
       <a href="#install">Install</a>
       <a href="#perf">Performance</a>
       <a href="#progression">Progression</a>
+      <a href="#shadow">Shadow</a>
       <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge &#8599;</a>
     </div>
-    <span class="nav-badge">v3.3.0 &middot; NeoForge 1.21.1</span>
+    <span class="nav-badge">v3.4.0 &middot; NeoForge 1.21.1</span>
   </div>
 </nav>
 
@@ -322,7 +323,7 @@ footer a{color:var(--teal)}
 <header class="hero">
   <div class="hero-eyebrow">Minecraft Modpack</div>
   <h1 class="hero-title">Tensura <span class="glow">Abyss</span></h1>
-  <div class="hero-ver">MC 1.21.1 &middot; NeoForge 21.1.222 &middot; 346 Mods &middot; v3.3.0</div>
+  <div class="hero-ver">MC 1.21.1 &middot; NeoForge 21.1.222 &middot; 347 Mods &middot; v3.4.0</div>
 
   <div class="hero-langs">
     <div class="h-lang de">
@@ -344,7 +345,7 @@ footer a{color:var(--teal)}
   <div class="pills">
     <span class="pill p-t">MC 1.21.1</span>
     <span class="pill p-t">NeoForge</span>
-    <span class="pill p-t">346 Mods</span>
+    <span class="pill p-t">347 Mods</span>
     <span class="pill p-g">500+ Quests</span>
     <span class="pill p-p">15 Chapters</span>
     <span class="pill p-gold">In Development</span>
@@ -401,8 +402,8 @@ footer a{color:var(--teal)}
     <div class="feat-card">
       <span class="feat-icon">&#128640;</span>
       <h3>Optimiert / Optimized Performance</h3>
-      <p class="feat-de">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stabile FPS auch mit 346 Mods und Shadern. Keine OptiFine n&ouml;tig.</p>
-      <p class="feat-en">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stable FPS even with 346 mods and shaders. No OptiFine needed.</p>
+      <p class="feat-de">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stabile FPS auch mit 347 Mods und Shadern. Keine OptiFine n&ouml;tig.</p>
+      <p class="feat-en">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stable FPS even with 347 mods and shaders. No OptiFine needed.</p>
     </div>
 
     <div class="feat-card">
@@ -417,6 +418,13 @@ footer a{color:var(--teal)}
       <h3>Server-freundliches RTP</h3>
       <p class="feat-de">SimpleRTP begrenzt Random-Teleports auf 6.000 Blocks mit Sicherheits-Scan (kein Lava/Ozean) &mdash; verhindert Server-Crashes durch extreme Chunk-Generierung.</p>
       <p class="feat-en">SimpleRTP caps random teleports at 6,000 blocks with a safety scan (no lava/ocean) &mdash; prevents server crashes from extreme chunk generation.</p>
+    </div>
+
+    <div class="feat-card">
+      <span class="feat-icon">&#127761;</span>
+      <h3>Eminence in Shadow System <span class="tag tag-p">NEU</span></h3>
+      <p class="feat-de">Neues Fraktions-System: Werde Teil des Shadow Garden, farme Dunklen &Auml;ther, entfessle den &bdquo;I Am Atomic&ldquo;-Skill, trage Slime Suits und verteidige dein Mitsugoshi-Imperium gegen den Kult von Diablos.</p>
+      <p class="feat-en">New faction system: join the Shadow Garden, farm Dark Aether, unleash the &ldquo;I Am Atomic&rdquo; skill, wear Slime Suits, and defend your Mitsugoshi empire against the Cult of Diablos.</p>
     </div>
 
   </div>
@@ -540,10 +548,22 @@ footer a{color:var(--teal)}
           <td><span class="tag tag-t">Addon A</span></td>
         </tr>
         <tr>
+          <td><strong>Paladins &amp; Priests</strong></td>
+          <td>Iron&rsquo;s-Spells-Addon: heilige Klassen, Segen &amp; neue Sprüche</td>
+          <td>Iron&rsquo;s Spells addon: holy classes, blessings &amp; new spells</td>
+          <td><span class="tag tag-g">Magie</span></td>
+        </tr>
+        <tr>
           <td><strong>SimpleRTP</strong></td>
           <td>Random-Teleport mit Safe-Landing-Scan, auf 6.000 Blocks begrenzt</td>
           <td>Random teleport with safe-landing scan, capped at 6,000 blocks</td>
           <td><span class="tag tag-gold">Server</span></td>
+        </tr>
+        <tr>
+          <td><strong>Shadow Garden (KubeJS)</strong></td>
+          <td>Eigenes Fraktions-System: Dunkler &Auml;ther, I-Am-Atomic-Skill, Slime Suits, Kult-Raids, Ränge</td>
+          <td>Custom faction system: Dark Aether, I-Am-Atomic skill, Slime Suits, cult raids, ranks</td>
+          <td><span class="tag tag-p">System</span></td>
         </tr>
       </tbody>
     </table>
@@ -581,11 +601,11 @@ footer a{color:var(--teal)}
       <div class="step-body">
         <div class="step-de">
           <strong>Tensura Abyss suchen &amp; installieren</strong>
-          <p>In der App: Minecraft &rarr; Suchfeld &rarr; <strong>&bdquo;Tensura Abyss&ldquo;</strong> &rarr; Pack ausw&auml;hlen &rarr; <em>Install</em> klicken. Alle 346 Mods werden automatisch heruntergeladen.</p>
+          <p>In der App: Minecraft &rarr; Suchfeld &rarr; <strong>&bdquo;Tensura Abyss&ldquo;</strong> &rarr; Pack ausw&auml;hlen &rarr; <em>Install</em> klicken. Alle 347 Mods werden automatisch heruntergeladen.</p>
         </div>
         <div class="step-en">
           <strong>Search &amp; install Tensura Abyss</strong>
-          <p>In the app: Minecraft &rarr; search field &rarr; <strong>&ldquo;Tensura Abyss&rdquo;</strong> &rarr; select pack &rarr; click <em>Install</em>. All 346 mods download automatically.</p>
+          <p>In the app: Minecraft &rarr; search field &rarr; <strong>&ldquo;Tensura Abyss&rdquo;</strong> &rarr; select pack &rarr; click <em>Install</em>. All 347 mods download automatically.</p>
         </div>
       </div>
     </div>
@@ -818,10 +838,73 @@ footer a{color:var(--teal)}
   </div>
 </section>
 
+<!-- ════ 07 EMINENCE IN SHADOW ════ -->
+<section id="shadow">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <div>
+      <h2 class="sec-title">The Eminence in Shadow &mdash; Fraktions-System</h2>
+      <p class="sec-sub">Neues Endgame- &amp; Fraktions-Update &mdash; New endgame &amp; faction update</p>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <span class="feat-icon">&#127761;</span>
+      <h3>Dunkler &Auml;ther &amp; Dunkler Schleim</h3>
+      <p class="feat-de">Zwei neue Endgame-Ressourcen ersetzen Diamanten-Upgrades. Dunkler &Auml;ther (Netherstern-gated) reworkt Netherit-Waffen/-R&uuml;stung und schaltet das Tensura-Breath-System frei.</p>
+      <p class="feat-en">Two new endgame resources replace diamond upgrades. Dark Aether (Nether-Star gated) reworks Netherite gear and unlocks the Tensura Breath system.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#9889;</span>
+      <h3>&bdquo;I Am Atomic&ldquo; Ultimate</h3>
+      <p class="feat-de">Verbraucht Mana + 1x Dunklen &Auml;ther: riesige neon-blaue Partikelexplosion + massiver AoE-Schaden an allen Mobs. Zerst&ouml;rt <strong>keine Bl&ouml;cke</strong> &mdash; kein Server-Lag.</p>
+      <p class="feat-en">Consumes mana + 1 Dark Aether: huge neon-blue particle blast + massive AoE damage to all mobs. Destroys <strong>no blocks</strong> &mdash; zero server lag.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#129714;</span>
+      <h3>Slime Suits &amp; Kult-Raids</h3>
+      <p class="feat-de">Tarne deine Kolonie als Mitsugoshi-Imperium. Der Kult von Diablos startet Raids; Kult-Drops craften Slime Suits (Stealth-R&uuml;stung: Speed + Defense + Unsichtbarkeit).</p>
+      <p class="feat-en">Disguise your colony as the Mitsugoshi empire. The Cult of Diablos raids you; cult drops craft Slime Suits (stealth armor: speed + defense + invisibility).</p>
+    </div>
+  </div>
+
+  <div class="bi-grid">
+    <div class="bi-col de">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-de">DE</span>
+        <h3>So funktioniert&rsquo;s</h3>
+      </div>
+      <p><strong>Ressourcen:</strong> Schleimb&auml;lle + Wither-Rose &rarr; Dunkler Schleim. 6&times; Dunkler Schleim + 2&times; Echo-Scherbe + Netherstern &rarr; Dunkler &Auml;ther.</p>
+      <p><strong>I Am Atomic:</strong> Katalysator craften (Dunkler &Auml;ther + Obsidian + Netherstern), Rechtsklick &rarr; 80 Schaden im Radius 14, 2 Min. Cooldown.</p>
+      <p><strong>Mitsugoshi:</strong> Trade Ledger craften &rarr; Rechtsklick aktiviert Tarnung + Kult-Raids (4&ndash;7 Kultisten + Ritter).</p>
+      <p><strong>R&auml;nge:</strong> Shadow-Pledges einl&ouml;sen &rarr; automatische Chat-Pr&auml;fixe <code>[Shadow]</code> &rarr; <code>[Numbers]</code> &rarr; <code>[Seven Shadows]</code> &rarr; <code>[Shadow Lord]</code>.</p>
+    </div>
+    <div class="bi-col en">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-en">EN</span>
+        <h3>How it works</h3>
+      </div>
+      <p><strong>Resources:</strong> Slimeballs + Wither Rose &rarr; Dark Slime. 6&times; Dark Slime + 2&times; Echo Shard + Nether Star &rarr; Dark Aether.</p>
+      <p><strong>I Am Atomic:</strong> craft the catalyst (Dark Aether + Obsidian + Nether Star), right-click &rarr; 80 damage in radius 14, 2 min cooldown.</p>
+      <p><strong>Mitsugoshi:</strong> craft the Trade Ledger &rarr; right-click enables disguise + cult raids (4&ndash;7 cultists + knight).</p>
+      <p><strong>Ranks:</strong> redeem Shadow Pledges &rarr; automatic chat prefixes <code>[Shadow]</code> &rarr; <code>[Numbers]</code> &rarr; <code>[Seven Shadows]</code> &rarr; <code>[Shadow Lord]</code>.</p>
+    </div>
+  </div>
+
+  <div class="callout cl-gold">
+    <span class="callout-i">&#9888;</span>
+    <div>
+      <strong>DE:</strong> Das System liegt in <code>kubejs/</code> (startup + server scripts). Setup-Anleitung: <code>configs/shadow_garden_setup.txt</code>. Das Tensura-Breath-Unlock-Command muss im Spiel verifiziert werden (Kommentar in <code>shadow_garden.js</code>).<br>
+      <strong>EN:</strong> The system lives in <code>kubejs/</code> (startup + server scripts). Setup guide: <code>configs/shadow_garden_setup.txt</code>. The Tensura Breath unlock command must be verified in-game (comment in <code>shadow_garden.js</code>).
+    </div>
+  </div>
+</section>
+
 <!-- ════ FOOTER ════ -->
 <footer>
   <div class="footer-brand">&#9889; Tensura Abyss</div>
-  <p>Minecraft 1.21.1 &middot; NeoForge 21.1.222 &middot; 346 Mods &middot; v3.3.0 &middot; 2026</p>
+  <p>Minecraft 1.21.1 &middot; NeoForge 21.1.222 &middot; 347 Mods &middot; v3.4.0 &middot; 2026</p>
   <p style="margin:1rem 0 .5rem">
     <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge</a> &ensp;&middot;&ensp;
     <a href="https://github.com/weeeedddd/tensura-modpack-optimization" target="_blank">GitHub</a> &ensp;&middot;&ensp;
