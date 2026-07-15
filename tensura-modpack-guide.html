@@ -311,6 +311,7 @@ footer a{color:var(--teal)}
       <a href="#perf">Performance</a>
       <a href="#progression">Progression</a>
       <a href="#shadow">Shadow</a>
+      <a href="#abyss">Abyss</a>
       <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge &#8599;</a>
     </div>
     <span class="nav-badge">v3.4.0 &middot; NeoForge 1.21.1</span>
@@ -425,6 +426,13 @@ footer a{color:var(--teal)}
       <h3>Eminence in Shadow System <span class="tag tag-p">NEU</span></h3>
       <p class="feat-de">Neues Fraktions-System: Werde Teil des Shadow Garden, farme Dunklen &Auml;ther, entfessle den &bdquo;I Am Atomic&ldquo;-Skill, trage Slime Suits und verteidige dein Mitsugoshi-Imperium gegen den Kult von Diablos.</p>
       <p class="feat-en">New faction system: join the Shadow Garden, farm Dark Aether, unleash the &ldquo;I Am Atomic&rdquo; skill, wear Slime Suits, and defend your Mitsugoshi empire against the Cult of Diablos.</p>
+    </div>
+
+    <div class="feat-card">
+      <span class="feat-icon">&#127756;</span>
+      <h3>Shadow Abyss Dimension <span class="tag tag-p">NEU</span></h3>
+      <p class="feat-de">Eine eigene Dimension mit 3 d&uuml;steren Biomen (Schleim-Sumpf, fl&uuml;sternde Leere, Ruinen-Heiligtum). Erbt Tectonics episches Gel&auml;nde &mdash; betreten &uuml;ber ein Aether-Portal.</p>
+      <p class="feat-en">A custom dimension with 3 dark biomes (slime marsh, whispering void, ruined sanctuary). Inherits Tectonic&rsquo;s epic terrain &mdash; entered via an Aether portal.</p>
     </div>
 
   </div>
@@ -564,6 +572,18 @@ footer a{color:var(--teal)}
           <td>Eigenes Fraktions-System: Dunkler &Auml;ther, I-Am-Atomic-Skill, Slime Suits, Kult-Raids, Ränge</td>
           <td>Custom faction system: Dark Aether, I-Am-Atomic skill, Slime Suits, cult raids, ranks</td>
           <td><span class="tag tag-p">System</span></td>
+        </tr>
+        <tr>
+          <td><strong>Shadow Abyss (Dimension)</strong></td>
+          <td>Eigene Dimension: erbt Tectonic-Gel&auml;nde, 3 Abyss-Biome, Aether-Portal</td>
+          <td>Custom dimension: inherits Tectonic terrain, 3 abyss biomes, Aether portal</td>
+          <td><span class="tag tag-p">Worldgen</span></td>
+        </tr>
+        <tr>
+          <td><strong>Tectonic + Terralith</strong></td>
+          <td>Worldgen-Overhaul: riesige Schluchten, Klippen &amp; realistische Biome</td>
+          <td>Worldgen overhaul: huge canyons, cliffs &amp; realistic biomes</td>
+          <td><span class="tag tag-g">Worldgen</span></td>
         </tr>
       </tbody>
     </table>
@@ -897,6 +917,69 @@ footer a{color:var(--teal)}
     <div>
       <strong>DE:</strong> Das System liegt in <code>kubejs/</code> (startup + server scripts). Setup-Anleitung: <code>configs/shadow_garden_setup.txt</code>. Das Tensura-Breath-Unlock-Command muss im Spiel verifiziert werden (Kommentar in <code>shadow_garden.js</code>).<br>
       <strong>EN:</strong> The system lives in <code>kubejs/</code> (startup + server scripts). Setup guide: <code>configs/shadow_garden_setup.txt</code>. The Tensura Breath unlock command must be verified in-game (comment in <code>shadow_garden.js</code>).
+    </div>
+  </div>
+</section>
+
+<!-- ════ 08 SHADOW ABYSS DIMENSION ════ -->
+<section id="abyss">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <div>
+      <h2 class="sec-title">The Shadow Abyss &mdash; Eigene Dimension</h2>
+      <p class="sec-sub">Crash-sichere Worldgen-Integration &mdash; Crash-safe worldgen integration</p>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <span class="feat-icon">&#127807;</span>
+      <h3>Slime Rot Marshes</h3>
+      <p class="feat-de">D&uuml;sterer Schleim-Sumpf mit dunklem Wasser, giftgr&uuml;nem Nebel und Schleim-Spawns.</p>
+      <p class="feat-en">Dark slime marsh with murky water, toxic-green fog and slime spawns.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#127788;</span>
+      <h3>Whispering Void</h3>
+      <p class="feat-de">Aschfahler, unheimlicher Nadelwald &mdash; graue T&ouml;ne, Phantome und Skelette.</p>
+      <p class="feat-en">Ashen, eerie coniferous forest &mdash; grey tones, phantoms and skeletons.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#127963;</span>
+      <h3>Ruined Sanctuary</h3>
+      <p class="feat-de">Seltenes Biom mit antiken Ruinen &mdash; Heimat von Vindikatoren und Zauberern.</p>
+      <p class="feat-en">Rare biome with ancient ruins &mdash; home to vindicators and evokers.</p>
+    </div>
+  </div>
+
+  <div class="bi-grid">
+    <div class="bi-col de">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-de">DE</span>
+        <h3>Worldgen &amp; Portal</h3>
+      </div>
+      <p><strong>Vererbung:</strong> Die Dimension nutzt den Generator <code>minecraft:noise</code> mit dem Preset <code>tectonic:overworld</code> &mdash; sie erbt Tectonics riesige Schluchten &amp; Klippen 1:1.</p>
+      <p><strong>Biome:</strong> Der <code>multi_noise</code>-biome_source generiert dort ausschlie&szlig;lich die 3 Abyss-Biome &mdash; l&uuml;ckenlose Abdeckung, kein Worldgen-Crash.</p>
+      <p><strong>Atmosph&auml;re:</strong> Kein Himmelslicht, End-Sternenhimmel, fixierte Nacht &mdash; echtes Abyss-Feeling.</p>
+      <p><strong>Portal:</strong> Rahmen craften (Obsidian + Crying Obsidian + Dunkler &Auml;ther), platzieren und mit <strong>Dunklem &Auml;ther</strong> rechtsklicken &rarr; Reise in den Abyss.</p>
+    </div>
+    <div class="bi-col en">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-en">EN</span>
+        <h3>Worldgen &amp; Portal</h3>
+      </div>
+      <p><strong>Inheritance:</strong> The dimension uses the <code>minecraft:noise</code> generator with the <code>tectonic:overworld</code> preset &mdash; it inherits Tectonic&rsquo;s huge canyons &amp; cliffs 1:1.</p>
+      <p><strong>Biomes:</strong> The <code>multi_noise</code> biome source generates only the 3 abyss biomes there &mdash; gapless coverage, no worldgen crash.</p>
+      <p><strong>Atmosphere:</strong> No skylight, End starfield sky, fixed night &mdash; true abyss feeling.</p>
+      <p><strong>Portal:</strong> craft a frame (Obsidian + Crying Obsidian + Dark Aether), place it and right-click with <strong>Dark Aether</strong> &rarr; travel to the abyss.</p>
+    </div>
+  </div>
+
+  <div class="callout cl-gold">
+    <span class="callout-i">&#9888;</span>
+    <div>
+      <strong>DE:</strong> Dateien liegen in <code>kubejs/data/tensura_abyss/</code> (Auto-Datapack). Setup + Tectonic-Fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender ist f&uuml;r die eigene Dimension nicht n&ouml;tig (nur f&uuml;r Overworld-Injektion &mdash; optionales Java-Template beiliegend).<br>
+      <strong>EN:</strong> Files live in <code>kubejs/data/tensura_abyss/</code> (auto datapack). Setup + Tectonic fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender isn&rsquo;t needed for the custom dimension (only for overworld injection &mdash; optional Java template included).
     </div>
   </div>
 </section>

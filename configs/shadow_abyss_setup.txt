@@ -1,0 +1,81 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — DIMENSION "THE SHADOW ABYSS" (SETUP)
+═══════════════════════════════════════════════════════════
+
+Eine crash-sichere Custom-Dimension nach dem Vererbungs-Prinzip:
+sie uebernimmt das Gelaende-Preset von Tectonic und generiert dort
+NUR unsere drei duesteren Abyss-Biome.
+
+DATEIEN (liegen bereits im Repo, werden ueber kubejs/data automatisch
+als Datapack geladen — kein separates Aktivieren noetig):
+
+  kubejs/data/tensura_abyss/dimension_type/shadow_abyss.json
+  kubejs/data/tensura_abyss/dimension/shadow_abyss.json
+  kubejs/data/tensura_abyss/worldgen/biome/slime_rot_marshes.json
+  kubejs/data/tensura_abyss/worldgen/biome/whispering_void.json
+  kubejs/data/tensura_abyss/worldgen/biome/ruined_sanctuary.json
+
+  kubejs/startup_scripts/shadow_abyss_blocks.js   (Portal-Rahmen-Block)
+  kubejs/server_scripts/shadow_abyss_portal.js    (Rezept + Teleport)
+
+WICHTIG: Dimensionen werden bei der WELT-ERSTELLUNG geladen. In einer
+bereits existierenden Welt taucht die Dimension ggf. erst nach
+/reload + Neuladen der Chunks oder in einer neuen Welt auf.
+
+─────────────────────────────────────────────────────────
+1) VERERBUNG DES GELAENDES (settings)
+───────────────────────────────
+  Die Dimension nutzt:
+    "generator": { "type": "minecraft:noise",
+                   "settings": "tectonic:overworld", ... }
+  -> uebernimmt Tectonics riesige Schluchten/Klippen 1:1.
+
+  ⚠ FALLBACK (falls Crash "Unknown noise settings tectonic:overworld"):
+     Ersetze in shadow_abyss.json "tectonic:overworld" durch
+     "minecraft:overworld". Dann wird das Vanilla-Overworld-Preset
+     genutzt (kein Crash, nur ohne Tectonic-Gelaende).
+     Pruefe den exakten Preset-Namen ggf. in der Tectonic-Doku /
+     im Log (data/…/worldgen/noise_settings/…).
+
+2) BIOME-VERTEILUNG (crash-sicher, LUECKENLOS)
+───────────────────────────────
+  biome_source = minecraft:multi_noise mit 3 Biomen. Der Temperatur-
+  Bereich ist LUECKENLOS abgedeckt (marshes -1.0..0.1, void 0.1..1.0),
+  ruined_sanctuary ist ein seltenes, schmales Ueberlappungs-Band ->
+  keine "missing biome"-Luecken, kein Worldgen-Crash.
+
+  Duesteres Setting: has_skylight=false, effects=the_end (dunkler
+  Sternenhimmel), fixed_time=18000, ambient_light=0.1.
+
+  Features (Baeume/Erze/Deko) sind bewusst LEER gelassen ("features": [])
+  fuer maximale Crash-Sicherheit. Zum Ergaenzen: pro Biom die 11
+  Decoration-Steps als Arrays von PlacedFeature-IDs eintragen, z.B.
+  Vanilla-Refs wie "minecraft:trees_taiga". Erst nach dem Testen der
+  Basis-Dimension hinzufuegen!
+
+3) PORTAL-SYSTEM
+───────────────────────────────
+  - Rahmen craften: 8x Obsidian + 4x Crying Obsidian + 1x Dunkler Aether
+    (Muster O-C-O / C-A-C / O-C-O) -> 4x Abyss Portal Frame.
+  - Einen Rahmen-Block platzieren, mit §5Dunklem Aether§7 rechtsklicken
+    -> Reise in den Shadow Abyss (verbraucht 1x Aether).
+  - Erneuter Rechtsklick auf einen Rahmen IN der Abyss -> zurueck in die
+    Overworld. Der Teleport behaelt X/Z und setzt eine sichere Y-Hoehe.
+
+─────────────────────────────────────────────────────────
+HINWEIS ZU TERRABLENDER (ehrlich & wichtig)
+───────────────────────────────
+  TerraBlender dient dazu, Biome in BESTEHENDE Dimensionen (Overworld/
+  Nether) einzuspeisen — ueber eine Java-"Region"-Klasse. Fuer unsere
+  EIGENE Dimension ist TerraBlender NICHT noetig und wuerde eher
+  Konflikte erzeugen: Wir listen die Biome direkt im multi_noise-
+  biome_source der Dimension. Das ist der stabile, empfohlene Weg.
+
+  NUR falls du dieselben Biome ZUSAETZLICH in der normalen Overworld
+  willst, braucht es eine Java-Region (KubeJS kann das nicht). Ein
+  minimales Template liegt bei:
+    java_templates/ShadowAbyssRegion.java
+  Das ist echter Java-Mod-Code (kein KubeJS) und muss kompiliert werden
+  — optional, fuer Fortgeschrittene.
+
+═══════════════════════════════════════════════════════════

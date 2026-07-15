@@ -283,6 +283,31 @@ def draw_suit(rects, size=16):
     return img
 
 # ─────────────────────────────────────────────────────────────
+# Block: Abyss Portal Frame (16x16) — dunkler Obsidian + teal Rune
+# ─────────────────────────────────────────────────────────────
+def draw_portal_frame(size=16):
+    img = img_new(size)
+    R_OBS = [(8,6,16),(16,12,28),(26,20,44),(38,30,64),(54,44,88)]
+    for y in range(size):
+        for x in range(size):
+            # obsidianartiger Untergrund mit leichtem Rauschen
+            n = ((x*7 + y*13) % 5) / 4.0
+            t = 0.18 + 0.5*n
+            if x in (0,15) or y in (0,15): t = 0.05    # Fassung/Rahmen
+            img[y][x] = shade(R_OBS, t)
+    # eingelassene teal Rune (Raute + Kern)
+    rune = [(8,3),(7,4),(9,4),(6,5),(10,5),(5,6),(11,6),(6,7),(10,7),
+            (7,8),(9,8),(8,9),(8,10),(7,11),(9,11),(8,12)]
+    for (x,y) in rune:
+        setp(img, x, y, [46,214,204,235])
+    for (x,y) in [(8,7),(8,8),(7,7),(9,7)]:
+        setp(img, x, y, [150,245,238,255])
+    # Eck-Glimmer
+    for (x,y) in [(2,2),(13,2),(2,13),(13,13)]:
+        setp(img, x, y, [60,200,200,180])
+    return img
+
+# ─────────────────────────────────────────────────────────────
 # Armor-Layer (worn) 64x32 — passend zur Slime-Optik, nicht flach
 # ─────────────────────────────────────────────────────────────
 def armor_layer(w=64, h=32):
@@ -397,6 +422,9 @@ def main():
 
     write_png(f"{root}/models/armor/slime_suit_layer_1.png", armor_layer())
     write_png(f"{root}/models/armor/slime_suit_layer_2.png", armor_layer())
+
+    # Block-Textur: Abyss Portal Frame
+    write_png(f"{root}/block/abyss_portal_frame.png", draw_portal_frame())
 
     # Resourcepack-Icon
     write_png("resourcepacks/TensuraAbyss_ShadowGarden/pack.png", pack_icon())
