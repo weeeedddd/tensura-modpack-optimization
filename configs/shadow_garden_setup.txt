@@ -107,4 +107,44 @@ OFFENER PUNKT (im Spiel verifizieren)
   Bis dahin zaehlt Dark-Aether-Rechtsklick eine Breath-Stufe hoch
   und gibt Feedback (Sound/Partikel/Nachricht).
 
+─────────────────────────────────────────────────────────
+TEXTUREN (bereits enthalten)
+───────────────────────────────
+  Basis-Item-Icons (16x16) liegen unter:
+    kubejs/assets/kubejs/textures/item/<id>.png
+  fuer alle 10 Items (dark_slime, dark_aether, i_am_atomic_catalyst,
+  cult_insignia, mitsugoshi_ledger, shadow_pledge_note und die 4
+  slime_suit-Teile). KubeJS nutzt sie automatisch (kein Model-JSON noetig).
+  Neu erzeugen/anpassen: python3 tools/gen_textures.py
+
+  Getragene Slime-Suit-Optik (optional):
+    kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_1.png
+    kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_2.png
+  Diese 64x32-Layer sind das 1.21.1-Format fuer Ruestung am Koerper.
+  Aktuell nutzt die Ruestung .tier('netherite') -> Netherit-Optik am Body.
+  Fuer die Slime-Optik einen eigenen Armor-Tier registrieren, z.B.:
+
+    // startup_scripts (ergaenzend, Syntax je nach KubeJS-Build pruefen):
+    // ItemEvents.armorTierRegistry(event => {
+    //   event.add('slime_suit', tier => {
+    //     tier.durabilityMultiplier = 37
+    //     tier.slotProtections = [3, 6, 8, 3]   // FEET, LEGS, BODY, HEAD
+    //     tier.toughness = 3.0
+    //     tier.knockbackResistance = 0.1
+    //     tier.enchantmentValue = 15
+    //     tier.equipSound = 'minecraft:item.armor.equip_netherite'
+    //     tier.repairIngredient = 'kubejs:dark_slime'
+    //   })
+    // })
+    // Dann in shadow_garden_items.js .tier('netherite') -> .tier('slime_suit')
+
+─────────────────────────────────────────────────────────
+FTB QUESTS KAPITEL
+───────────────────────────────
+  Ein fertiges Quest-Kapitel liegt bei:
+    ftbquests/config/ftbquests/quests/chapters/shadow_garden.snbt
+  Den config/-Ordner ins Instanz-Root kopieren -> erscheint als Kapitel
+  "The Eminence in Shadow" im Questbuch. Details: ftbquests/README.md
+  (Benoetigt FTB Quests + FTB Library fuer NeoForge 1.21.1.)
+
 ═══════════════════════════════════════════════════════════

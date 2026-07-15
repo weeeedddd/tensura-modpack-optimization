@@ -5,10 +5,16 @@
 // Registriert die Endgame-Ressourcen, den Ultimate-Skill-Katalysator,
 // Kult-Drops, das Mitsugoshi-Werkzeug und die Slime-Suit-Ruestung.
 //
-// HINWEIS ZU TEXTUREN: Custom Items erscheinen ohne PNG als schwarz/pink.
-// Optional Texturen ablegen unter:
+// TEXTUREN: Basis-Item-Icons sind BEREITS enthalten unter
 //   kubejs/assets/kubejs/textures/item/<id>.png
-// Die Funktionalitaet (Werte, Set-Bonus, Skill) ist davon unabhaengig.
+// (KubeJS nutzt diese automatisch, kein Model-JSON noetig.)
+//
+// Getragene Ruestung: .tier('netherite') rendert am Koerper vorerst die
+// Netherit-Optik. Optionale Slime-Suit-Layer liegen bereit unter
+//   kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_1.png (+ _2)
+// -> Zum Aktivieren einen eigenen Armor-Tier mit diesen Layern registrieren
+//    (Anleitung in configs/shadow_garden_setup.txt). Neu-generieren mit:
+//    python3 tools/gen_textures.py
 
 StartupEvents.registry('item', event => {
 
