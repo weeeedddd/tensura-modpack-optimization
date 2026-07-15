@@ -117,26 +117,19 @@ TEXTUREN (bereits enthalten)
   slime_suit-Teile). KubeJS nutzt sie automatisch (kein Model-JSON noetig).
   Neu erzeugen/anpassen: python3 tools/gen_textures.py
 
-  Getragene Slime-Suit-Optik (optional):
+  Getragene Slime-Suit-Optik (AKTIV):
     kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_1.png
     kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_2.png
   Diese 64x32-Layer sind das 1.21.1-Format fuer Ruestung am Koerper.
-  Aktuell nutzt die Ruestung .tier('netherite') -> Netherit-Optik am Body.
-  Fuer die Slime-Optik einen eigenen Armor-Tier registrieren, z.B.:
+  Der eigene Armor-Tier ist bereits registriert in
+    kubejs/startup_scripts/shadow_garden_armor_tiers.js
+  und die Items nutzen .tier('slime_suit'). KubeJS loest die Layer ueber
+  den Tier-Namen auf (kubejs:.../armor/slime_suit_layer_1.png) -> die
+  Slime-Optik wird am Koerper gerendert, KEINE Netherit-Optik mehr.
 
-    // startup_scripts (ergaenzend, Syntax je nach KubeJS-Build pruefen):
-    // ItemEvents.armorTierRegistry(event => {
-    //   event.add('slime_suit', tier => {
-    //     tier.durabilityMultiplier = 37
-    //     tier.slotProtections = [3, 6, 8, 3]   // FEET, LEGS, BODY, HEAD
-    //     tier.toughness = 3.0
-    //     tier.knockbackResistance = 0.1
-    //     tier.enchantmentValue = 15
-    //     tier.equipSound = 'minecraft:item.armor.equip_netherite'
-    //     tier.repairIngredient = 'kubejs:dark_slime'
-    //   })
-    // })
-    // Dann in shadow_garden_items.js .tier('netherite') -> .tier('slime_suit')
+  Falls dein KubeJS-Build die Layer nicht ueber den Tier-Namen findet,
+  pruefe in shadow_garden_armor_tiers.js, ob ein expliziter Textur-/
+  assetId-Setter verfuegbar ist, und setze ihn auf 'kubejs:slime_suit'.
 
 ─────────────────────────────────────────────────────────
 FTB QUESTS KAPITEL

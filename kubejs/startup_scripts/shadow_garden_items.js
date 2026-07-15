@@ -9,12 +9,10 @@
 //   kubejs/assets/kubejs/textures/item/<id>.png
 // (KubeJS nutzt diese automatisch, kein Model-JSON noetig.)
 //
-// Getragene Ruestung: .tier('netherite') rendert am Koerper vorerst die
-// Netherit-Optik. Optionale Slime-Suit-Layer liegen bereit unter
+// Getragene Ruestung: .tier('slime_suit') (siehe shadow_garden_armor_tiers.js)
+// rendert am Koerper die Slime-Layer unter
 //   kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_1.png (+ _2)
-// -> Zum Aktivieren einen eigenen Armor-Tier mit diesen Layern registrieren
-//    (Anleitung in configs/shadow_garden_setup.txt). Neu-generieren mit:
-//    python3 tools/gen_textures.py
+// Alle Texturen neu erzeugen mit: python3 tools/gen_textures.py
 
 StartupEvents.registry('item', event => {
 
@@ -46,14 +44,15 @@ StartupEvents.registry('item', event => {
     .rarity('uncommon').maxStackSize(16)
 
   // ── Slime Suit (Stealth-Ruestung, Set-Bonus via shadow_garden.js) ──
-  // .tier('netherite') = Netherit-Grundwerte (Schutz/Haltbarkeit).
-  event.create('slime_suit_helmet', 'helmet').tier('netherite')
+  // .tier('slime_suit') = eigener Armor-Tier (siehe shadow_garden_armor_tiers.js),
+  // rendert die Slime-Layer am Koerper statt der Netherit-Optik.
+  event.create('slime_suit_helmet', 'helmet').tier('slime_suit')
     .displayName('Slime Suit Mask').glow(true)
-  event.create('slime_suit_chestplate', 'chestplate').tier('netherite')
+  event.create('slime_suit_chestplate', 'chestplate').tier('slime_suit')
     .displayName('Slime Suit Coat').glow(true)
-  event.create('slime_suit_leggings', 'leggings').tier('netherite')
+  event.create('slime_suit_leggings', 'leggings').tier('slime_suit')
     .displayName('Slime Suit Leggings').glow(true)
-  event.create('slime_suit_boots', 'boots').tier('netherite')
+  event.create('slime_suit_boots', 'boots').tier('slime_suit')
     .displayName('Slime Suit Boots').glow(true)
 
 })
