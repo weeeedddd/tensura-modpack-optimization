@@ -1,0 +1,13 @@
+{
+  "itemGroup.tensura_abyss.shadow_garden": "Shadow Garden",
+  "item.tensura_abyss.dark_slime": "Refined Dark Slime",
+  "item.tensura_abyss.dark_aether": "Dark Aether",
+  "item.tensura_abyss.signature_record": "Signature Record",
+  "item.tensura_abyss.slime_suit_helmet": "Slime Suit Mask",
+  "item.tensura_abyss.slime_suit_chestplate": "Slime Suit Coat",
+  "item.tensura_abyss.slime_suit_leggings": "Slime Suit Leggings",
+  "item.tensura_abyss.slime_suit_boots": "Slime Suit Boots",
+  "tooltip.tensura_abyss.slime_suit.set": "Set Bonus (full set): Speed II + Resistance II",
+  "tooltip.tensura_abyss.slime_suit.stealth": "Stealth: Invisibility while worn as a full set",
+  "tooltip.tensura_abyss.signature_record.blank": "An unsigned guild record."
+}

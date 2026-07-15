@@ -1,0 +1,102 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Tensura Abyss — Shadow-Garden Rassen fuer Tensura Ascensions
+#  ZIEL-PFAD IN DER INSTANZ:  config/tensura/ascension-races.toml
+# ═══════════════════════════════════════════════════════════════════════════
+#
+#  >>> WICHTIG: Die exakten Schluessel-Namen (spiritualHealth, movementSpeed, …)
+#      und die TOML-Struktur MUESSEN gegen die installierte Tensura-Ascensions-
+#      Version abgeglichen werden. Diese Datei ist als vollstaendige, konsistente
+#      Vorlage geschrieben; passe die Keys an das reale Schema an, falls sie
+#      abweichen (siehe die vom Mod generierte Beispiel-Config im config-Ordner).
+#
+#  Progression:  Possessed -> Shadow Garden Member -> Seven Shadows (Delta/
+#                Gamma/Beta/Alpha) -> Shadow (Ultimativ).
+#  Die Evolution wird ueber die Companion-Mod (TensuraBridge.setTensuraRace)
+#  bzw. shadow_evos.js ausgeloest; hier stehen die Rassen-STATS.
+# ═══════════════════════════════════════════════════════════════════════════
+
+[[race]]
+  id = "tensura_abyss:possessed"
+  name = "Possessed"
+  # Startklasse: bewusst geschwaechte Werte (der "Befallene" Zustand).
+  spiritualHealth = 40.0
+  physicalHealth = 30.0
+  movementSpeed = 0.09
+  attackDamage = 2.0
+  aura = 20.0
+  isStartRace = false           # via Ritual/Heilung erreichbar, nicht Vanilla-Start
+  evolutionRequirementEP = 0
+
+[[race]]
+  id = "tensura_abyss:shadow_garden_member"
+  name = "Shadow Garden Member"
+  # Gebuffte Standard-Werte nach dem Beitritt.
+  spiritualHealth = 120.0
+  physicalHealth = 100.0
+  movementSpeed = 0.12
+  attackDamage = 6.0
+  aura = 150.0
+  previousRace = "tensura_abyss:possessed"
+  evolutionRequirementEP = 5000
+
+# ── Seven Shadows: vier Spezialisierungen (Delta/Gamma/Beta/Alpha) ──
+[[race]]
+  id = "tensura_abyss:seven_shadows_delta"
+  name = "Seven Shadows — Delta"
+  # Delta: roher Bestien-Nahkampf (hohe physische Werte).
+  spiritualHealth = 220.0
+  physicalHealth = 320.0
+  movementSpeed = 0.135
+  attackDamage = 14.0
+  aura = 400.0
+  previousRace = "tensura_abyss:shadow_garden_member"
+  evolutionRequirementEP = 15000
+
+[[race]]
+  id = "tensura_abyss:seven_shadows_gamma"
+  name = "Seven Shadows — Gamma"
+  # Gamma: Balance mit Fokus auf Ausdauer/Aura.
+  spiritualHealth = 300.0
+  physicalHealth = 260.0
+  movementSpeed = 0.14
+  attackDamage = 12.0
+  aura = 550.0
+  previousRace = "tensura_abyss:shadow_garden_member"
+  evolutionRequirementEP = 40000
+
+[[race]]
+  id = "tensura_abyss:seven_shadows_beta"
+  name = "Seven Shadows — Beta"
+  # Beta: hohe spirituelle Werte (Magie/Skills).
+  spiritualHealth = 420.0
+  physicalHealth = 300.0
+  movementSpeed = 0.145
+  attackDamage = 13.0
+  aura = 700.0
+  previousRace = "tensura_abyss:shadow_garden_member"
+  evolutionRequirementEP = 90000
+
+[[race]]
+  id = "tensura_abyss:seven_shadows_alpha"
+  name = "Seven Shadows — Alpha"
+  # Alpha: staerkste der Sieben, Spitzenwerte in allem.
+  spiritualHealth = 600.0
+  physicalHealth = 520.0
+  movementSpeed = 0.155
+  attackDamage = 20.0
+  aura = 1000.0
+  previousRace = "tensura_abyss:shadow_garden_member"
+  evolutionRequirementEP = 200000
+
+# ── Shadow: die ultimative Form (Cid) — extreme spirituelle HP & Speed ──
+[[race]]
+  id = "tensura_abyss:shadow"
+  name = "Shadow"
+  spiritualHealth = 2000.0
+  physicalHealth = 1200.0
+  movementSpeed = 0.19
+  attackDamage = 40.0
+  aura = 5000.0
+  previousRace = "tensura_abyss:seven_shadows_alpha"
+  evolutionRequirementEP = 500000
+  # Voraussetzung fuer den "I Am Atomic"-Skill (zusaetzlich >= 5.000.000 Max EP).

@@ -1,70 +1,61 @@
 // KubeJS 6 — Tensura Abyss: "Eminence in Shadow" ⇄ Tensura Evolutions-Kopplung
 // server_scripts/ — hot-reloadbar mit /kubejs reload server_scripts
 //
-// Koppelt die Shadow-Garden-Raenge (Possessed → Delta → Gamma → Beta → Alpha)
-// DIREKT an Tensura-Reincarnated-Fortschritt: Magicule-Schwelle + Katalysator-
-// Items (Dunkler Aether/Schleim) + optionale Tensura-Skill/Evo-Gates.
+// HYBRID: Ruft die Java-Companion-Mod (net.tensura.abyss.bridge.TensuraBridge)
+// fuer echten Tensura-Zugriff (Magicules/EP/Rasse). Ist die Mod nicht gebaut,
+// faellt ALLES automatisch auf den Scoreboard-Proxy zurueck -> laeuft trotzdem.
 //
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ EHRLICH & WICHTIG:                                                          │
-// │ Die EXAKTEN Tensura-Datenpfade/Commands (Magicule lesen, Skill pruefen,     │
-// │ Evolution ausloesen) kenne ich nicht ohne laufendes Spiel. Deshalb ist die  │
-// │ Logik so gebaut, dass sie HEUTE funktioniert (Magicule via Scoreboard,      │
-// │ Katalysatoren via /clear-Zaehlung — beides 100% robust), und die echten     │
-// │ Tensura-Hooks als klar markierte, ein-kommentierbare Zeilen bereitstehen.   │
-// └───────────────────────────────────────────────────────────────────────────┘
-//
-// Ausloeser: SNEAK + Rechtsklick mit Dunklem Aether (Evolution).
-//            Normaler Rechtsklick mit Dunklem Aether = Breath (shadow_garden.js).
-//            Rechtsklick mit Dunklem Schleim = Slime-Faehigkeiten maxen.
+// Ausloeser:
+//   Dunkler Schleim (Rechtsklick)           -> +10.000 Magicules (Tensura)
+//   Dunkler Aether  (Sneak + Rechtsklick)   -> Evolution zur naechsten Stufe
+//   Dunkler Aether  (Rechtsklick, kein Sneak)-> Breath (shadow_garden.js)
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CONFIG — hier die realen Tensura-Werte anpassen/verifizieren
-// ═══════════════════════════════════════════════════════════════════════════
-
-// Scoreboard, das den Tensura-Magicule/EP-Wert SPIEGELT.
-// -> Siehe unten "MAGICULE-SYNC" wie man das an Tensura koppelt.
+// ── Item-Namespace: 'kubejs' (KubeJS-Items) ODER 'tensura_abyss' (Companion-Mod).
+//    Bei installierter Companion-Mod hier auf 'tensura_abyss' umstellen.
+const NS = 'kubejs'
 const MAGICULE_OBJ = 'sg_magicule'
 
-// Rang-Leiter (aufsteigend). team = Praefix-Team aus shadow_garden.js.
-// magicule = benoetigter Magicule/EP-Wert. aether/slime = Katalysator-Kosten.
-// tensuraEvo = OPTIONAL: exakte Tensura-Evolutions-/Rassen-ID (verifizieren!).
+// Rang-Leiter mit Tensura-Rassenpfad + Magicule-Schwelle + Katalysator.
 const RANKS = [
-  { id: 'possessed', name: 'Possessed',     team: 'sg_shadow',  magicule: 0,     aether: 0, slime: 0, tensuraEvo: '' },
-  { id: 'delta',     name: 'Delta',         team: 'sg_numbers', magicule: 2000,  aether: 1, slime: 0, tensuraEvo: '' },
-  { id: 'gamma',     name: 'Gamma',         team: 'sg_numbers', magicule: 6000,  aether: 2, slime: 2, tensuraEvo: '' },
-  { id: 'beta',      name: 'Beta',          team: 'sg_seven',   magicule: 15000, aether: 3, slime: 4, tensuraEvo: '' },
-  { id: 'alpha',     name: 'Alpha',         team: 'sg_lord',    magicule: 40000, aether: 5, slime: 8, tensuraEvo: '' }
+  { id: 'possessed', name: 'Possessed',            race: 'tensura_abyss:possessed',            magicule: 0,     aether: 0, slime: 0 },
+  { id: 'member',    name: 'Shadow Garden Member', race: 'tensura_abyss:shadow_garden_member', magicule: 5000,  aether: 1, slime: 0 },
+  { id: 'delta',     name: 'Delta',                race: 'tensura_abyss:seven_shadows_delta',  magicule: 15000, aether: 2, slime: 2 },
+  { id: 'gamma',     name: 'Gamma',                race: 'tensura_abyss:seven_shadows_gamma',  magicule: 40000, aether: 3, slime: 4 },
+  { id: 'beta',      name: 'Beta',                 race: 'tensura_abyss:seven_shadows_beta',   magicule: 90000, aether: 4, slime: 6 },
+  { id: 'alpha',     name: 'Alpha',                race: 'tensura_abyss:seven_shadows_alpha',  magicule: 200000, aether: 5, slime: 8 },
+  { id: 'shadow',    name: 'Shadow',               race: 'tensura_abyss:shadow',               magicule: 500000, aether: 8, slime: 12 }
 ]
 
-// ═══════════════════════════════════════════════════════════════════════════
-// Helfer
-// ═══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════ Java-Bridge mit Fallback ═══════════════════════
+let BRIDGE = null
+try { BRIDGE = Java.loadClass('net.tensura.abyss.bridge.TensuraBridge') } catch (e) { BRIDGE = null }
+
+function getMagicules(player) {
+  if (BRIDGE) { try { return BRIDGE.getMagicules(player) } catch (e) {} }
+  return player.runCommandSilent(`scoreboard players get @s ${MAGICULE_OBJ}`)
+}
+function addMagicules(player, delta) {
+  if (BRIDGE) { try { BRIDGE.addMagicules(player, delta); return } catch (e) {} }
+  player.runCommandSilent(`scoreboard players add @s ${MAGICULE_OBJ} ${Math.round(delta)}`)
+}
+function setTensuraRace(player, racePath) {
+  if (BRIDGE) { try { return BRIDGE.setTensuraRace(player, racePath) } catch (e) {} }
+  return false // ohne Mod: nur unser Rang/Praefix (siehe unten)
+}
 function isSneaking(p) {
   try { return p.isCrouching() } catch (e) {
-    try { return p.crouching } catch (e2) {
-      try { return p.isShiftKeyDown() } catch (e3) { return false }
-    }
+    try { return p.isShiftKeyDown() } catch (e2) { return false }
   }
 }
-// zaehlt passende Items ohne zu entfernen: /clear @s <item> 0 gibt die Anzahl zurueck
-function countItem(player, id) {
-  return player.runCommandSilent(`clear @s ${id} 0`)
-}
-// aktueller Rang-Index aus persistentData (Default 0 = Possessed)
-function rankIndex(player) {
-  return player.persistentData.getInt('sgEvoRank') // 0, wenn nicht gesetzt
-}
+function countItem(player, id) { return player.runCommandSilent(`clear @s ${id} 0`) }
+function rankIndex(player) { return player.persistentData.getInt('sgEvoRank') }
 
-// Scoreboard-Objektiv sicherstellen
 ServerEvents.loaded(event => {
   event.server.runCommandSilent(`scoreboard objectives add ${MAGICULE_OBJ} dummy "Magicule"`)
 })
 
-// ═══════════════════════════════════════════════════════════════════════════
-// EVOLUTION: Sneak + Rechtsklick mit Dunklem Aether
-// ═══════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('kubejs:dark_aether', event => {
+// ═══════════════════════ EVOLUTION: Sneak + Dunkler Aether ═══════════════════════
+ItemEvents.rightClicked(`${NS}:dark_aether`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -72,111 +63,68 @@ ItemEvents.rightClicked('kubejs:dark_aether', event => {
 
   const idx = rankIndex(player)
   if (idx >= RANKS.length - 1) {
-    player.tell(Text.gold(`Du hast bereits den hoechsten Rang: [${RANKS[idx].name}].`))
+    player.tell(Text.gold(`Du hast die hoechste Form erreicht: [${RANKS[idx].name}].`))
     return
   }
   const next = RANKS[idx + 1]
 
-  // ── 1) Magicule-Gate (Tensura-Fortschritt, via Scoreboard) ──
-  const hasMag = player.runCommandSilent(`execute if score @s ${MAGICULE_OBJ} matches ${next.magicule}..`)
-  if (hasMag < 1) {
-    const cur = player.runCommandSilent(`scoreboard players get @s ${MAGICULE_OBJ}`)
-    player.tell(Text.gray(`Zu wenig Magicule: ${cur} / ${next.magicule} fuer [${next.name}].`))
-    player.tell(Text.gray('(Magicule steigt mit deinem Tensura-Fortschritt — siehe MAGICULE-SYNC.)'))
+  // 1) Magicule-Gate (echt via Bridge, sonst Scoreboard)
+  const mag = getMagicules(player)
+  if (mag < next.magicule) {
+    player.tell(Text.gray(`Zu wenig Magicule: ${Math.round(mag)} / ${next.magicule} fuer [${next.name}].`))
     return
   }
 
-  // ── 2) OPTIONALE Tensura-Skill/Evo-Stufen-Gates (verifizieren & aktivieren) ──
-  // Beispiel Skill-Gate (wenn Tensura die Daten via /data lesbar macht):
-  //   const hasSkill = player.runCommandSilent('execute if data entity @s <TENSURA_SKILL_PFAD>')
-  //   if (hasSkill < 1) { player.tell(Text.gray('Benoetigt Tensura-Skill: ...')); return }
-  // Beispiel Evo-Stufen-Gate:
-  //   const stage = player.runCommandSilent('execute if data entity @s <TENSURA_EVO_STAGE_PFAD>')
-  //   if (stage < 1) { player.tell(Text.gray('Benoetigt Tensura-Evolutionsstufe: ...')); return }
-
-  // ── 3) Katalysator-Check (Dunkler Aether/Schleim) ──
-  const haveAether = countItem(player, 'kubejs:dark_aether')
-  const haveSlime  = next.slime > 0 ? countItem(player, 'kubejs:dark_slime') : 0
+  // 2) Katalysator-Check
+  const haveAether = countItem(player, `${NS}:dark_aether`)
+  const haveSlime  = next.slime > 0 ? countItem(player, `${NS}:dark_slime`) : 0
   if (haveAether < next.aether || haveSlime < next.slime) {
     player.tell(Text.gray(`Katalysator fehlt: ${next.aether}x Dunkler Aether` +
-      (next.slime > 0 ? ` + ${next.slime}x Dunkler Schleim` : '') +
-      ` (du hast ${haveAether}/${haveSlime}).`))
+      (next.slime > 0 ? ` + ${next.slime}x Dunkler Schleim` : '') + `.`))
     return
   }
 
-  // ── 4) Alles erfuellt: Katalysator verbrauchen ──
+  // 3) Katalysator verbrauchen
   if (!player.isCreative()) {
-    if (next.aether > 0) player.runCommandSilent(`clear @s kubejs:dark_aether ${next.aether}`)
-    if (next.slime > 0)  player.runCommandSilent(`clear @s kubejs:dark_slime ${next.slime}`)
+    if (next.aether > 0) player.runCommandSilent(`clear @s ${NS}:dark_aether ${next.aether}`)
+    if (next.slime > 0)  player.runCommandSilent(`clear @s ${NS}:dark_slime ${next.slime}`)
   }
 
-  // ── 5) Rang setzen + Praefix-Team ──
+  // 4) Rang setzen + Praefix
   player.persistentData.putInt('sgEvoRank', idx + 1)
-  player.runCommandSilent(`team join ${next.team} @s`)
+  const teams = ['sg_shadow','sg_shadow','sg_numbers','sg_numbers','sg_seven','sg_seven','sg_lord']
+  player.runCommandSilent(`team join ${teams[idx + 1]} @s`)
 
-  // ── 6) Tensura-Evolution ausloesen (ECHTER HOOK — Syntax verifizieren!) ──
-  // Sobald du die exakte Tensura-Command-Syntax kennst, hier aktivieren.
-  // Die Rassen/Evo-ID steht pro Rang in RANKS[].tensuraEvo.
-  // if (next.tensuraEvo) {
-  //   player.runCommandSilent(`tensura evolution set @s ${next.tensuraEvo}`)
-  // }
+  // 5) ECHTE Tensura-Evolution ueber die Java-Bridge
+  const evolved = setTensuraRace(player, next.race)
 
-  // ── 7) Evolutions-Inszenierung (Partikel/Sound, keine Blockschaeden) ──
-  player.runCommandSilent('playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 4 1.3')
-  player.runCommandSilent('particle minecraft:end_rod ~ ~1 ~ 0.6 1.2 0.6 0.06 220 force')
-  player.runCommandSilent('particle minecraft:soul_fire_flame ~ ~1 ~ 0.6 1.2 0.6 0.03 200 force')
-  player.runCommandSilent('effect give @s minecraft:strength 20 0 true')
-  player.runCommandSilent('effect give @s minecraft:regeneration 10 1 true')
+  // 6) Epische Animation (purpur/schwarz)
+  player.runCommandSilent('playsound minecraft:entity.wither.spawn master @a ~ ~ ~ 4 0.6')
+  player.runCommandSilent('particle minecraft:dragon_breath ~ ~1 ~ 0.7 1.2 0.7 0.02 200 force')
+  player.runCommandSilent('particle minecraft:witch ~ ~1 ~ 0.7 1.2 0.7 0.1 120 force')
+  player.runCommandSilent('particle minecraft:smoke ~ ~1 ~ 0.8 1.2 0.8 0.02 120 force')
+  player.runCommandSilent('effect give @s minecraft:strength 30 1 true')
+  player.runCommandSilent('effect give @s minecraft:regeneration 15 1 true')
+  player.runCommandSilent('effect give @s minecraft:resistance 30 0 true')
 
-  player.tell(Text.aqua(`§lEVOLUTION§r§b — Shadow Garden Rang [${next.name}] erreicht!`))
+  player.tell(Text.aqua(`§lEVOLUTION§r§b — [${next.name}] erreicht!`))
+  if (!evolved) player.tell(Text.gray('(In-Mod-Rasse folgt, sobald die Companion-Mod aktiv ist — Rang/Buffs sind gesetzt.)'))
 })
 
-// ═══════════════════════════════════════════════════════════════════════════
-// DUNKLER SCHLEIM: Tensura-Schleim-Faehigkeiten maxen (Rechtsklick, kein Sneak)
-// ═══════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('kubejs:dark_slime', event => {
+// ═══════════════════════ DUNKLER SCHLEIM: +10.000 Magicules ═══════════════════════
+ItemEvents.rightClicked(`${NS}:dark_slime`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
-  if (isSneaking(player)) return   // Sneak fuer Schleim ungenutzt -> frei fuer Zukunft
+  if (isSneaking(player)) return
 
   if (!player.isCreative()) event.item.shrink(1)
+  addMagicules(player, 10000)
 
   const tier = player.persistentData.getInt('sgSlimeMastery') + 1
   player.persistentData.putInt('sgSlimeMastery', tier)
 
   player.runCommandSilent('playsound minecraft:entity.slime.squish master @s ~ ~ ~ 1 0.8')
-  player.runCommandSilent('particle minecraft:item_slime ~ ~1 ~ 0.4 0.6 0.4 0.1 40 force')
-
-  // >>> ECHTER TENSURA-HOOK (Syntax verifizieren): Schleim-Skill maxen <<<
-  // player.runCommandSilent('tensura skill level @s predator_slime max')
-
-  player.tell(Text.aqua(`Dunkler Schleim absorbiert — Schleim-Meisterschaft Stufe ${tier}.`))
-  player.tell(Text.gray('(Tensura-Skill-Command in shadow_evos.js aktivieren, siehe Kommentar.)'))
+  player.runCommandSilent('particle minecraft:item_slime ~ ~1 ~ 0.4 0.6 0.4 0.1 50 force')
+  player.tell(Text.aqua(`Dunkler Schleim absorbiert — +10.000 Magicules (Schleim-Meisterschaft ${tier}).`))
 })
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MAGICULE-SYNC — wie sg_magicule an Tensura gekoppelt wird
-// ═══════════════════════════════════════════════════════════════════════════
-// sg_magicule ist ein Scoreboard-Proxy fuer den Tensura-Magicule/EP-Wert.
-// Optionen, ihn zu fuellen (eine waehlen):
-//
-//   A) Falls Tensura den Wert via /data entity lesbar macht, hier periodisch
-//      synchronisieren (exakten Pfad verifizieren):
-//        ServerEvents.tick(e => {
-//          if (e.server.tickCount % 100 !== 0) return
-//          const players = e.server.players
-//          for (let i = 0; i < players.size(); i++) {
-//            const p = players.get(i)
-//            p.runCommandSilent('execute store result score @s sg_magicule run data get entity @s <TENSURA_MAGICULE_PFAD>')
-//          }
-//        })
-//
-//   B) Falls Tensura ein eigenes Scoreboard/Command bereitstellt, dieses direkt
-//      als MAGICULE_OBJ oben eintragen (kein Sync noetig).
-//
-//   C) Manuell/Debug: /scoreboard players set <Spieler> sg_magicule <Wert>
-//      oder ueber FTB-Quests-Rewards den Score erhoehen.
-//
-// Bis A/B eingerichtet ist, steuert C den Fortschritt — die Kopplung selbst
-// (Gates, Katalysatoren, Raenge, Evolutionen) funktioniert bereits vollstaendig.

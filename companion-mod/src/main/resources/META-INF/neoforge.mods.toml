@@ -1,0 +1,46 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+description = '''
+Companion mod for the Tensura Abyss modpack: custom items & Slime Suit armor,
+a reflection bridge into Tensura Reincarnated / Ascensions player data
+(magicules, EP, race), and the exclusive Shadow Garden guild / commission
+backend. Paired with KubeJS for events, quests and balancing.
+'''
+
+# ── Harte Abhaengigkeiten: erzwingen Praesenz UND Ladereihenfolge ──
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+# Tensura Reincarnated MUSS vorher laden (Bridge greift auf dessen Daten zu).
+[[dependencies.${mod_id}]]
+modId = "tensura"
+type = "required"
+versionRange = "[1.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Tensura Ascensions liefert das Evolutions-Framework.
+[[dependencies.${mod_id}]]
+modId = "tensura_ascensions"
+type = "required"
+versionRange = "[1.0,)"
+ordering = "AFTER"
+side = "BOTH"

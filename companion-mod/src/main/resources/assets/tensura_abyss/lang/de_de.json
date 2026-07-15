@@ -1,0 +1,13 @@
+{
+  "itemGroup.tensura_abyss.shadow_garden": "Shadow Garden",
+  "item.tensura_abyss.dark_slime": "Veredelter Dunkler Schleim",
+  "item.tensura_abyss.dark_aether": "Dunkler Aether",
+  "item.tensura_abyss.signature_record": "Signatur-Urkunde",
+  "item.tensura_abyss.slime_suit_helmet": "Slime-Suit-Maske",
+  "item.tensura_abyss.slime_suit_chestplate": "Slime-Suit-Mantel",
+  "item.tensura_abyss.slime_suit_leggings": "Slime-Suit-Hose",
+  "item.tensura_abyss.slime_suit_boots": "Slime-Suit-Stiefel",
+  "tooltip.tensura_abyss.slime_suit.set": "Set-Bonus (volles Set): Speed II + Resistance II",
+  "tooltip.tensura_abyss.slime_suit.stealth": "Stealth: Unsichtbarkeit im vollen Set",
+  "tooltip.tensura_abyss.signature_record.blank": "Eine unsignierte Gilden-Urkunde."
+}

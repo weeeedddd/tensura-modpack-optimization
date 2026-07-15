@@ -1,0 +1,50 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — RTP-BEGRENZUNG (FTB ESSENTIALS)
+═══════════════════════════════════════════════════════════
+
+Alternative/Ergaenzung zu SimpleRTP (configs/simplertp_setup.txt).
+Wenn ihr FTB Essentials fuer /rtp nutzt, so begrenzt ihr die Reichweite
+serverfreundlich auf 5.000–8.000 Bloecke.
+
+CONFIG-PFAD (im Instanz-Ordner)
+───────────────────────────────
+  config/ftbessentials.snbt
+
+RELEVANTE EINSTELLUNGEN (Werte anpassen)
+───────────────────────────────
+Die FTB-Essentials-Config ist SNBT. Suche den teleport-/rtp-Abschnitt
+und setze folgende Werte (Schluesselnamen ggf. an deine FTBE-Version
+angleichen — nach dem ersten Start werden die echten Keys generiert):
+
+  teleport {
+    # Cooldown zwischen /rtp-Nutzungen (Sekunden)
+    rtp_cooldown: 300
+
+    # WICHTIG: maximale RTP-Reichweite serverfreundlich begrenzen
+    rtp_max_distance: 6000        # 5000–8000 empfohlen (statt 10000+)
+    rtp_min_distance: 500
+
+    # RTP nur in erlaubten Dimensionen
+    rtp_dimension_blacklist: ["minecraft:the_nether","minecraft:the_end"]
+
+    # Sicheres Landen: FTBE sucht eine sichere Oberflaeche. Zusaetzlich:
+    rtp_avoid_water: true
+    rtp_max_tries: 24            # mehr Versuche = zuverlaessiger sicherer Spot
+  }
+
+LAVA-/UNSAFE-CHECK
+───────────────────────────────
+FTB Essentials sucht standardmaessig eine begehbare Oberflaeche (kein
+Ersticken/Void). Einen expliziten "kein Lava"-Schalter bietet nicht jede
+FTBE-Version. Fuer garantierte Lava-/Ozean-Vermeidung ist SimpleRTP
+(configs/simplertp_setup.txt) die robustere Wahl — dessen Safe-Landing-Scan
+schliesst Lava, Void und Ozean explizit aus. Beide Mods koennen parallel
+laufen (unterschiedliche Commands), oder ihr entscheidet euch fuer eine.
+
+TESTABLAUF
+───────────────────────────────
+  1. Server einmal starten -> config/ftbessentials.snbt wird generiert
+  2. Werte oben eintragen (Keys abgleichen), Server neu starten
+  3. /rtp testen: Distanz <= 6000? Cooldown greift? Sichere Landung?
+
+═══════════════════════════════════════════════════════════

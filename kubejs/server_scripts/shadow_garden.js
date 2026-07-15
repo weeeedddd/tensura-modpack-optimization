@@ -17,8 +17,13 @@ let SG_SERVER = null
 // Zentrale Balancing-Werte
 const ATOMIC_MANA_COST = 30       // XP-Level als Mana-Proxy (Iron's Spells Mana ist per KubeJS nicht sicher lesbar)
 const ATOMIC_COOLDOWN_MS = 120000 // 2 Minuten Cooldown
-const ATOMIC_RADIUS = 14          // Wirkungsradius in Blocks
-const ATOMIC_DAMAGE = 80          // Schaden pro Mob (magisch)
+const ATOMIC_RADIUS = 30          // Wirkungsradius in Blocks
+const ATOMIC_DAMAGE = 120         // Schaden pro Mob (magisch)
+const ATOMIC_MIN_MAXEP = 5000000  // Voraussetzung: >= 5.000.000 Max EP (via Ascension-API)
+
+// Java-Bridge (optional) — Rang/EP-Gate. Ohne Companion-Mod: Gate wird uebersprungen.
+let ATOMIC_BRIDGE = null
+try { ATOMIC_BRIDGE = Java.loadClass('net.tensura.abyss.bridge.TensuraBridge') } catch (e) { ATOMIC_BRIDGE = null }
 const RAID_INTERVAL_TICKS = 1200  // alle 60s pruefen
 const RAID_CHANCE = 0.5           // 50% pro Intervall (nur bei aktiver Mitsugoshi-Tarnung)
 const SUIT_INTERVAL_TICKS = 40    // Set-Bonus alle 2s erneuern
@@ -129,6 +134,20 @@ ItemEvents.rightClicked('kubejs:i_am_atomic_catalyst', event => {
     return
   }
 
+  // Voraussetzung: Rang "Shadow" (hoechste Evo, Index 6) + >= 5.000.000 Max EP.
+  if (player.persistentData.getInt('sgEvoRank') < 6) {
+    player.tell(Text.gray('Nur der Rang [Shadow] kann "I Am Atomic" entfesseln.'))
+    return
+  }
+  if (ATOMIC_BRIDGE) {
+    let maxEp = 0
+    try { maxEp = ATOMIC_BRIDGE.getMaxEP(player) } catch (e) { maxEp = ATOMIC_MIN_MAXEP }
+    if (maxEp < ATOMIC_MIN_MAXEP) {
+      player.tell(Text.gray(`Zu wenig Max EP: ${Math.round(maxEp)} / ${ATOMIC_MIN_MAXEP}.`))
+      return
+    }
+  }
+
   // Mana-Proxy: XP-Level pruefen und abziehen (via Command = robust)
   let lvl = 0
   try { lvl = player.xpLevel } catch (err) { lvl = -1 }
@@ -148,9 +167,18 @@ ItemEvents.rightClicked('kubejs:i_am_atomic_catalyst', event => {
   player.runCommandSilent(`particle minecraft:electric_spark ~ ~1 ~ ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} 0.12 500 force`)
   player.runCommandSilent(`particle minecraft:end_rod ~ ~1 ~ ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} 0.04 350 force`)
 
-  // Sound
-  player.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @a ~ ~ ~ 5 0.6')
-  player.runCommandSilent('playsound minecraft:entity.generic.explode master @a ~ ~ ~ 5 0.8')
+  // Kreisfoermiges neon-blaues Dornenfeld (expandierender Ring)
+  for (let a = 0; a < 360; a += 12) {
+    const rad = a * Math.PI / 180
+    const dx = (Math.cos(rad) * ATOMIC_RADIUS * 0.7).toFixed(1)
+    const dz = (Math.sin(rad) * ATOMIC_RADIUS * 0.7).toFixed(1)
+    player.runCommandSilent(`particle minecraft:soul_fire_flame ~${dx} ~0.3 ~${dz} 0.2 0.6 0.2 0.01 12 force`)
+  }
+
+  // Tiefer Bass-Sound
+  player.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @a ~ ~ ~ 6 0.5')
+  player.runCommandSilent('playsound minecraft:block.beacon.deactivate master @a ~ ~ ~ 6 0.4')
+  player.runCommandSilent('playsound minecraft:entity.generic.explode master @a ~ ~ ~ 5 0.7')
 
   // AoE-Schaden an ALLEN Nicht-Spieler-Entities im Radius (keine Blockschaeden!)
   player.runCommandSilent(`damage @e[distance=..${ATOMIC_RADIUS},type=!minecraft:player] ${ATOMIC_DAMAGE} minecraft:magic by @s`)

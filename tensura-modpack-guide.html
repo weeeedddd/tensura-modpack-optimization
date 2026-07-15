@@ -312,6 +312,7 @@ footer a{color:var(--teal)}
       <a href="#progression">Progression</a>
       <a href="#shadow">Shadow</a>
       <a href="#abyss">Abyss</a>
+      <a href="#guild">Guild</a>
       <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge &#8599;</a>
     </div>
     <span class="nav-badge">v3.4.0 &middot; NeoForge 1.21.1</span>
@@ -989,6 +990,91 @@ footer a{color:var(--teal)}
     <div>
       <strong>DE:</strong> Dateien liegen in <code>kubejs/data/tensura_abyss/</code> (Auto-Datapack). Setup + Tectonic-Fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender ist f&uuml;r die eigene Dimension nicht n&ouml;tig (nur f&uuml;r Overworld-Injektion &mdash; optionales Java-Template beiliegend).<br>
       <strong>EN:</strong> Files live in <code>kubejs/data/tensura_abyss/</code> (auto datapack). Setup + Tectonic fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender isn&rsquo;t needed for the custom dimension (only for overworld injection &mdash; optional Java template included).
+    </div>
+  </div>
+</section>
+
+<!-- ════ 09 GUILD & COMMISSION SYSTEM ════ -->
+<section id="guild">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <div>
+      <h2 class="sec-title">Shadow Garden Guild &amp; Commission System</h2>
+      <p class="sec-sub">Exklusiv &mdash; nur f&uuml;r Possessed oder h&ouml;her &middot; Exclusive &mdash; Possessed rank or higher only</p>
+    </div>
+  </div>
+
+  <div class="callout cl-gold">
+    <span class="callout-i">&#128274;</span>
+    <div>
+      <strong>DE:</strong> Dieses System ist f&uuml;r Spieler ohne Tensura-Rasse komplett <strong>unsichtbar &amp; gesperrt</strong> (Commands ohne Tab-Complete, kein Zugriff).<br>
+      <strong>EN:</strong> For players without a Tensura race this system is fully <strong>invisible &amp; locked</strong> (no command tab-completion, no access).
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <span class="feat-icon">&#127983;</span>
+      <h3>Gilde &amp; Mitgliedsnummer</h3>
+      <p class="feat-de">Gilden mit R&auml;ngen (Anf&uuml;hrer/Vize/Mitglied), Mitglieder-Limit und Login-Zeitstempeln. Beim Beitritt: fortlaufende Nummer (&bdquo;Member #135&ldquo;) + signierte Gilden-Urkunde.</p>
+      <p class="feat-en">Guilds with ranks (Leader/Vice/Member), member limits and login timestamps. On join: a sequential number (&ldquo;Member #135&rdquo;) + a signed guild record.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#127894;</span>
+      <h3>Abenteurer-R&auml;nge F&ndash;S</h3>
+      <p class="feat-de">Sammle Guild-EXP und steige von Rang <strong>F</strong> bis <strong>S</strong> auf. Aufstiege werden automatisch gemeldet.</p>
+      <p class="feat-en">Earn guild EXP and climb from rank <strong>F</strong> to <strong>S</strong>. Promotions are announced automatically.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#128203;</span>
+      <h3>Auftr&auml;ge / Commissions</h3>
+      <p class="feat-de">Gathering, Crafting, Subjugation, <em>Coordinate Subjugation</em> (Boss an Zufallskoordinaten), Party-Auftr&auml;ge (geteilte EXP) und Zwergen-Auftr&auml;ge (Werkstatt-Ausbau, Lieferungen).</p>
+      <p class="feat-en">Gathering, Crafting, Subjugation, <em>Coordinate Subjugation</em> (boss at random coords), Party commissions (shared EXP) and Dwarf commissions (workshop upgrades, deliveries).</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#128737;</span>
+      <h3>Party &amp; Party-Chat</h3>
+      <p class="feat-de">Bilde Trupps mit <code>/shadow party create</code> und nutze den eigenen, farbig hervorgehobenen Party-Chat <code>/p [Nachricht]</code>.</p>
+      <p class="feat-en">Form squads with <code>/shadow party create</code> and use the dedicated, colour-highlighted party chat <code>/p [message]</code>.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#128506;</span>
+      <h3>Minimap-Radar</h3>
+      <p class="feat-de">Gildenmitglieder erscheinen als Blips f&uuml;reinander. <code>/shadow radar</code> listet Online-Positionen; Xaero/JourneyMap-Icons &uuml;ber die dokumentierte API-Schnittstelle.</p>
+      <p class="feat-en">Guild members show as blips to each other. <code>/shadow radar</code> lists online positions; Xaero/JourneyMap icons via the documented API endpoint.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">&#9881;</span>
+      <h3>Java Companion Mod</h3>
+      <p class="feat-de">Eine eigene NeoForge-1.21.1-Mod registriert Items &amp; Slime-Suit-Rendering und koppelt via Attachment-/Reflection-Bridge an Tensura (Magicules, EP, Rasse) und das Ascensions-Framework.</p>
+      <p class="feat-en">A dedicated NeoForge 1.21.1 mod registers items &amp; slime-suit rendering and couples to Tensura (magicules, EP, race) and the Ascensions framework via an attachment/reflection bridge.</p>
+    </div>
+  </div>
+
+  <div class="bi-grid">
+    <div class="bi-col de">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-de">DE</span>
+        <h3>Zusammenspiel</h3>
+      </div>
+      <p>Die <strong>Java-Companion-Mod</strong> liefert das Fundament (Items, echtes Slime-Suit-Rendering, Gilden-Backend, Tensura-Bridge). <strong>Tensura Ascensions</strong> wickelt die Rassen-Evolutionen ab (Possessed &rarr; Shadow Garden Member &rarr; <strong>Seven Shadows</strong> Alpha/Beta/Gamma/Delta &rarr; Shadow).</p>
+      <p><strong>KubeJS</strong> steuert Events, Quests, Balancing und ruft die Bridge: Dunkler Schleim gibt +10.000 Magicules, Dunkler &Auml;ther triggert die Evolution. Der <strong>&bdquo;I Am Atomic&ldquo;</strong>-Skill (Rang Shadow + 5 Mio. Max EP) entfesselt ein neon-blaues Dornenfeld (30 Blocks, keine Blocksch&auml;den) &mdash; und die <strong>Shadow Abyss</strong> Dimension ist das Endgame-Reisen.</p>
+    </div>
+    <div class="bi-col en">
+      <div class="bi-col-head">
+        <span class="lang-lbl lbl-en">EN</span>
+        <h3>How it fits together</h3>
+      </div>
+      <p>The <strong>Java companion mod</strong> provides the foundation (items, real slime-suit rendering, guild backend, Tensura bridge). <strong>Tensura Ascensions</strong> handles the race evolutions (Possessed &rarr; Shadow Garden Member &rarr; <strong>Seven Shadows</strong> Alpha/Beta/Gamma/Delta &rarr; Shadow).</p>
+      <p><strong>KubeJS</strong> drives events, quests, balancing and calls the bridge: Dark Slime grants +10,000 magicules, Dark Aether triggers evolution. The <strong>&ldquo;I Am Atomic&rdquo;</strong> skill (Shadow rank + 5M max EP) unleashes a neon-blue thorn field (30 blocks, no block damage) &mdash; and the <strong>Shadow Abyss</strong> dimension is the endgame travel.</p>
+    </div>
+  </div>
+
+  <div class="callout cl-gold">
+    <span class="callout-i">&#9888;</span>
+    <div>
+      <strong>DE:</strong> Companion-Mod in <code>companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura-interne Zugriffe laufen ehrlich &uuml;ber eine Reflection-Bridge (Namen zu verifizieren); Minimap-Icons brauchen die Xaero/JourneyMap-API. Details: <code>companion-mod/README.md</code>.<br>
+      <strong>EN:</strong> Companion mod in <code>companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura-internal access honestly goes through a reflection bridge (names to verify); minimap icons need the Xaero/JourneyMap API. Details: <code>companion-mod/README.md</code>.
     </div>
   </div>
 </section>
