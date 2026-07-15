@@ -169,6 +169,8 @@ ItemEvents.rightClicked('kubejs:dark_aether', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
+  // Sneak + Rechtsklick ist der EVOLUTIONS-Trigger (shadow_evos.js) — hier ignorieren.
+  if (player.isCrouching()) return
 
   if (!player.isCreative()) event.item.shrink(1)
 

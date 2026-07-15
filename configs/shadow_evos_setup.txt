@@ -1,0 +1,60 @@
+═══════════════════════════════════════════════════════════
+  TENSURA ABYSS — SHADOW-EVOS ⇄ TENSURA-KOPPLUNG (SETUP)
+═══════════════════════════════════════════════════════════
+
+Datei: kubejs/server_scripts/shadow_evos.js
+Zweck: Die Shadow-Garden-Raenge laufen NICHT parallel, sondern werden
+ueber Tensura-Fortschritt (Magicule + Katalysatoren + optional Skills/
+Evo-Stufe) freigeschaltet.
+
+RANG-LEITER (aufsteigend)
+───────────────────────────────
+  Possessed → Delta → Gamma → Beta → Alpha
+  Schwellen (Magicule) + Katalysatoren (Dunkler Aether/Schleim):
+    Delta  :  2.000  + 1x Aether
+    Gamma  :  6.000  + 2x Aether + 2x Schleim
+    Beta   : 15.000  + 3x Aether + 4x Schleim
+    Alpha  : 40.000  + 5x Aether + 8x Schleim
+  (Werte in shadow_evos.js -> RANKS anpassbar.)
+
+BEDIENUNG
+───────────────────────────────
+  - Evolution: SNEAK + Rechtsklick mit Dunklem Aether.
+  - Breath (shadow_garden.js): normaler Rechtsklick mit Dunklem Aether.
+  - Schleim-Meisterschaft: Rechtsklick mit Dunklem Schleim.
+
+WAS SOFORT FUNKTIONIERT (ohne weitere Einrichtung)
+───────────────────────────────
+  - Rang-Aufstieg mit Magicule-Gate (Scoreboard sg_magicule) + echtem
+    Item-Verbrauch (Dunkler Aether/Schleim, gezaehlt via /clear).
+  - Praefix-Team pro Rang, Evolutions-Inszenierung (Partikel/Sound),
+    temporaere Buffs.
+  Der Magicule-Wert kommt aus dem Scoreboard "sg_magicule".
+
+MAGICULE AN TENSURA KOPPELN (eine Option waehlen)
+───────────────────────────────
+  A) Tensura-Wert via /data spiegeln (exakten Pfad verifizieren):
+       execute store result score @s sg_magicule run data get entity @s <PFAD>
+     Ein fertiger, aus-kommentierter ServerEvents.tick-Block steht am Ende
+     von shadow_evos.js — Pfad eintragen, einkommentieren.
+  B) Falls Tensura ein eigenes Scoreboard/Command hat: dieses direkt als
+     MAGICULE_OBJ in shadow_evos.js eintragen.
+  C) Manuell/Quest-gesteuert:
+       scoreboard players set <Spieler> sg_magicule <Wert>
+     oder ueber FTB-Quests-Rewards den Score erhoehen.
+
+ECHTE TENSURA-EVOLUTION AUSLOESEN (optional, verifizieren)
+───────────────────────────────
+  In shadow_evos.js, Abschnitt 6, steht der Hook:
+    // player.runCommandSilent(`tensura evolution set @s ${next.tensuraEvo}`)
+  Sobald du die exakte Tensura-Command-Syntax und die Rassen/Evo-IDs kennst
+  (pruefe /tensura help bzw. das Tensura-Wiki), trage die IDs in
+  RANKS[].tensuraEvo ein und entferne das Kommentarzeichen. Analog fuer den
+  Schleim-Skill-Hook (predator_slime max) und die optionalen Skill-/Evo-
+  Stufen-Gates (Abschnitt 2).
+
+  Bis dahin bleibt die Kopplung ueber Magicule + Katalysatoren voll aktiv;
+  nur die IN-MOD-Rassenaenderung wird erst mit dem verifizierten Command
+  ausgeloest (kein Crash, kein Blocker).
+
+═══════════════════════════════════════════════════════════
