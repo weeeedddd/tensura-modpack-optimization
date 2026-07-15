@@ -22,6 +22,7 @@ public final class ModCreativeTabs {
                     .displayItems((params, output) -> {
                         output.accept(ModItems.DARK_SLIME.get());
                         output.accept(ModItems.DARK_AETHER.get());
+                        output.accept(ModItems.I_AM_ATOMIC_CATALYST.get());
                         output.accept(ModItems.SIGNATURE_RECORD.get());
                         output.accept(ModItems.SLIME_SUIT_HELMET.get());
                         output.accept(ModItems.SLIME_SUIT_CHESTPLATE.get());

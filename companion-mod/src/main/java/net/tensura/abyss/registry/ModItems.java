@@ -6,6 +6,7 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.tensura.abyss.TensuraAbyss;
+import net.tensura.abyss.item.IAmAtomicItem;
 import net.tensura.abyss.item.SignatureRecordItem;
 import net.tensura.abyss.item.SlimeSuitArmorItem;
 
@@ -34,6 +35,12 @@ public final class ModItems {
     public static final DeferredItem<Item> SIGNATURE_RECORD = ITEMS.registerItem(
             "signature_record",
             props -> new SignatureRecordItem(props.rarity(Rarity.EPIC).stacksTo(1))
+    );
+
+    // ── Ultimate-Skill-Katalysator "I Am Atomic" ──
+    public static final DeferredItem<Item> I_AM_ATOMIC_CATALYST = ITEMS.registerItem(
+            "i_am_atomic_catalyst",
+            props -> new IAmAtomicItem(props.rarity(Rarity.EPIC).stacksTo(1).fireResistant())
     );
 
     // ── Slime Suit (eigenes Armor-Material -> Slime-Layer am Koerper) ──

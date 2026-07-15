@@ -9,5 +9,8 @@
   "item.tensura_abyss.slime_suit_boots": "Slime Suit Boots",
   "tooltip.tensura_abyss.slime_suit.set": "Set Bonus (full set): Speed II + Resistance II",
   "tooltip.tensura_abyss.slime_suit.stealth": "Stealth: Invisibility while worn as a full set",
-  "tooltip.tensura_abyss.signature_record.blank": "An unsigned guild record."
+  "tooltip.tensura_abyss.signature_record.blank": "An unsigned guild record.",
+  "item.tensura_abyss.i_am_atomic_catalyst": "I Am Atomic",
+  "tooltip.tensura_abyss.i_am_atomic.req": "Requires: rank Shadow + 5,000,000 Max EP",
+  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blue thorn field — 30-block AoE, no block damage"
 }

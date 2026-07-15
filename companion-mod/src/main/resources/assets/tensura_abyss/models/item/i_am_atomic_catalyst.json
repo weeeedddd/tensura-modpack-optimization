@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tensura_abyss:item/i_am_atomic_catalyst"
+  }
+}

@@ -9,5 +9,8 @@
   "item.tensura_abyss.slime_suit_boots": "Slime-Suit-Stiefel",
   "tooltip.tensura_abyss.slime_suit.set": "Set-Bonus (volles Set): Speed II + Resistance II",
   "tooltip.tensura_abyss.slime_suit.stealth": "Stealth: Unsichtbarkeit im vollen Set",
-  "tooltip.tensura_abyss.signature_record.blank": "Eine unsignierte Gilden-Urkunde."
+  "tooltip.tensura_abyss.signature_record.blank": "Eine unsignierte Gilden-Urkunde.",
+  "item.tensura_abyss.i_am_atomic_catalyst": "I Am Atomic",
+  "tooltip.tensura_abyss.i_am_atomic.req": "Voraussetzung: Rang Shadow + 5.000.000 Max EP",
+  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blaues Dornenfeld — 30-Block-AoE, keine Blockschaeden"
 }
