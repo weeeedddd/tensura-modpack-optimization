@@ -11,7 +11,7 @@ Optimization guide, configs, and KubeJS scripts for the **Tensura Abyss** modpac
 
 | File | Description |
 |------|-------------|
-| `tensura-modpack-guide.html` | Bilingual DE/EN landing page (open in browser) |
+| `index.html` | Bilingual DE/EN landing page (served via GitHub Pages) |
 | `kubejs/server_scripts/tensura_balancing.js` | Loot table & recipe balancing templates |
 | `kubejs/startup_scripts/tensura_fixes.js` | Cross-mod item/block tag assignments |
 | `configs/options_optimized.txt` | Drop-in Minecraft options.txt with optimized settings |
