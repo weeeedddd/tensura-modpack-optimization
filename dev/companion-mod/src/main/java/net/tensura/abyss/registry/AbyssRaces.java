@@ -92,7 +92,7 @@ public final class AbyssRaces {
             new AbyssRaceDef("progenitor_of_the_abyss", 1680.0, 48.0, 0.192, 5000.0, 1710.0),
 
             // ── GEHEIME RASSE ──
-            new AbyssRaceDef("stylish_bandit_slayer", 2000.0, 55.0, 0.21, 7500.0, 2400.0),
+            new AbyssRaceDef("stylish_bandit_slayer", 2000.0, 55.0, 0.21, 7500.0, 2400.0)
     );
 
     /**
