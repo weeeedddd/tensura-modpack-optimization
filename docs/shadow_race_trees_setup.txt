@@ -1,0 +1,72 @@
+═══════════════════════════════════════════════════════════════════════════
+ TENSURA ABYSS — 4 RASSEN-BAEUME + GEHEIME RASSE  (Setup & Verifikation)
+═══════════════════════════════════════════════════════════════════════════
+
+ARCHITEKTUR — WO LIEGT WAS?
+
+  overrides/config/tensura/ascension-races.toml
+      44 Rassen-Definitionen (4 Baeume x 9 Stufen + Stylish Bandit Slayer
+      + 7 Legacy-Rassen). Erscheinen im ORIGINALEN Tensura-Menue via
+      "Tensura: Ascension" (ascension-2.1.2.jar). EP-Gates = nativ im Menue.
+
+  overrides/kubejs/server_scripts/shadow_race_trees.js
+      Zusatz-Gates (Kult-Anfuehrer / Katalysator-Items / Abyss-Dimension),
+      Perks (Fallschaden-Immunitaet, Void-Rettung, Vampir-Nacht-Perks,
+      I-Am-Atomic-Unlock), Baum-Wahl per /shadowtree, Evolution per
+      SNEAK + Rechtsklick mit Dunklem Aether. ERSETZT shadow_evos.js.
+
+  overrides/kubejs/server_scripts/secret_bandit_slayer.js
+      Geheimquest "Crazy Kid???": Readiness-Titel-Popup, Banditen-Dorf-
+      Tracking, 500k-Coins-Check, Ohnmachts-Event + Rassen-Wechsel.
+      Befehle: /shadowquest status | /shadowquest abgeben
+
+  overrides/kubejs/data/tensura_abyss/
+      tags/entity_type/bandits.json           — wer zaehlt als "Bandit"
+      tags/worldgen/structure/bandit_villages.json — was zaehlt als "Banditen-Dorf"
+      predicate/in_bandit_village.json        — Standort-Check fuer Kills
+
+───────────────────────────────────────────────────────────────────────────
+NACH DER INSTALLATION IM SPIEL VERIFIZIEREN (PFLICHT!)
+
+ 1. ASCENSION-TOML-SCHEMA: Die Key-Namen (spiritualHealth, isStartRace,
+    previousRace, evolutionRequirementEP, hidden) sind eine konsistente
+    VORLAGE. Starte das Pack einmal und vergleiche mit der von Ascension
+    generierten Beispiel-Config in config/ — Keys ggf. umbenennen.
+    Insbesondere "hidden" (versteckte Rasse) gegen die Doku pruefen.
+
+ 2. TENSURABRIDGE: setTensuraRace/getMagicules laufen ueber die Companion-
+    Mod (dev/companion-mod). Ohne gebaute Companion-Jar greift der
+    Scoreboard-Fallback (sg_magicule) — Gating funktioniert, aber der
+    echte In-Mod-Rassenwechsel unterbleibt (Chat-Hinweis erscheint).
+
+ 3. BANDITEN-DORF: Standard ist minecraft:pillager_outpost. Wenn eine
+    Struktur-Mod ein echtes Banditen-Dorf liefert (z.B. aus den vielen
+    installierten Struktur-Packs), dessen Struktur-ID einfach in
+    tags/worldgen/structure/bandit_villages.json ergaenzen —
+    ID im Spiel per /locate structure herausfinden.
+
+ 4. LIEGE-POSE: Ohne playerAnimator wird die Ohnmacht via Blindness +
+    Darkness + Slowness 255 inszeniert. Fuer eine echte Liege-Pose
+    (Pose.SLEEPING) einen Packet-Hook in der Companion-Mod ergaenzen
+    (Kommentar "TODO (Companion-Mod)" in secret_bandit_slayer.js).
+
+ 5. GILDEN-GUI: Die Geheimquest ist im Skript komplett spielbar
+    (/shadowquest). Damit sie im Gilden-INTERFACE nur fuer den
+    freigeschalteten Spieler erscheint: CommissionManager der Companion-
+    Mod auf Scoreboard sg_secret_quest == 1 pruefen lassen
+    (2 = abgeschlossen).
+
+───────────────────────────────────────────────────────────────────────────
+BALANCING-SCHNELLREFERENZ
+
+  Magicule-Gates (Stufe 2..9):  5k / 15k / 40k / 100k / 250k / 600k / 1.4M / 3M
+  Aether-Kosten  (Stufe 2..9):  1 / 2 / 3 / 4 / 5 / 7 / 9 / 12
+  Stufe-3-Gate:  Diablos-Kult-Anfuehrer besiegen (alle Baeume)
+  Stufe-5-Gate:  Slime: 4x Dunkler Schleim — andere: 2x Dunkler Aether extra
+  Stufe-8-Gate:  Shadow Abyss betreten (alle Baeume) -> Void-Immunitaet
+  Slime Stufe 9: I-Am-Atomic-Unlock + 1 Katalysator geschenkt
+  Geheimquest:   500.000 Coins + 15 Banditen im Dorf, ab 100k Magicules
+
+  Anpassen: Konstanten am Kopf der beiden Skripte (COINS_REQUIRED,
+  BANDITS_REQUIRED, READY_MAGICULE, MAGICULE[], AETHER_COST[]).
+═══════════════════════════════════════════════════════════════════════════

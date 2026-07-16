@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════
-#  Tensura Abyss — Shadow-Garden Rassen fuer Tensura Ascensions
+#  Tensura Abyss — Custom-Rassen fuer Tensura: Ascension (ascension-2.1.2)
 #  ZIEL-PFAD IN DER INSTANZ:  config/tensura/ascension-races.toml
 # ═══════════════════════════════════════════════════════════════════════════
 #
@@ -9,28 +9,498 @@
 #      Vorlage geschrieben; passe die Keys an das reale Schema an, falls sie
 #      abweichen (siehe die vom Mod generierte Beispiel-Config im config-Ordner).
 #
-#  Progression:  Possessed -> Shadow Garden Member -> Seven Shadows (Delta/
-#                Gamma/Beta/Alpha) -> Shadow (Ultimativ).
-#  Die Evolution wird ueber die Companion-Mod (TensuraBridge.setTensuraRace)
-#  bzw. shadow_evos.js ausgeloest; hier stehen die Rassen-STATS.
+#  ARCHITEKTUR:
+#   - Diese Datei definiert die Rassen -> sie erscheinen im ORIGINALEN
+#     Tensura-Rassenauswahl-/Evolutionsmenue (via Ascension-Addon).
+#   - evolutionRequirementEP ist das native EP-Gate im Menue.
+#   - Harte Zusatz-Gates (Boss-Kill, Dimension, Items, Coins) prueft
+#     kubejs/server_scripts/shadow_race_trees.js im Hintergrund.
+#   - Die versteckte Rasse (Stylish Bandit Slayer) wird NUR per Skript
+#     vergeben: kubejs/server_scripts/secret_bandit_slayer.js.
+#
+#  4 sichtbare Pfade x 9 Stufen + 1 versteckte Rasse + Legacy-Block.
 # ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PFAD 1: SHADOW SLIME TREE (Schatten-Schleim)
+# Fokus: spirituelle HP, Fallschaden-Immunitaet (Stufe 1, via Skript-Attribut).
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[race]]
+  id = "tensura_abyss:shadow_slime"
+  name = "Shadow Slime"
+  # Tiefvioletter Schleim. Fallschaden-Immunitaet setzt shadow_race_trees.js
+  # ueber das Attribut minecraft:generic.safe_fall_distance.
+  spiritualHealth = 70.0
+  physicalHealth = 45.0
+  movementSpeed = 0.105
+  attackDamage = 4.0
+  aura = 40.0
+  isStartRace = true
+  evolutionRequirementEP = 0
+
+[[race]]
+  id = "tensura_abyss:magicule_slime"
+  name = "Magicule Slime"
+  spiritualHealth = 115.0
+  physicalHealth = 72.0
+  movementSpeed = 0.11
+  attackDamage = 6.0
+  aura = 95.0
+  previousRace = "tensura_abyss:shadow_slime"
+  evolutionRequirementEP = 5000
+
+[[race]]
+  id = "tensura_abyss:abyss_slime"
+  name = "Abyss Slime"
+  # GATE (Skript): Sieg ueber den Diablos-Kult-Anfuehrer.
+  spiritualHealth = 185.0
+  physicalHealth = 117.0
+  movementSpeed = 0.115
+  attackDamage = 8.0
+  aura = 170.0
+  previousRace = "tensura_abyss:magicule_slime"
+  evolutionRequirementEP = 15000
+
+[[race]]
+  id = "tensura_abyss:shadow_garden_guard"
+  name = "Shadow Garden Guard"
+  # Feste humane Gestalt aus Schattenstoff.
+  spiritualHealth = 275.0
+  physicalHealth = 180.0
+  movementSpeed = 0.12
+  attackDamage = 11.0
+  aura = 300.0
+  previousRace = "tensura_abyss:abyss_slime"
+  evolutionRequirementEP = 40000
+
+[[race]]
+  id = "tensura_abyss:dark_slime_sovereign"
+  name = "Dark Slime Sovereign"
+  # GATE (Skript): benoetigt Dunklen Schleim (kubejs:dark_slime).
+  spiritualHealth = 415.0
+  physicalHealth = 270.0
+  movementSpeed = 0.13
+  attackDamage = 14.0
+  aura = 510.0
+  previousRace = "tensura_abyss:shadow_garden_guard"
+  evolutionRequirementEP = 100000
+
+[[race]]
+  id = "tensura_abyss:shadow_lord"
+  name = "Shadow Lord"
+  spiritualHealth = 600.0
+  physicalHealth = 385.0
+  movementSpeed = 0.14
+  attackDamage = 18.0
+  aura = 850.0
+  previousRace = "tensura_abyss:dark_slime_sovereign"
+  evolutionRequirementEP = 250000
+
+[[race]]
+  id = "tensura_abyss:awakened_shadow_lord"
+  name = "Awakened Shadow Lord"
+  # Native True-Demon-Lord-Stufe.
+  spiritualHealth = 875.0
+  physicalHealth = 560.0
+  movementSpeed = 0.15
+  attackDamage = 24.0
+  aura = 1500.0
+  previousRace = "tensura_abyss:shadow_lord"
+  evolutionRequirementEP = 600000
+
+[[race]]
+  id = "tensura_abyss:abyss_monarch"
+  name = "Abyss Monarch"
+  # GATE (Skript): Shadow-Abyss-Dimension betreten.
+  # PERK (Skript): permanente Void-Immunitaet (Rettung aus der Leere).
+  spiritualHealth = 1265.0
+  physicalHealth = 810.0
+  movementSpeed = 0.165
+  attackDamage = 32.0
+  aura = 2800.0
+  previousRace = "tensura_abyss:awakened_shadow_lord"
+  evolutionRequirementEP = 1400000
+
+[[race]]
+  id = "tensura_abyss:eminence_of_the_abyss"
+  name = "Eminence of the Abyss"
+  # MAXIMUM. PERK (Skript): schaltet "I Am Atomic" frei (120 AoE, neon-blau,
+  # Bass-Sound, keine Blockschaeden — Implementierung in shadow_garden.js).
+  spiritualHealth = 2070.0
+  physicalHealth = 1260.0
+  movementSpeed = 0.19
+  attackDamage = 45.0
+  aura = 5400.0
+  previousRace = "tensura_abyss:abyss_monarch"
+  evolutionRequirementEP = 3000000
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PFAD 2: SHADOW DEMON TREE (Schatten-Daemon)
+# Fokus: rohe Zerstoerungsmagie -> hohe Aura & Attack.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[race]]
+  id = "tensura_abyss:low_shadow_demon"
+  name = "Low Shadow Demon"
+  spiritualHealth = 60.0
+  physicalHealth = 48.0
+  movementSpeed = 0.105
+  attackDamage = 4.5
+  aura = 50.0
+  isStartRace = true
+  evolutionRequirementEP = 0
+
+[[race]]
+  id = "tensura_abyss:shadow_demon_peer"
+  name = "Shadow Demon Peer"
+  spiritualHealth = 100.0
+  physicalHealth = 76.0
+  movementSpeed = 0.11
+  attackDamage = 6.5
+  aura = 115.0
+  previousRace = "tensura_abyss:low_shadow_demon"
+  evolutionRequirementEP = 5000
+
+[[race]]
+  id = "tensura_abyss:blood_shadow_demon"
+  name = "Blood-Shadow Demon"
+  # GATE (Skript): Sieg ueber den Diablos-Kult-Anfuehrer.
+  spiritualHealth = 160.0
+  physicalHealth = 124.0
+  movementSpeed = 0.115
+  attackDamage = 9.0
+  aura = 200.0
+  previousRace = "tensura_abyss:shadow_demon_peer"
+  evolutionRequirementEP = 15000
+
+[[race]]
+  id = "tensura_abyss:arcane_demon_guard"
+  name = "Arcane Demon Guard"
+  spiritualHealth = 240.0
+  physicalHealth = 190.0
+  movementSpeed = 0.12
+  attackDamage = 12.0
+  aura = 350.0
+  previousRace = "tensura_abyss:blood_shadow_demon"
+  evolutionRequirementEP = 40000
+
+[[race]]
+  id = "tensura_abyss:arch_demon_of_shadows"
+  name = "Arch-Demon of Shadows"
+  # GATE (Skript): benoetigt 2x Dunklen Aether als Katalysator im Inventar.
+  spiritualHealth = 360.0
+  physicalHealth = 285.0
+  movementSpeed = 0.13
+  attackDamage = 15.5
+  aura = 600.0
+  previousRace = "tensura_abyss:arcane_demon_guard"
+  evolutionRequirementEP = 100000
+
+[[race]]
+  id = "tensura_abyss:shadow_duke"
+  name = "Shadow Duke"
+  spiritualHealth = 520.0
+  physicalHealth = 410.0
+  movementSpeed = 0.14
+  attackDamage = 20.0
+  aura = 1000.0
+  previousRace = "tensura_abyss:arch_demon_of_shadows"
+  evolutionRequirementEP = 250000
+
+[[race]]
+  id = "tensura_abyss:awakened_demon_king"
+  name = "Awakened Demon King"
+  spiritualHealth = 760.0
+  physicalHealth = 590.0
+  movementSpeed = 0.15
+  attackDamage = 26.5
+  aura = 1750.0
+  previousRace = "tensura_abyss:shadow_duke"
+  evolutionRequirementEP = 600000
+
+[[race]]
+  id = "tensura_abyss:void_overlord"
+  name = "Void Overlord"
+  # GATE (Skript): Shadow-Abyss-Dimension betreten. PERK: Void-Immunitaet.
+  spiritualHealth = 1100.0
+  physicalHealth = 855.0
+  movementSpeed = 0.165
+  attackDamage = 35.0
+  aura = 3250.0
+  previousRace = "tensura_abyss:awakened_demon_king"
+  evolutionRequirementEP = 1400000
+
+[[race]]
+  id = "tensura_abyss:diablos_eminence"
+  name = "Diablos Eminence"
+  spiritualHealth = 1800.0
+  physicalHealth = 1330.0
+  movementSpeed = 0.19
+  attackDamage = 50.0
+  aura = 6250.0
+  previousRace = "tensura_abyss:void_overlord"
+  evolutionRequirementEP = 3000000
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PFAD 3: ANCIENT SHADOW HERO TREE (antiker Schatten-Held)
+# Fokus: Schwertkunst & Licht-Schatten-Magie -> hoher Attack & Speed.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[race]]
+  id = "tensura_abyss:human_apprentice"
+  name = "Human Apprentice"
+  spiritualHealth = 55.0
+  physicalHealth = 55.0
+  movementSpeed = 0.11
+  attackDamage = 5.0
+  aura = 34.0
+  isStartRace = true
+  evolutionRequirementEP = 0
+
+[[race]]
+  id = "tensura_abyss:shadow_spellsword"
+  name = "Shadow Spellsword"
+  spiritualHealth = 92.0
+  physicalHealth = 86.0
+  movementSpeed = 0.115
+  attackDamage = 7.0
+  aura = 76.0
+  previousRace = "tensura_abyss:human_apprentice"
+  evolutionRequirementEP = 5000
+
+[[race]]
+  id = "tensura_abyss:shadow_blade"
+  name = "Shadow Blade"
+  # GATE (Skript): Sieg ueber den Diablos-Kult-Anfuehrer.
+  spiritualHealth = 148.0
+  physicalHealth = 140.0
+  movementSpeed = 0.12
+  attackDamage = 10.0
+  aura = 136.0
+  previousRace = "tensura_abyss:shadow_spellsword"
+  evolutionRequirementEP = 15000
+
+[[race]]
+  id = "tensura_abyss:cult_breaker"
+  name = "Cult Breaker"
+  spiritualHealth = 220.0
+  physicalHealth = 215.0
+  movementSpeed = 0.125
+  attackDamage = 13.0
+  aura = 240.0
+  previousRace = "tensura_abyss:shadow_blade"
+  evolutionRequirementEP = 40000
+
+[[race]]
+  id = "tensura_abyss:master_of_garden"
+  name = "Master of Garden"
+  # GATE (Skript): benoetigt 2x Dunklen Aether als Katalysator im Inventar.
+  spiritualHealth = 330.0
+  physicalHealth = 320.0
+  movementSpeed = 0.135
+  attackDamage = 17.0
+  aura = 410.0
+  previousRace = "tensura_abyss:cult_breaker"
+  evolutionRequirementEP = 100000
+
+[[race]]
+  id = "tensura_abyss:ancient_knight"
+  name = "Ancient Knight"
+  spiritualHealth = 480.0
+  physicalHealth = 460.0
+  movementSpeed = 0.145
+  attackDamage = 21.5
+  aura = 680.0
+  previousRace = "tensura_abyss:master_of_garden"
+  evolutionRequirementEP = 250000
+
+[[race]]
+  id = "tensura_abyss:true_hero_of_shadows"
+  name = "True Hero of Shadows"
+  spiritualHealth = 700.0
+  physicalHealth = 660.0
+  movementSpeed = 0.155
+  attackDamage = 29.0
+  aura = 1190.0
+  previousRace = "tensura_abyss:ancient_knight"
+  evolutionRequirementEP = 600000
+
+[[race]]
+  id = "tensura_abyss:light_shadow_monarch"
+  name = "Light-Shadow Monarch"
+  # GATE (Skript): Shadow-Abyss-Dimension betreten. PERK: Void-Immunitaet.
+  spiritualHealth = 1010.0
+  physicalHealth = 960.0
+  movementSpeed = 0.17
+  attackDamage = 38.5
+  aura = 2210.0
+  previousRace = "tensura_abyss:true_hero_of_shadows"
+  evolutionRequirementEP = 1400000
+
+[[race]]
+  id = "tensura_abyss:sovereign_of_midnight"
+  name = "Sovereign of Midnight"
+  spiritualHealth = 1650.0
+  physicalHealth = 1500.0
+  movementSpeed = 0.195
+  attackDamage = 54.0
+  aura = 4250.0
+  previousRace = "tensura_abyss:light_shadow_monarch"
+  evolutionRequirementEP = 3000000
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PFAD 4: PROGENITOR BLOOD-SHADOW TREE (Urvampir)
+# Fokus: physische HP; Lifesteal + Nacht-Regeneration + Nebel via Skript.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[race]]
+  id = "tensura_abyss:vampire_spawn"
+  name = "Vampire Spawn"
+  spiritualHealth = 57.0
+  physicalHealth = 60.0
+  movementSpeed = 0.108
+  attackDamage = 4.5
+  aura = 38.0
+  isStartRace = true
+  evolutionRequirementEP = 0
+
+[[race]]
+  id = "tensura_abyss:blood_shadow"
+  name = "Blood Shadow"
+  spiritualHealth = 95.0
+  physicalHealth = 96.0
+  movementSpeed = 0.113
+  attackDamage = 6.5
+  aura = 86.0
+  previousRace = "tensura_abyss:vampire_spawn"
+  evolutionRequirementEP = 5000
+
+[[race]]
+  id = "tensura_abyss:mist_walker"
+  name = "Mist Walker"
+  # GATE (Skript): Sieg ueber den Diablos-Kult-Anfuehrer.
+  # PERK (Skript): Nebelgestalt — Unsichtbarkeit beim Schleichen in der Nacht.
+  spiritualHealth = 152.0
+  physicalHealth = 156.0
+  movementSpeed = 0.118
+  attackDamage = 8.5
+  aura = 153.0
+  previousRace = "tensura_abyss:blood_shadow"
+  evolutionRequirementEP = 15000
+
+[[race]]
+  id = "tensura_abyss:crimson_noble"
+  name = "Crimson Noble"
+  spiritualHealth = 228.0
+  physicalHealth = 240.0
+  movementSpeed = 0.123
+  attackDamage = 11.5
+  aura = 270.0
+  previousRace = "tensura_abyss:mist_walker"
+  evolutionRequirementEP = 40000
+
+[[race]]
+  id = "tensura_abyss:night_stalker"
+  name = "Night Stalker"
+  # GATE (Skript): benoetigt 2x Dunklen Aether als Katalysator im Inventar.
+  spiritualHealth = 342.0
+  physicalHealth = 360.0
+  movementSpeed = 0.133
+  attackDamage = 15.0
+  aura = 460.0
+  previousRace = "tensura_abyss:crimson_noble"
+  evolutionRequirementEP = 100000
+
+[[race]]
+  id = "tensura_abyss:pureblood_vampire"
+  name = "Pureblood Vampire"
+  spiritualHealth = 494.0
+  physicalHealth = 516.0
+  movementSpeed = 0.143
+  attackDamage = 19.0
+  aura = 765.0
+  previousRace = "tensura_abyss:night_stalker"
+  evolutionRequirementEP = 250000
+
+[[race]]
+  id = "tensura_abyss:awakened_blood_lord"
+  name = "Awakened Blood Lord"
+  spiritualHealth = 722.0
+  physicalHealth = 744.0
+  movementSpeed = 0.153
+  attackDamage = 25.5
+  aura = 1340.0
+  previousRace = "tensura_abyss:pureblood_vampire"
+  evolutionRequirementEP = 600000
+
+[[race]]
+  id = "tensura_abyss:monarch_of_the_red_moon"
+  name = "Monarch of the Red Moon"
+  # GATE (Skript): Shadow-Abyss-Dimension betreten. PERK: Void-Immunitaet.
+  spiritualHealth = 1045.0
+  physicalHealth = 1080.0
+  movementSpeed = 0.168
+  attackDamage = 34.0
+  aura = 2490.0
+  previousRace = "tensura_abyss:awakened_blood_lord"
+  evolutionRequirementEP = 1400000
+
+[[race]]
+  id = "tensura_abyss:progenitor_of_the_abyss"
+  name = "Progenitor of the Abyss"
+  spiritualHealth = 1710.0
+  physicalHealth = 1680.0
+  movementSpeed = 0.192
+  attackDamage = 48.0
+  aura = 5000.0
+  previousRace = "tensura_abyss:monarch_of_the_red_moon"
+  evolutionRequirementEP = 3000000
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GEHEIME RASSE: STYLISH BANDIT SLAYER  (NICHT im Startmenue!)
+# Wird AUSSCHLIESSLICH per Skript vergeben (secret_bandit_slayer.js):
+# Gilden-Geheimquest "Crazy Kid???" — 500.000 Mitsugoshi-Muenzen +
+# Banditen-Dorf saeubern -> Ohnmachts-Event -> permanente Verwandlung.
+#
+# >>> Der Key "hidden" ist eine ANNAHME — verifiziere gegen die
+#     Ascensions-Beispiel-Config, wie Rassen aus dem Menue versteckt werden
+#     (alternativ: isStartRace=false + kein previousRace laesst die Rasse in
+#     der Praxis unerreichbar fuer das Menue, da sie in keinem Baum haengt).
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[race]]
+  id = "tensura_abyss:stylish_bandit_slayer"
+  name = "Stylish Bandit Slayer"
+  spiritualHealth = 2400.0
+  physicalHealth = 2000.0
+  movementSpeed = 0.21
+  attackDamage = 55.0
+  aura = 7500.0
+  isStartRace = false
+  hidden = true
+  evolutionRequirementEP = 0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LEGACY (v3.5.0): alte Shadow-Garden-Leiter — bleibt fuer bestehende Welten
+# erhalten, damit Spieler mit diesen Rassen nicht "racelos" werden.
+# Neue Spieler starten in einem der 4 Baeume oben.
+# ─────────────────────────────────────────────────────────────────────────────
 
 [[race]]
   id = "tensura_abyss:possessed"
   name = "Possessed"
-  # Startklasse: bewusst geschwaechte Werte (der "Befallene" Zustand).
   spiritualHealth = 40.0
   physicalHealth = 30.0
   movementSpeed = 0.09
   attackDamage = 2.0
   aura = 20.0
-  isStartRace = false           # via Ritual/Heilung erreichbar, nicht Vanilla-Start
+  isStartRace = false
   evolutionRequirementEP = 0
 
 [[race]]
   id = "tensura_abyss:shadow_garden_member"
   name = "Shadow Garden Member"
-  # Gebuffte Standard-Werte nach dem Beitritt.
   spiritualHealth = 120.0
   physicalHealth = 100.0
   movementSpeed = 0.12
@@ -39,11 +509,9 @@
   previousRace = "tensura_abyss:possessed"
   evolutionRequirementEP = 5000
 
-# ── Seven Shadows: vier Spezialisierungen (Delta/Gamma/Beta/Alpha) ──
 [[race]]
   id = "tensura_abyss:seven_shadows_delta"
   name = "Seven Shadows — Delta"
-  # Delta: roher Bestien-Nahkampf (hohe physische Werte).
   spiritualHealth = 220.0
   physicalHealth = 320.0
   movementSpeed = 0.135
@@ -55,7 +523,6 @@
 [[race]]
   id = "tensura_abyss:seven_shadows_gamma"
   name = "Seven Shadows — Gamma"
-  # Gamma: Balance mit Fokus auf Ausdauer/Aura.
   spiritualHealth = 300.0
   physicalHealth = 260.0
   movementSpeed = 0.14
@@ -67,7 +534,6 @@
 [[race]]
   id = "tensura_abyss:seven_shadows_beta"
   name = "Seven Shadows — Beta"
-  # Beta: hohe spirituelle Werte (Magie/Skills).
   spiritualHealth = 420.0
   physicalHealth = 300.0
   movementSpeed = 0.145
@@ -79,7 +545,6 @@
 [[race]]
   id = "tensura_abyss:seven_shadows_alpha"
   name = "Seven Shadows — Alpha"
-  # Alpha: staerkste der Sieben, Spitzenwerte in allem.
   spiritualHealth = 600.0
   physicalHealth = 520.0
   movementSpeed = 0.155
@@ -88,7 +553,6 @@
   previousRace = "tensura_abyss:shadow_garden_member"
   evolutionRequirementEP = 200000
 
-# ── Shadow: die ultimative Form (Cid) — extreme spirituelle HP & Speed ──
 [[race]]
   id = "tensura_abyss:shadow"
   name = "Shadow"
@@ -99,4 +563,3 @@
   aura = 5000.0
   previousRace = "tensura_abyss:seven_shadows_alpha"
   evolutionRequirementEP = 500000
-  # Voraussetzung fuer den "I Am Atomic"-Skill (zusaetzlich >= 5.000.000 Max EP).

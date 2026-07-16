@@ -134,9 +134,12 @@ ItemEvents.rightClicked('kubejs:i_am_atomic_catalyst', event => {
     return
   }
 
-  // Voraussetzung: Rang "Shadow" (hoechste Evo, Index 6) + >= 5.000.000 Max EP.
-  if (player.persistentData.getInt('sgEvoRank') < 6) {
-    player.tell(Text.gray('Nur der Rang [Shadow] kann "I Am Atomic" entfesseln.'))
+  // Voraussetzung: [Eminence of the Abyss] (Slime-Baum Stufe 9, setzt
+  // sgAtomicUnlocked in shadow_race_trees.js) ODER Legacy-Rang "Shadow".
+  const atomicUnlocked = player.persistentData.getBoolean('sgAtomicUnlocked') ||
+    player.persistentData.getInt('sgEvoRank') >= 6
+  if (!atomicUnlocked) {
+    player.tell(Text.gray('Nur die [Eminence of the Abyss] kann "I Am Atomic" entfesseln.'))
     return
   }
   if (ATOMIC_BRIDGE) {
