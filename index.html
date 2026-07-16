@@ -896,8 +896,8 @@ footer a{color:var(--teal)}
   <div class="callout cl-gold">
     <span class="callout-i">&#9888;</span>
     <div>
-      <strong>DE:</strong> Das Skill-Unlock (Breath-System) ben&ouml;tigt eine Anpassung an die exakte Tensura-Command-Syntax &mdash; siehe Kommentare in <code>kubejs/server_scripts/balancing.js</code>.<br>
-      <strong>EN:</strong> The skill unlock (Breath system) needs adjustment to the exact Tensura command syntax &mdash; see comments in <code>kubejs/server_scripts/balancing.js</code>.
+      <strong>DE:</strong> Das Skill-Unlock (Breath-System) ben&ouml;tigt eine Anpassung an die exakte Tensura-Command-Syntax &mdash; siehe Kommentare in <code>overrides/kubejs/server_scripts/balancing.js</code>.<br>
+      <strong>EN:</strong> The skill unlock (Breath system) needs adjustment to the exact Tensura command syntax &mdash; see comments in <code>overrides/kubejs/server_scripts/balancing.js</code>.
     </div>
   </div>
 
@@ -911,7 +911,7 @@ footer a{color:var(--teal)}
       <p><strong>Reichweite:</strong> Auf <strong>6.000 Blocks</strong> begrenzt (statt Standard 10.000+) &mdash; verhindert Chunk-Generation-Spitzen und Server-Crashes.</p>
       <p><strong>Sicherheit:</strong> Eingebauter Scan verhindert Landung in Lava, Ozean, Void oder ohne Kopffreiheit.</p>
       <p><strong>Cooldown:</strong> 300 Sekunden zwischen zwei Teleports &mdash; verhindert RTP-Spam-Farming.</p>
-      <p>Config-Pfad: <code>config/simplertp-common.toml</code> &mdash; volle Anleitung in <code>configs/simplertp_setup.txt</code>.</p>
+      <p>Config-Pfad: <code>config/simplertp-common.toml</code> &mdash; volle Anleitung in <code>docs/simplertp_setup.txt</code>.</p>
     </div>
     <div class="bi-col en">
       <div class="bi-col-head">
@@ -922,7 +922,7 @@ footer a{color:var(--teal)}
       <p><strong>Range:</strong> Capped at <strong>6,000 blocks</strong> (instead of the default 10,000+) &mdash; prevents chunk-generation spikes and server crashes.</p>
       <p><strong>Safety:</strong> Built-in scan prevents landing in lava, ocean, void, or without headroom.</p>
       <p><strong>Cooldown:</strong> 300 seconds between teleports &mdash; prevents RTP-spam farming.</p>
-      <p>Config path: <code>config/simplertp-common.toml</code> &mdash; full guide in <code>configs/simplertp_setup.txt</code>.</p>
+      <p>Config path: <code>config/simplertp-common.toml</code> &mdash; full guide in <code>docs/simplertp_setup.txt</code>.</p>
     </div>
   </div>
 </section>
@@ -993,8 +993,8 @@ footer a{color:var(--teal)}
   <div class="callout cl-gold">
     <span class="callout-i">&#9888;</span>
     <div>
-      <strong>DE:</strong> Das System liegt in <code>kubejs/</code> (startup + server scripts). Setup-Anleitung: <code>configs/shadow_garden_setup.txt</code>. Das Tensura-Breath-Unlock-Command muss im Spiel verifiziert werden (Kommentar in <code>shadow_garden.js</code>).<br>
-      <strong>EN:</strong> The system lives in <code>kubejs/</code> (startup + server scripts). Setup guide: <code>configs/shadow_garden_setup.txt</code>. The Tensura Breath unlock command must be verified in-game (comment in <code>shadow_garden.js</code>).
+      <strong>DE:</strong> Das System liegt in <code>overrides/kubejs/</code> (startup + server scripts). Setup-Anleitung: <code>docs/shadow_garden_setup.txt</code>. Das Tensura-Breath-Unlock-Command muss im Spiel verifiziert werden (Kommentar in <code>shadow_garden.js</code>).<br>
+      <strong>EN:</strong> The system lives in <code>overrides/kubejs/</code> (startup + server scripts). Setup guide: <code>docs/shadow_garden_setup.txt</code>. The Tensura Breath unlock command must be verified in-game (comment in <code>shadow_garden.js</code>).
     </div>
   </div>
 </section>
@@ -1056,8 +1056,8 @@ footer a{color:var(--teal)}
   <div class="callout cl-gold">
     <span class="callout-i">&#9888;</span>
     <div>
-      <strong>DE:</strong> Dateien liegen in <code>kubejs/data/tensura_abyss/</code> (Auto-Datapack). Setup + Tectonic-Fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender ist f&uuml;r die eigene Dimension nicht n&ouml;tig (nur f&uuml;r Overworld-Injektion &mdash; optionales Java-Template beiliegend).<br>
-      <strong>EN:</strong> Files live in <code>kubejs/data/tensura_abyss/</code> (auto datapack). Setup + Tectonic fallback: <code>configs/shadow_abyss_setup.txt</code>. TerraBlender isn&rsquo;t needed for the custom dimension (only for overworld injection &mdash; optional Java template included).
+      <strong>DE:</strong> Dateien liegen in <code>overrides/kubejs/data/tensura_abyss/</code> (Auto-Datapack). Setup + Tectonic-Fallback: <code>docs/shadow_abyss_setup.txt</code>. TerraBlender ist f&uuml;r die eigene Dimension nicht n&ouml;tig (nur f&uuml;r Overworld-Injektion &mdash; optionales Java-Template beiliegend).<br>
+      <strong>EN:</strong> Files live in <code>overrides/kubejs/data/tensura_abyss/</code> (auto datapack). Setup + Tectonic fallback: <code>docs/shadow_abyss_setup.txt</code>. TerraBlender isn&rsquo;t needed for the custom dimension (only for overworld injection &mdash; optional Java template included).
     </div>
   </div>
 </section>
@@ -1148,8 +1148,8 @@ footer a{color:var(--teal)}
   <div class="callout cl-gold">
     <span class="callout-i">&#9888;</span>
     <div>
-      <strong>DE:</strong> Companion-Mod in <code>companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura-Zugriffe laufen ueber eine <strong>crash-sichere Reflection-Bridge</strong>: findet sie die Tensura-Klassen nicht, degradiert sie <strong>lautlos &amp; lag-frei</strong> auf das <code>sg_magicule</code>-Scoreboard (kein Pack-Crash bei Tensura-Updates, kein Error-Log-Spam). Der &bdquo;I Am Atomic&ldquo;-Skill ist als echtes Java-Item umgesetzt. Minimap-Icons brauchen die Xaero/JourneyMap-API. Details: <code>companion-mod/README.md</code>.<br>
-      <strong>EN:</strong> Companion mod in <code>companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura access goes through a <strong>crash-safe reflection bridge</strong>: if it can&rsquo;t find the Tensura classes it degrades <strong>silently &amp; lag-free</strong> to the <code>sg_magicule</code> scoreboard (no pack crash on Tensura updates, no error-log spam). The &ldquo;I Am Atomic&rdquo; skill is a real Java item. Minimap icons need the Xaero/JourneyMap API. Details: <code>companion-mod/README.md</code>.
+      <strong>DE:</strong> Companion-Mod in <code>dev/companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura-Zugriffe laufen ueber eine <strong>crash-sichere Reflection-Bridge</strong>: findet sie die Tensura-Klassen nicht, degradiert sie <strong>lautlos &amp; lag-frei</strong> auf das <code>sg_magicule</code>-Scoreboard (kein Pack-Crash bei Tensura-Updates, kein Error-Log-Spam). Der &bdquo;I Am Atomic&ldquo;-Skill ist als echtes Java-Item umgesetzt. Minimap-Icons brauchen die Xaero/JourneyMap-API. Details: <code>dev/companion-mod/README.md</code>.<br>
+      <strong>EN:</strong> Companion mod in <code>dev/companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura access goes through a <strong>crash-safe reflection bridge</strong>: if it can&rsquo;t find the Tensura classes it degrades <strong>silently &amp; lag-free</strong> to the <code>sg_magicule</code> scoreboard (no pack crash on Tensura updates, no error-log spam). The &ldquo;I Am Atomic&rdquo; skill is a real Java item. Minimap icons need the Xaero/JourneyMap API. Details: <code>dev/companion-mod/README.md</code>.
     </div>
   </div>
 </section>

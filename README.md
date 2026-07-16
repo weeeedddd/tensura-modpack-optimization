@@ -1,20 +1,42 @@
 # Tensura Abyss — Modpack Optimization Repo
 
 Optimization guide, configs, and KubeJS scripts for the **Tensura Abyss** modpack
-(Minecraft 1.21.1 · NeoForge · v3.1.5).
+(Minecraft 1.21.1 · NeoForge · v3.5.0).
 
 > **CurseForge:** https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss
 
 ---
 
-## Files
+## Repository Structure
 
-| File | Description |
-|------|-------------|
-| `index.html` | Bilingual DE/EN landing page (served via GitHub Pages) |
-| `kubejs/server_scripts/tensura_balancing.js` | Loot table & recipe balancing templates |
-| `kubejs/startup_scripts/tensura_fixes.js` | Cross-mod item/block tag assignments |
-| `configs/options_optimized.txt` | Drop-in Minecraft options.txt with optimized settings |
+This repo is laid out so it can be exported to CurseForge directly: only
+`manifest.json` + the `overrides/` folder are part of the pack. Everything
+else (`dev/`, `docs/`) is source and documentation that stays out of the export.
+
+```
+manifest.json            ← CurseForge mod list (projectID + fileID per mod)
+index.html               ← Landing page, served via GitHub Pages
+overrides/               ← Instance files shipped to players (the pack payload)
+├── config/
+│   ├── ftbquests/…      ← Shadow Garden quest chapter
+│   └── tensura/ascension-races.toml   ← Ascensions race stats (template — verify keys)
+├── kubejs/
+│   ├── assets/…         ← Item/block textures (KubeJS namespace)
+│   ├── data/…           ← Shadow Abyss dimension + worldgen datapack
+│   ├── server_scripts/  ← Recipes, balancing, events
+│   └── startup_scripts/ ← Item/block/armor registration
+└── resourcepacks/TensuraAbyss_ShadowGarden/
+dev/                     ← Source & tooling (NOT shipped in the pack)
+├── companion-mod/       ← NeoForge companion mod (Gradle source)
+├── java_templates/      ← Optional Java snippets (e.g. TerraBlender region)
+└── tools/               ← Python/PowerShell asset & quest generators
+docs/                    ← Setup guides & notes (NOT shipped in the pack)
+```
+
+> **Custom companion mod:** it lives as source in `dev/companion-mod/`. Its
+> compiled `.jar` is **not** on CurseForge, so for the pack to include it the
+> built jar must be dropped into `overrides/mods/` (or it is already present in
+> your local instance, in which case a CurseForge-app export picks it up).
 
 ---
 
@@ -31,12 +53,29 @@ Optimization guide, configs, and KubeJS scripts for the **Tensura Abyss** modpac
 - **Never install:** OptiFine — causes sensitivity bugs + conflicts with Embeddium
 
 ### 3 — Mouse Fix (if sensitivity resets)
-Copy `configs/options_optimized.txt` into your instance folder,
+Copy `docs/options_optimized.txt` into your instance folder as `options.txt`,
 then set the file **read-only** (right-click → Properties → Read-only).
 
 ### 4 — KubeJS Balancing (optional, for customization)
-Copy the `kubejs/` folder into your instance folder. Open the scripts,
+The scripts ship in `overrides/kubejs/`. To tweak them, edit the files there,
 find your item IDs with `/kubejs hand` in-game, then uncomment the relevant lines.
+
+---
+
+## Building the CurseForge Pack
+
+The repo is already in CurseForge layout, so a release zip is just
+`manifest.json` + `overrides/` (do **not** include `dev/`, `docs/`, `index.html`
+or `README.md`):
+
+```bash
+zip -r tensura-abyss-3.5.0.zip manifest.json overrides
+```
+
+Then upload the zip in the **CurseForge Console** (console.curseforge.com →
+your project → Files → Upload File). Alternatively, export straight from the
+CurseForge app (••• → Export) — that regenerates `manifest.json` from your
+installed mods automatically.
 
 ---
 
@@ -46,7 +85,7 @@ find your item IDs with `/kubejs hand` in-game, then uncomment the relevant line
 |----------|-------|
 | MC Version | 1.21.1 |
 | Modloader | NeoForge |
-| Pack Version | v3.1.5 (April 17, 2026) |
+| Pack Version | v3.5.0 |
 | Quests | 500+ (15 chapters, in development) |
 | Focus | Hardcore survival RPG + colony building + automation |
 
@@ -132,4 +171,4 @@ find your item IDs with `/kubejs hand` in-game, then uncomment the relevant line
 
 ---
 
-*Last Updated: July 2026 · MC 1.21.1 NeoForge · Pack v3.1.5*
+*Last Updated: July 2026 · MC 1.21.1 · NeoForge · Pack v3.5.0*
