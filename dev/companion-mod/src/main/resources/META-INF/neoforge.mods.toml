@@ -44,3 +44,11 @@ type = "required"
 versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# Nightmare's Tensura Utils: API-Library, MUSS vorher laden.
+[[dependencies.${mod_id}]]
+modId = "nightmarestensurautils"
+type = "required"
+versionRange = "[0.1,)"
+ordering = "AFTER"
+side = "BOTH"

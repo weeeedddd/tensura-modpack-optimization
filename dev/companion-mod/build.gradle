@@ -30,17 +30,23 @@ neoForge {
 
 repositories {
     mavenCentral()
-    // CurseMaven — falls du die Tensura-Mods als compileOnly-Abhaengigkeit
-    // einbinden willst (die Bridge nutzt jedoch Reflection, daher optional):
+    // CurseMaven: liefert die exakt im Pack installierten Mod-Jars fuer den
+    // Compile gegen die echte Tensura-/ManasCore-API (Race-Registrierung).
     maven { url = 'https://cursemaven.com'; content { includeGroup 'curse.maven' } }
 }
 
 dependencies {
-    // Reflection-Bridge -> KEINE feste Compile-Abhaengigkeit noetig.
-    // Optional (fuer direkte Imports statt Reflection): die passenden
-    // curse.maven-Koordinaten von Tensura Reincarnated / Ascensions eintragen:
-    // compileOnly "curse.maven:tensura-reincarnated-XXXXXX:FILEID"
-    // compileOnly "curse.maven:tensura-ascensions-1505110:8060740"
+    // ── Compile gegen die echte Tensura-API (AbyssRaces braucht die Race-Klasse) ──
+    // NeoForge 1.21.1 nutzt offizielle Mappings -> Produktions-Jars sind direkt
+    // kompilierbar (kein deobf noetig). ManasCore ist Tensuras Basis-Lib.
+    implementation "curse.maven:manascore-${manascore_project_id}:${manascore_file_id}"
+    implementation "curse.maven:tensura-reincarnated-${tensura_project_id}:${tensura_file_id}"
+    implementation "curse.maven:nightmares-tensura-utils-${nightmareutils_project_id}:${nightmareutils_file_id}"
+
+    // Alternativ via JitPack (Gruppe com.github.manasmods):
+    //   maven { url = 'https://jitpack.io' }
+    //   implementation "com.github.manasmods:tensura:<version>"
+    //   implementation "com.github.manasmods:ManasCore:<version>"
 }
 
 tasks.named('processResources', ProcessResources).configure {

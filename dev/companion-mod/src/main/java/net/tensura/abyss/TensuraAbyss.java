@@ -5,6 +5,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.tensura.abyss.command.ShadowCommands;
 import net.tensura.abyss.guild.GuildEventHandler;
+import net.tensura.abyss.registry.AbyssRaces;
 import net.tensura.abyss.registry.ModArmorMaterials;
 import net.tensura.abyss.registry.ModCreativeTabs;
 import net.tensura.abyss.registry.ModItems;
@@ -29,6 +30,11 @@ public class TensuraAbyss {
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
+
+        // Custom-Rassen nativ in Tensuras Race-Registry anmelden (Weg B)
+        AbyssRaces.register(modEventBus);
+        LOGGER.info("[Tensura Abyss] {} Custom-Rassen zur Registrierung angemeldet.",
+                AbyssRaces.registeredCount());
 
         // Server-/Game-Events (Gilden-Login-Tracking, Commands)
         NeoForge.EVENT_BUS.register(new GuildEventHandler());
