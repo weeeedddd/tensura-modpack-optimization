@@ -9,9 +9,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.tensura.abyss.commission.Commission;
 import net.tensura.abyss.commission.CommissionManager;
 import net.tensura.abyss.guild.*;
+import net.tensura.abyss.network.ClientboundOpenGuildScreenPayload;
 
 import java.util.UUID;
 
@@ -56,7 +58,16 @@ public class ShadowCommands {
                                     return 1;
                                 }))
                         .then(Commands.literal("info")
-                                .executes(ctx -> guildInfo(ctx.getSource().getPlayerOrException()))))
+                                .executes(ctx -> guildInfo(ctx.getSource().getPlayerOrException())))
+                        .then(Commands.literal("open")
+                                .executes(ctx -> openGui(ctx.getSource().getPlayerOrException())))
+                        .then(Commands.literal("accept")
+                                .executes(ctx -> {
+                                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                                    boolean ok = GuildInviteManager.accept(p);
+                                    if (!ok) p.sendSystemMessage(Component.literal("§7Keine offene Einladung."));
+                                    return ok ? 1 : 0;
+                                })))
                 // ── PARTY ──
                 .then(Commands.literal("party")
                         .then(Commands.literal("create")
@@ -104,6 +115,26 @@ public class ShadowCommands {
                             PartyManager.chat(p.getServer(), p, StringArgumentType.getString(ctx, "message"));
                             return 1;
                         })));
+    }
+
+    /** Sendet eine Gilden-Momentaufnahme an den Client und oeffnet das GUI. */
+    private int openGui(ServerPlayer p) {
+        GuildSavedData data = GuildSavedData.get(p.getServer());
+        Guild g = data.guildOf(p.getUUID());
+        if (g == null) {
+            p.sendSystemMessage(Component.literal("§7Du bist in keiner Gilde."));
+            return 0;
+        }
+        GuildRank rank = g.members.get(p.getUUID());
+        int number = g.memberNumbers.getOrDefault(p.getUUID(), 0);
+        PacketDistributor.sendToPlayer(p, new ClientboundOpenGuildScreenPayload(
+                g.name,
+                rank == null ? "Member" : rank.display(),
+                number,
+                g.rank().name(),
+                g.members.size(),
+                g.memberLimit));
+        return 1;
     }
 
     private int guildInfo(ServerPlayer p) {
