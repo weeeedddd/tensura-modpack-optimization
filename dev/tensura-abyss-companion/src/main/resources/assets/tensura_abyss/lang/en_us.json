@@ -1,0 +1,45 @@
+{
+  "_comment": "Anzeige-Namen der Custom-Rassen. WICHTIG: Der Key-Praefix 'race.tensura_abyss.<id>' ist eine Annahme — pruefe gegen die echte Tensura-Race-Uebersetzungslogik (z.B. wie Tensura/Ascension ihre eigenen Rassen benennen; evtl. 'tensura.race.<id>' oder aehnlich).",
+
+  "race.tensura_abyss.shadow_slime": "Shadow Slime",
+  "race.tensura_abyss.magicule_slime": "Magicule Slime",
+  "race.tensura_abyss.abyss_slime": "Abyss Slime",
+  "race.tensura_abyss.shadow_garden_guard": "Shadow Garden Guard",
+  "race.tensura_abyss.dark_slime_sovereign": "Dark Slime Sovereign",
+  "race.tensura_abyss.shadow_lord": "Shadow Lord",
+  "race.tensura_abyss.awakened_shadow_lord": "Awakened Shadow Lord",
+  "race.tensura_abyss.abyss_monarch": "Abyss Monarch",
+  "race.tensura_abyss.eminence_of_the_abyss": "Eminence of the Abyss",
+
+  "race.tensura_abyss.low_shadow_demon": "Low Shadow Demon",
+  "race.tensura_abyss.shadow_demon_peer": "Shadow Demon Peer",
+  "race.tensura_abyss.blood_shadow_demon": "Blood-Shadow Demon",
+  "race.tensura_abyss.arcane_demon_guard": "Arcane Demon Guard",
+  "race.tensura_abyss.arch_demon_of_shadows": "Arch-Demon of Shadows",
+  "race.tensura_abyss.shadow_duke": "Shadow Duke",
+  "race.tensura_abyss.awakened_demon_king": "Awakened Demon King",
+  "race.tensura_abyss.void_overlord": "Void Overlord",
+  "race.tensura_abyss.diablos_eminence": "Diablos Eminence",
+
+  "race.tensura_abyss.human_apprentice": "Human Apprentice",
+  "race.tensura_abyss.shadow_spellsword": "Shadow Spellsword",
+  "race.tensura_abyss.shadow_blade": "Shadow Blade",
+  "race.tensura_abyss.cult_breaker": "Cult Breaker",
+  "race.tensura_abyss.master_of_garden": "Master of Garden",
+  "race.tensura_abyss.ancient_knight": "Ancient Knight",
+  "race.tensura_abyss.true_hero_of_shadows": "True Hero of Shadows",
+  "race.tensura_abyss.light_shadow_monarch": "Light-Shadow Monarch",
+  "race.tensura_abyss.sovereign_of_midnight": "Sovereign of Midnight",
+
+  "race.tensura_abyss.vampire_spawn": "Vampire Spawn",
+  "race.tensura_abyss.blood_shadow": "Blood Shadow",
+  "race.tensura_abyss.mist_walker": "Mist Walker",
+  "race.tensura_abyss.crimson_noble": "Crimson Noble",
+  "race.tensura_abyss.night_stalker": "Night Stalker",
+  "race.tensura_abyss.pureblood_vampire": "Pureblood Vampire",
+  "race.tensura_abyss.awakened_blood_lord": "Awakened Blood Lord",
+  "race.tensura_abyss.monarch_of_the_red_moon": "Monarch of the Red Moon",
+  "race.tensura_abyss.progenitor_of_the_abyss": "Progenitor of the Abyss",
+
+  "race.tensura_abyss.stylish_bandit_slayer": "Stylish Bandit Slayer"
+}
