@@ -6,7 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.tensura.abyss.network.ClientboundOpenGuildScreenPayload;
+import net.tensura.abyss.network.ServerboundMarketActionPacket;
 
 /**
  * Gilden-Hauptmenue im "Eminence in Shadow"-Stil:
@@ -43,18 +45,23 @@ public class GuildMainScreen extends Screen {
         this.left = (this.width - PANEL_W) / 2;
         this.top = (this.height - PANEL_H) / 2;
 
-        int btnW = 96, btnH = 20, gap = 8;
+        int btnW = 150, btnH = 20, gap = 6;
         int bx = left + (PANEL_W - btnW) / 2;
-        int by = top + PANEL_H - 58;
+        int by = top + PANEL_H - 84;
 
         // "Einladen" -> schliesst dieses GUI und oeffnet den Einladungs-Screen
         addRenderableWidget(Button.builder(Component.literal("§5» Einladen «"), b ->
                 Minecraft.getInstance().setScreen(new GuildInviteScreen(this)))
                 .bounds(bx, by, btnW, btnH).build());
 
+        // "Schwarzmarkt" -> Server oeffnet das Mitsugoshi-Handels-GUI
+        addRenderableWidget(Button.builder(Component.literal("§6» Mitsugoshi Schwarzmarkt «"), b ->
+                PacketDistributor.sendToServer(new ServerboundMarketActionPacket(ServerboundMarketActionPacket.OPEN)))
+                .bounds(bx, by + btnH + gap, btnW, btnH).build());
+
         // "Schliessen"
         addRenderableWidget(Button.builder(Component.literal("§8Schliessen"), b -> this.onClose())
-                .bounds(bx, by + btnH + gap, btnW, btnH).build());
+                .bounds(bx, by + (btnH + gap) * 2, btnW, btnH).build());
     }
 
     /** Pulsierende Schleim-Farbe: Alpha fadet sanft zwischen 0.6 und 1.0. */

@@ -25,25 +25,40 @@ public final class NetworkHandler {
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("1");
 
-        // Client -> Server: Einladung
+        // Client -> Server
         registrar.playToServer(
                 ServerboundGuildInvitePacket.TYPE,
                 ServerboundGuildInvitePacket.STREAM_CODEC,
                 ServerGuildInviteHandler::handle
         );
+        registrar.playToServer(
+                ServerboundMarketActionPacket.TYPE,
+                ServerboundMarketActionPacket.STREAM_CODEC,
+                MarketActionHandler::handle
+        );
 
-        // Server -> Client: Gilden-GUI oeffnen (Client-Handler nur auf Client)
+        // Server -> Client: Client-Handler nur auf Dist.CLIENT (server-safe)
         if (FMLEnvironment.dist == Dist.CLIENT) {
             registrar.playToClient(
                     ClientboundOpenGuildScreenPayload.TYPE,
                     ClientboundOpenGuildScreenPayload.STREAM_CODEC,
                     ClientPayloadHandler::handleOpenGuild
             );
+            registrar.playToClient(
+                    ClientboundMarketSyncPayload.TYPE,
+                    ClientboundMarketSyncPayload.STREAM_CODEC,
+                    ClientPayloadHandler::handleMarketSync
+            );
         } else {
             registrar.playToClient(
                     ClientboundOpenGuildScreenPayload.TYPE,
                     ClientboundOpenGuildScreenPayload.STREAM_CODEC,
-                    (payload, context) -> { /* Server empfaengt dies nie */ }
+                    (payload, context) -> { }
+            );
+            registrar.playToClient(
+                    ClientboundMarketSyncPayload.TYPE,
+                    ClientboundMarketSyncPayload.STREAM_CODEC,
+                    (payload, context) -> { }
             );
         }
     }

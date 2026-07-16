@@ -12,5 +12,8 @@
   "tooltip.tensura_abyss.signature_record.blank": "Eine unsignierte Gilden-Urkunde.",
   "item.tensura_abyss.i_am_atomic_catalyst": "I Am Atomic",
   "tooltip.tensura_abyss.i_am_atomic.req": "Voraussetzung: Rang Shadow + 5.000.000 Max EP",
-  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blaues Dornenfeld — 30-Block-AoE, keine Blockschaeden"
+  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blaues Dornenfeld — 30-Block-AoE, keine Blockschaeden",
+  "message.tensura_abyss.corruption.immune": "Der Slime Suit wehrt die Abyss-Korruption ab.",
+  "message.tensura_abyss.corruption.rising": "Void-Korruption steigt: %s/%s",
+  "message.tensura_abyss.cult_leader_slain": "Ein Diablos-Kult-Anfuehrer wurde besiegt."
 }

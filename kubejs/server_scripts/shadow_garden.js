@@ -335,8 +335,23 @@ EntityEvents.death(event => {
   if (!SG_SERVER) return
 
   const knight = e.tags.contains('cult_knight')
+
+  // Kult-Anfuehrer (Diablos-Ritter) besiegt -> Evolutions-Bedingung fuer [Numbers].
+  // Killer ermitteln (best effort); markiert nahe Spieler als Bezwinger.
+  if (knight) {
+    let killer = null
+    try { killer = event.source.player } catch (err) {}
+    if (!killer) { try { killer = event.source.getActual() } catch (err) {} }
+    if (killer && killer.persistentData) {
+      killer.persistentData.putBoolean('sgKilledCultLeader', true)
+    } else {
+      // Fallback: alle Spieler im Umkreis von 24 Blocks markieren
+      SG_SERVER.runCommandSilent(
+        `execute positioned ${e.x} ${e.y} ${e.z} as @a[distance=..24] run scoreboard players set @s sg_cult_leader 1`)
+    }
+  }
+
   const drop = knight ? (2 + Math.floor(Math.random() * 3)) : (Math.random() < 0.6 ? 1 : 0)
   if (drop <= 0) return
-
   SG_SERVER.runCommandSilent(`summon item ${e.x} ${e.y} ${e.z} {Item:{id:"kubejs:cult_insignia",count:${drop}}}`)
 })

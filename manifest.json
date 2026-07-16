@@ -12,7 +12,7 @@
   "manifestType": "minecraftModpack",
   "manifestVersion": 1,
   "name": "Tensura Abyss",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "author": "",
   "files": [
     {
@@ -227,7 +227,7 @@
     },
     {
       "projectID": 619025,
-      "fileID": 7869418,
+      "fileID": 8022425,
       "required": true,
       "isLocked": false
     },
@@ -2094,6 +2094,12 @@
     {
       "projectID": 856548,
       "fileID": 7742914,
+      "required": true,
+      "isLocked": false
+    },
+    {
+      "projectID": 659887,
+      "fileID": 7704396,
       "required": true,
       "isLocked": false
     }

@@ -1,115 +1,139 @@
-// KubeJS 6 — Tensura Abyss: "Eminence in Shadow" ⇄ Tensura Evolutions-Kopplung
-// server_scripts/ — hot-reloadbar mit /kubejs reload server_scripts
+// KubeJS 6 — Tensura Abyss: HARDCORE Evolutions-Gating (8-Stufen-System)
+// server_scripts/ — /kubejs reload server_scripts
 //
-// HYBRID: Ruft die Java-Companion-Mod (net.tensura.abyss.bridge.TensuraBridge)
-// fuer echten Tensura-Zugriff (Magicules/EP/Rasse). Ist die Mod nicht gebaut,
-// faellt ALLES automatisch auf den Scoreboard-Proxy zurueck -> laeuft trotzdem.
+// Koppelt an Tensura via net.tensura.abyss.bridge.TensuraBridge (mit lautlosem
+// Scoreboard-Fallback). Erzwingt 8 eigenstaendige Evolutionsstufen (9 Zustaende
+// inkl. Startform) mit EXPONENTIELL steigenden Magicule-Kosten und harten
+// Bedingungen — verhindert, dass Spieler zu schnell brutal stark werden.
 //
-// Ausloeser:
-//   Dunkler Schleim (Rechtsklick)           -> +10.000 Magicules (Tensura)
-//   Dunkler Aether  (Sneak + Rechtsklick)   -> Evolution zur naechsten Stufe
-//   Dunkler Aether  (Rechtsklick, kein Sneak)-> Breath (shadow_garden.js)
+// Ausloeser: SNEAK + Rechtsklick mit Dunklem Aether.
+//   (Normaler Rechtsklick mit Dunklem Aether = Breath, shadow_garden.js)
+//   (Rechtsklick mit Dunklem Schleim = +Magicules & Schleim-Meisterschaft)
 
-// ── Item-Namespace: 'kubejs' (KubeJS-Items) ODER 'tensura_abyss' (Companion-Mod).
-//    Bei installierter Companion-Mod hier auf 'tensura_abyss' umstellen.
-const NS = 'kubejs'
-const MAGICULE_OBJ = 'sg_magicule'
+const NS = 'kubejs'                 // bei Companion-Mod: 'tensura_abyss'
+const ABYSS_DIM = 'tensura_abyss:shadow_abyss'
 
-// Rang-Leiter mit Tensura-Rassenpfad + Magicule-Schwelle + Katalysator.
-const RANKS = [
-  { id: 'possessed', name: 'Possessed',            race: 'tensura_abyss:possessed',            magicule: 0,     aether: 0, slime: 0 },
-  { id: 'member',    name: 'Shadow Garden Member', race: 'tensura_abyss:shadow_garden_member', magicule: 5000,  aether: 1, slime: 0 },
-  { id: 'delta',     name: 'Delta',                race: 'tensura_abyss:seven_shadows_delta',  magicule: 15000, aether: 2, slime: 2 },
-  { id: 'gamma',     name: 'Gamma',                race: 'tensura_abyss:seven_shadows_gamma',  magicule: 40000, aether: 3, slime: 4 },
-  { id: 'beta',      name: 'Beta',                 race: 'tensura_abyss:seven_shadows_beta',   magicule: 90000, aether: 4, slime: 6 },
-  { id: 'alpha',     name: 'Alpha',                race: 'tensura_abyss:seven_shadows_alpha',  magicule: 200000, aether: 5, slime: 8 },
-  { id: 'shadow',    name: 'Shadow',               race: 'tensura_abyss:shadow',               magicule: 500000, aether: 8, slime: 12 }
-]
-
-// ═══════════════════════ Java-Bridge mit Fallback ═══════════════════════
+// ── Java-Bridge (optional) mit Fallback ──
 let BRIDGE = null
 try { BRIDGE = Java.loadClass('net.tensura.abyss.bridge.TensuraBridge') } catch (e) { BRIDGE = null }
-
-function getMagicules(player) {
-  if (BRIDGE) { try { return BRIDGE.getMagicules(player) } catch (e) {} }
-  return player.runCommandSilent(`scoreboard players get @s ${MAGICULE_OBJ}`)
+function getMagicules(p) {
+  if (BRIDGE) { try { return BRIDGE.getMagicules(p) } catch (e) {} }
+  return p.runCommandSilent('scoreboard players get @s sg_magicule')
 }
-function addMagicules(player, delta) {
-  if (BRIDGE) { try { BRIDGE.addMagicules(player, delta); return } catch (e) {} }
-  player.runCommandSilent(`scoreboard players add @s ${MAGICULE_OBJ} ${Math.round(delta)}`)
-}
-function setTensuraRace(player, racePath) {
-  if (BRIDGE) { try { return BRIDGE.setTensuraRace(player, racePath) } catch (e) {} }
-  return false // ohne Mod: nur unser Rang/Praefix (siehe unten)
+function setRace(p, path) {
+  if (BRIDGE) { try { return BRIDGE.setTensuraRace(p, path) } catch (e) {} }
+  return false
 }
 function isSneaking(p) {
-  try { return p.isCrouching() } catch (e) {
-    try { return p.isShiftKeyDown() } catch (e2) { return false }
-  }
+  try { return p.isCrouching() } catch (e) { try { return p.isShiftKeyDown() } catch (e2) { return false } }
 }
-function countItem(player, id) { return player.runCommandSilent(`clear @s ${id} 0`) }
-function rankIndex(player) { return player.persistentData.getInt('sgEvoRank') }
+function count(p, id) { return p.runCommandSilent(`clear @s ${id} 0`) }
+
+// ── Bedingungs-Prueffunktionen (persistentData-Flags + Fallbacks) ──
+function flag(p, key) { return p.persistentData.getBoolean(key) }
+function condCultLeader(p) {
+  return flag(p, 'sgKilledCultLeader') ||
+         p.runCommandSilent('execute if score @s sg_cult_leader matches 1..') >= 1
+}
+function condDarkSlime(p) {
+  return p.persistentData.getInt('sgSlimeMastery') >= 1
+}
+function condAbyss(p) {
+  if (flag(p, 'sgEnteredAbyss')) return true
+  // Fallback: aktuell in der Abyss?
+  let here = ''
+  try { here = String(p.level.dimension.location()) } catch (e) {}
+  if (here === ABYSS_DIM) { p.persistentData.putBoolean('sgEnteredAbyss', true); return true }
+  return false
+}
+
+// ── Rang-Leiter: 9 Zustaende, exponentielle Magicule-Kosten ──
+// cond: optionale harte Bedingung (fn) + condMsg fuer Chat-Feedback.
+const RANKS = [
+  { name: 'Possessed',            race: 'tensura_abyss:possessed',            magicule: 0,       aether: 0, slime: 0 },
+  { name: 'Awakened',             race: 'tensura_abyss:awakened',             magicule: 3000,    aether: 1, slime: 0 },
+  { name: 'Shadow Garden Member', race: 'tensura_abyss:shadow_garden_member', magicule: 8000,    aether: 2, slime: 1 },
+  { name: 'Numbers',              race: 'tensura_abyss:numbers',              magicule: 20000,   aether: 3, slime: 2,
+    cond: condCultLeader, condMsg: 'Besiege zuerst einen §5Diablos-Kult-Anfuehrer§7 (Diablos-Ritter).' },
+  { name: 'Rogue',                race: 'tensura_abyss:rogue',                magicule: 50000,   aether: 4, slime: 3 },
+  { name: 'Elite Shadow',         race: 'tensura_abyss:elite_shadow',         magicule: 120000,  aether: 5, slime: 4 },
+  { name: 'Seven Shadows Aspirant', race: 'tensura_abyss:seven_shadows_aspirant', magicule: 300000, aether: 6, slime: 6,
+    cond: condDarkSlime, condMsg: 'Stelle zuerst §3Dunklen Schleim§7 her und nutze ihn (Rechtsklick).' },
+  { name: 'Seven Shadows',        race: 'tensura_abyss:seven_shadows',        magicule: 750000,  aether: 8, slime: 8 },
+  { name: 'Shadow',               race: 'tensura_abyss:shadow',               magicule: 2000000, aether: 12, slime: 12,
+    cond: condAbyss, condMsg: 'Betrete zuerst den §5§lShadow Abyss§r§7 (Aether-Portal).' }
+]
+const TEAMS = ['sg_shadow','sg_shadow','sg_numbers','sg_numbers','sg_numbers','sg_seven','sg_seven','sg_seven','sg_lord']
 
 ServerEvents.loaded(event => {
-  event.server.runCommandSilent(`scoreboard objectives add ${MAGICULE_OBJ} dummy "Magicule"`)
+  event.server.runCommandSilent('scoreboard objectives add sg_magicule dummy "Magicule"')
+  event.server.runCommandSilent('scoreboard objectives add sg_cult_leader dummy "CultLeader"')
 })
 
-// ═══════════════════════ EVOLUTION: Sneak + Dunkler Aether ═══════════════════════
+// ═══════════════════════ EVOLUTION ═══════════════════════
 ItemEvents.rightClicked(`${NS}:dark_aether`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
-  if (!isSneaking(player)) return   // normaler Rechtsklick = Breath (shadow_garden.js)
+  if (!isSneaking(player)) return
 
-  const idx = rankIndex(player)
+  const idx = player.persistentData.getInt('sgEvoRank')
   if (idx >= RANKS.length - 1) {
-    player.tell(Text.gold(`Du hast die hoechste Form erreicht: [${RANKS[idx].name}].`))
+    player.tell(Text.gold(`§lMaximale Form erreicht: [${RANKS[idx].name}].`))
     return
   }
   const next = RANKS[idx + 1]
 
-  // 1) Magicule-Gate (echt via Bridge, sonst Scoreboard)
+  // 1) exponentielles Magicule-Gate
   const mag = getMagicules(player)
   if (mag < next.magicule) {
-    player.tell(Text.gray(`Zu wenig Magicule: ${Math.round(mag)} / ${next.magicule} fuer [${next.name}].`))
+    player.tell(Text.red(`✖ Evolution [${next.name}] gesperrt.`))
+    player.tell(Text.gray(`Magicule: ${Math.round(mag)} / ${next.magicule} (${percent(mag, next.magicule)}%).`))
     return
   }
 
-  // 2) Katalysator-Check
-  const haveAether = countItem(player, `${NS}:dark_aether`)
-  const haveSlime  = next.slime > 0 ? countItem(player, `${NS}:dark_slime`) : 0
-  if (haveAether < next.aether || haveSlime < next.slime) {
-    player.tell(Text.gray(`Katalysator fehlt: ${next.aether}x Dunkler Aether` +
-      (next.slime > 0 ? ` + ${next.slime}x Dunkler Schleim` : '') + `.`))
+  // 2) harte Bedingung
+  if (next.cond && !next.cond(player)) {
+    player.tell(Text.red(`✖ Bedingung nicht erfuellt fuer [${next.name}].`))
+    player.tell(Text.gray('» ' + next.condMsg))
     return
   }
 
-  // 3) Katalysator verbrauchen
+  // 3) Katalysator-Gate
+  const haveA = count(player, `${NS}:dark_aether`)
+  const haveS = next.slime > 0 ? count(player, `${NS}:dark_slime`) : 0
+  if (haveA < next.aether || haveS < next.slime) {
+    player.tell(Text.red('✖ Katalysator fehlt.'))
+    player.tell(Text.gray(`Benoetigt: ${next.aether}x Dunkler Aether` +
+      (next.slime > 0 ? ` + ${next.slime}x Dunkler Schleim` : '') +
+      ` (hast ${haveA}/${haveS}).`))
+    return
+  }
+
+  // ── alles erfuellt ──
   if (!player.isCreative()) {
     if (next.aether > 0) player.runCommandSilent(`clear @s ${NS}:dark_aether ${next.aether}`)
     if (next.slime > 0)  player.runCommandSilent(`clear @s ${NS}:dark_slime ${next.slime}`)
   }
-
-  // 4) Rang setzen + Praefix
   player.persistentData.putInt('sgEvoRank', idx + 1)
-  const teams = ['sg_shadow','sg_shadow','sg_numbers','sg_numbers','sg_seven','sg_seven','sg_lord']
-  player.runCommandSilent(`team join ${teams[idx + 1]} @s`)
+  player.runCommandSilent(`team join ${TEAMS[idx + 1]} @s`)
+  const evolved = setRace(player, next.race)
 
-  // 5) ECHTE Tensura-Evolution ueber die Java-Bridge
-  const evolved = setTensuraRace(player, next.race)
-
-  // 6) Epische Animation (purpur/schwarz)
+  // Evolutions-Inszenierung (purpur/schwarz)
   player.runCommandSilent('playsound minecraft:entity.wither.spawn master @a ~ ~ ~ 4 0.6')
-  player.runCommandSilent('particle minecraft:dragon_breath ~ ~1 ~ 0.7 1.2 0.7 0.02 200 force')
-  player.runCommandSilent('particle minecraft:witch ~ ~1 ~ 0.7 1.2 0.7 0.1 120 force')
-  player.runCommandSilent('particle minecraft:smoke ~ ~1 ~ 0.8 1.2 0.8 0.02 120 force')
+  player.runCommandSilent('particle minecraft:dragon_breath ~ ~1 ~ 0.7 1.2 0.7 0.02 220 force')
+  player.runCommandSilent('particle minecraft:witch ~ ~1 ~ 0.7 1.2 0.7 0.1 140 force')
   player.runCommandSilent('effect give @s minecraft:strength 30 1 true')
-  player.runCommandSilent('effect give @s minecraft:regeneration 15 1 true')
   player.runCommandSilent('effect give @s minecraft:resistance 30 0 true')
 
-  player.tell(Text.aqua(`§lEVOLUTION§r§b — [${next.name}] erreicht!`))
-  if (!evolved) player.tell(Text.gray('(In-Mod-Rasse folgt, sobald die Companion-Mod aktiv ist — Rang/Buffs sind gesetzt.)'))
+  player.tell(Text.aqua(`§l✦ EVOLUTION ✦ §r§b Stufe ${idx + 1}/8 — [${next.name}]!`))
+  if (!evolved) player.tell(Text.gray('(In-Mod-Rasse folgt via Companion-Mod; Rang/Buffs gesetzt.)'))
 })
+
+function percent(cur, req) {
+  if (req <= 0) return 100
+  return Math.max(0, Math.min(99, Math.floor(cur * 100 / req)))
+}
 
 // ═══════════════════════ DUNKLER SCHLEIM: +10.000 Magicules ═══════════════════════
 ItemEvents.rightClicked(`${NS}:dark_slime`, event => {
@@ -119,12 +143,12 @@ ItemEvents.rightClicked(`${NS}:dark_slime`, event => {
   if (isSneaking(player)) return
 
   if (!player.isCreative()) event.item.shrink(1)
-  addMagicules(player, 10000)
+  if (BRIDGE) { try { BRIDGE.addMagicules(player, 10000) } catch (e) { player.runCommandSilent('scoreboard players add @s sg_magicule 10000') } }
+  else player.runCommandSilent('scoreboard players add @s sg_magicule 10000')
 
   const tier = player.persistentData.getInt('sgSlimeMastery') + 1
   player.persistentData.putInt('sgSlimeMastery', tier)
-
   player.runCommandSilent('playsound minecraft:entity.slime.squish master @s ~ ~ ~ 1 0.8')
   player.runCommandSilent('particle minecraft:item_slime ~ ~1 ~ 0.4 0.6 0.4 0.1 50 force')
-  player.tell(Text.aqua(`Dunkler Schleim absorbiert — +10.000 Magicules (Schleim-Meisterschaft ${tier}).`))
+  player.tell(Text.aqua(`Dunkler Schleim absorbiert — +10.000 Magicules (Meisterschaft ${tier}).`))
 })

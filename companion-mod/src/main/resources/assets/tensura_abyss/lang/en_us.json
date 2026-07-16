@@ -12,5 +12,8 @@
   "tooltip.tensura_abyss.signature_record.blank": "An unsigned guild record.",
   "item.tensura_abyss.i_am_atomic_catalyst": "I Am Atomic",
   "tooltip.tensura_abyss.i_am_atomic.req": "Requires: rank Shadow + 5,000,000 Max EP",
-  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blue thorn field — 30-block AoE, no block damage"
+  "tooltip.tensura_abyss.i_am_atomic.effect": "Neon-blue thorn field — 30-block AoE, no block damage",
+  "message.tensura_abyss.corruption.immune": "The Slime Suit repels the Abyss corruption.",
+  "message.tensura_abyss.corruption.rising": "Void Corruption rising: %s/%s",
+  "message.tensura_abyss.cult_leader_slain": "A Diablos cult leader has fallen."
 }
