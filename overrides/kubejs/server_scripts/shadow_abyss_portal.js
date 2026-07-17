@@ -8,7 +8,7 @@
 // Teleport laeuft ueber /execute in <dim> run tp @s ~ <y> ~  (dimensionssicher,
 // versionsstabil). Keine fragilen Java-Mappings.
 
-const ABYSS_DIM = 'tensura_abyss:shadow_abyss'
+const ABYSS_DIM_PORTAL = 'tensura_abyss:shadow_abyss'
 const OVERWORLD = 'minecraft:overworld'
 const ABYSS_Y   = 120   // sichere Einstiegshoehe in der Abyss
 const RETURN_Y  = 110   // Ruecksprunghoehe in der Overworld
@@ -41,12 +41,12 @@ BlockEvents.rightClicked('tensura_abyss:abyss_portal_frame', event => {
   // aktuelle Dimension bestimmen (robust, mit Fallback)
   let here = ''
   try { here = String(player.level.dimension.location()) } catch (e) { here = '' }
-  const inAbyss = here === ABYSS_DIM
+  const inAbyss = here === ABYSS_DIM_PORTAL
 
   // 1x Dunklen Aether verbrauchen
   if (!player.isCreative()) item.shrink(1)
 
-  const target = inAbyss ? OVERWORLD : ABYSS_DIM
+  const target = inAbyss ? OVERWORLD : ABYSS_DIM_PORTAL
   const y = inAbyss ? RETURN_Y : ABYSS_Y
 
   // Effekte am Ausgangspunkt

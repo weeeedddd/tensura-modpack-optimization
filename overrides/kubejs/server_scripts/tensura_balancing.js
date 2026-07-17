@@ -10,35 +10,20 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // LOOT TABLE ANPASSUNGEN
 // ─────────────────────────────────────────────────────────────────────────────
-ServerEvents.lootTables(event => {
-
-  // Ice and Fire CE: Drachen droppen Tensura-relevante Items
-  // Macht Drachen-Kämpfe für die gesamte Spielphase relevant
-  event.modifyEntity('iceandfire:ice_dragon', table => {
-    table.addPool(pool => {
-      pool.rolls(1);
-      pool.addItem('minecraft:diamond').weight(3);             // Platzhalter — ersetze mit Tensura-Item
-      // pool.addItem('tensura_magic_growth:slime_core').weight(3);
-    });
-  });
-
-  event.modifyEntity('iceandfire:fire_dragon', table => {
-    table.addPool(pool => {
-      pool.rolls(1);
-      pool.addItem('minecraft:blaze_powder').weight(5);        // Platzhalter
-      // pool.addItem('tensura_magic_growth:flame_essence').weight(5);
-    });
-  });
-
-  // Cataclysm-Bosse: Garantierter Tensura-Progression-Drop
-  // Stelle sicher, dass Tensura-Fortschritt aus Boss-Kills kommt
-  event.modifyEntity('iceandfire:death_worm', table => {
-    table.addPool(pool => {
-      pool.rolls(1);
-      pool.addItem('minecraft:bone').weight(8);               // Platzhalter
-    });
-  });
-});
+// HINWEIS: 'ServerEvents.lootTables' existiert in KubeJS 1.21.1 (2101.x) nicht mehr.
+// Die Loot-API wurde aufgeteilt in ServerEvents.entityLootTables / .blockLootTables /
+// .chestLootTables. Der folgende Block war reines Platzhalter-Scaffolding
+// (Dummy-Drops) und ist deaktiviert, damit das Skript fehlerfrei laedt.
+// Zum Reaktivieren mit echten Tensura-Items auf die neue API portieren:
+//
+// ServerEvents.entityLootTables(event => {
+//   event.modifyEntity('iceandfire:ice_dragon', table => {
+//     table.addPool(pool => {
+//       pool.rolls(1);
+//       pool.addItem('tensura_magic_growth:slime_core').weight(3);
+//     });
+//   });
+// });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REZEPT-ANPASSUNGEN (Progression-Gating)
@@ -81,15 +66,8 @@ ServerEvents.recipes(event => {
 // ─────────────────────────────────────────────────────────────────────────────
 // ENTITY ATTRIBUTE ANPASSUNGEN (Schaden / HP Balancing)
 // ─────────────────────────────────────────────────────────────────────────────
-ServerEvents.entitySpawned(event => {
-  const e = event.entity;
-
-  // EP Scaling übernimmt die Grundskalierung.
-  // Hier nur Feintuning für spezifische Mobs die zu stark/schwach sind.
-
-  // Ice and Fire Drachen: Leicht stärker für Mid-/Late-Game Challenge
-  if (e.type === 'iceandfire:ice_dragon' || e.type === 'iceandfire:fire_dragon') {
-    // Nur in Welten mit hohem Spieler-Level anwenden
-    // Basiswerte werden von EP Scaling gesetzt
-  }
-});
+// HINWEIS: 'ServerEvents.entitySpawned' existiert in KubeJS 1.21.1 nicht.
+// Dieser Block war leeres Scaffolding (nur Kommentare, keine Wirkung) und ist
+// deaktiviert. EP Scaling uebernimmt ohnehin die Grundskalierung der Mobs.
+// Fuer Spawn-basiertes Feintuning bei Bedarf die NeoForge-Events der jeweiligen
+// Mod nutzen (z. B. ueber die Companion-Mod), nicht KubeJS.

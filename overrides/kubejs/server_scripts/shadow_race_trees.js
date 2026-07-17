@@ -19,8 +19,8 @@
 //   (identisch zum alten System — Spieler kennen den Handgriff schon).
 // Baum-Wahl: /shadowtree <slime|demon|hero|vampire>  (einmalig)
 
-const NS = 'tensura_abyss'
-const ABYSS_DIM = 'tensura_abyss:shadow_abyss'
+const NS_TREE = 'tensura_abyss'
+const ABYSS_DIM_TREE = 'tensura_abyss:shadow_abyss'
 
 // ── Java-Bridge (optional) mit lautlosem Fallback ──
 let BRIDGE = null
@@ -49,7 +49,7 @@ function condAbyss(p) {
   if (flag(p, 'sgEnteredAbyss')) return true
   let here = ''
   try { here = String(p.level.dimension.location()) } catch (e) {}
-  if (here === ABYSS_DIM) { p.persistentData.putBoolean('sgEnteredAbyss', true); return true }
+  if (here === ABYSS_DIM_TREE) { p.persistentData.putBoolean('sgEnteredAbyss', true); return true }
   return false
 }
 
@@ -61,7 +61,7 @@ const AETHER_COST = [0, 1, 2, 3, 4, 5, 7, 9, 12]
 const TREES = {
   slime: {
     label: 'Schatten-Schleim',
-    catalyst: { id: `${NS}:dark_slime`, n: 4, label: '4x Dunkler Schleim' },
+    catalyst: { id: `${NS_TREE}:dark_slime`, n: 4, label: '4x Dunkler Schleim' },
     stages: [
       'tensura_abyss:shadow_slime',        'tensura_abyss:magicule_slime',
       'tensura_abyss:abyss_slime',         'tensura_abyss:shadow_garden_guard',
@@ -75,7 +75,7 @@ const TREES = {
   },
   demon: {
     label: 'Schatten-Daemon',
-    catalyst: { id: `${NS}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
     stages: [
       'tensura_abyss:low_shadow_demon',    'tensura_abyss:shadow_demon_peer',
       'tensura_abyss:blood_shadow_demon',  'tensura_abyss:arcane_demon_guard',
@@ -89,7 +89,7 @@ const TREES = {
   },
   hero: {
     label: 'Antiker Schatten-Held',
-    catalyst: { id: `${NS}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
     stages: [
       'tensura_abyss:human_apprentice',    'tensura_abyss:shadow_spellsword',
       'tensura_abyss:shadow_blade',        'tensura_abyss:cult_breaker',
@@ -103,7 +103,7 @@ const TREES = {
   },
   vampire: {
     label: 'Urvampir',
-    catalyst: { id: `${NS}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
     stages: [
       'tensura_abyss:vampire_spawn',       'tensura_abyss:blood_shadow',
       'tensura_abyss:mist_walker',         'tensura_abyss:crimson_noble',
@@ -167,7 +167,7 @@ ServerEvents.commandRegistry(event => {
 })
 
 // ═══════════════ EVOLUTION: Sneak + Rechtsklick Dunkler Aether ═══════════════
-ItemEvents.rightClicked(`${NS}:dark_aether`, event => {
+ItemEvents.rightClicked(`${NS_TREE}:dark_aether`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -205,14 +205,14 @@ ItemEvents.rightClicked(`${NS}:dark_aether`, event => {
 
   // 3) Aether-Kosten
   const aetherNeed = AETHER_COST[nextIdx]
-  if (countItem(player, `${NS}:dark_aether`) < aetherNeed) {
+  if (countItem(player, `${NS_TREE}:dark_aether`) < aetherNeed) {
     player.tell(Text.red(`✖ Katalysator fehlt: ${aetherNeed}x Dunkler Aether.`))
     return
   }
 
   // ── alles erfuellt: verbrauchen, Rasse setzen, Perks anwenden ──
   if (!player.isCreative()) {
-    player.runCommandSilent(`clear @s ${NS}:dark_aether ${aetherNeed}`)
+    player.runCommandSilent(`clear @s ${NS_TREE}:dark_aether ${aetherNeed}`)
     if (nextIdx === 4) {
       const c = tree.catalyst
       player.runCommandSilent(`clear @s ${c.id} ${c.n}`)
@@ -244,7 +244,7 @@ function applyPerks(p, treeKey, idx) {
   // Slime Stufe 9: "I Am Atomic" freischalten + Katalysator schenken.
   if (treeKey === 'slime' && idx === 8 && !flag(p, 'sgAtomicUnlocked')) {
     p.persistentData.putBoolean('sgAtomicUnlocked', true)
-    p.runCommandSilent(`give @s ${NS}:i_am_atomic_catalyst 1`)
+    p.runCommandSilent(`give @s ${NS_TREE}:i_am_atomic_catalyst 1`)
     p.runCommandSilent('title @s title {"text":"I AM ATOMIC","color":"aqua","bold":true}')
     p.runCommandSilent('title @s subtitle {"text":"Der finale Skill ist entfesselt.","color":"dark_aqua"}')
     p.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @s ~ ~ ~ 3 0.5')
@@ -307,7 +307,7 @@ EntityEvents.death(event => {
 })
 
 // ═══════════════ DUNKLER SCHLEIM: +10.000 Magicules (aus shadow_evos.js uebernommen) ═══════════════
-ItemEvents.rightClicked(`${NS}:dark_slime`, event => {
+ItemEvents.rightClicked(`${NS_TREE}:dark_slime`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
