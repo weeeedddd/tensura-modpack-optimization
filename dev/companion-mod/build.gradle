@@ -35,6 +35,13 @@ repositories {
     maven { url = 'https://cursemaven.com'; content { includeGroup 'curse.maven' } }
 }
 
+// Eigene Configuration nur zum Extrahieren der in ManasCore verschachtelten
+// (Jar-in-Jar) Module — deren Klassen (ManasRace, RaceAPI, ManasSkill, ...)
+// liegen NICHT in der aeusseren Jar und sind sonst beim Compile unsichtbar.
+configurations {
+    manascoreJij
+}
+
 dependencies {
     // ── Compile gegen die echte Tensura-API (AbyssRaces braucht die Race-Klasse) ──
     // NeoForge 1.21.1 nutzt offizielle Mappings -> Produktions-Jars sind direkt
@@ -44,10 +51,31 @@ dependencies {
     implementation "curse.maven:tensura-reincarnated-${tensura_project_id}:${tensura_file_id}"
     implementation "curse.maven:nightmares-tensura-utils-${nightmareutils_project_id}:${nightmareutils_file_id}"
 
+    // ManasCore-Jar auch zum Extrahieren der JiJ-Module bereitstellen.
+    manascoreJij "curse.maven:manascore-${manascore_project_id}:${manascore_file_id}"
+
+    // Die extrahierten JiJ-Module auf den Compile-Classpath legen (nur Compile;
+    // zur Laufzeit liefert der Pack die echte ManasCore-Jar).
+    compileOnly fileTree(dir: layout.buildDirectory.dir('manascore-jij'), include: '*.jar')
+
     // Alternativ via JitPack (Gruppe com.github.manasmods):
     //   maven { url = 'https://jitpack.io' }
     //   implementation "com.github.manasmods:tensura:<version>"
     //   implementation "com.github.manasmods:ManasCore:<version>"
+}
+
+// Extrahiert alle in der ManasCore-Jar verschachtelten Module flach nach
+// build/manascore-jij/ (manascore-race, -skill, -network, ...).
+def extractManascoreJij = tasks.register('extractManascoreJij', Copy) {
+    from { configurations.manascoreJij.collect { zipTree(it) } }
+    include 'META-INF/jars/*.jar'
+    eachFile { fcd -> fcd.relativePath = new RelativePath(true, fcd.name) }
+    includeEmptyDirs = false
+    into layout.buildDirectory.dir('manascore-jij')
+}
+
+tasks.named('compileJava') {
+    dependsOn extractManascoreJij
 }
 
 tasks.named('processResources', ProcessResources).configure {
