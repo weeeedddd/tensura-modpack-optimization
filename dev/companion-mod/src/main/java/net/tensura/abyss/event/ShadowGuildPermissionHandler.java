@@ -1,107 +1,115 @@
 package net.tensura.abyss.event;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.slf4j.Logger;
 
-// ── ECHTE ManasCore/Architectury-API (per javap gegen die Pack-Jars verifiziert) ──
+// ══════════════════════════════════════════════════════════════════════════
+//  CORE-MOD-API (ManasCore / Architectury) — an deine dekompilierten Jars
+//  anpassen. Verifiziert per javap gegen manascore-race-neoforge-4.0.0.2:
+//    RaceEvents           -> io.github.manasmods.manascore.race.api.RaceEvents
+//    ManasRaceInstance    -> io.github.manasmods.manascore.race.api.ManasRaceInstance
+//                            (Typ von oldRace/newRace; hier nur via Lambda-
+//                             Inferenz genutzt -> Import optional)
+//    EventResult          -> dev.architectury.event.EventResult
+// ══════════════════════════════════════════════════════════════════════════
 import io.github.manasmods.manascore.race.api.RaceEvents;
 import dev.architectury.event.EventResult;
 
-import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 /**
- * Koppelt exklusive „Shadow"-Rassen an die Gilden-Erstellungs-Berechtigung
- * (Argonauts) via LuckPerms.
- *
- * <p><b>Mechanik (verifiziert):</b> Der Rassenwechsel ist KEIN NeoForge-
- * {@code @SubscribeEvent}, sondern das <em>Architectury</em>-Event
- * {@link RaceEvents#SET_RACE}. Es wird einmalig beim Mod-Start registriert
- * (siehe {@link #init()}, aufgerufen aus dem Mod-Konstruktor).
- *
- * <p>Der Handler {@code SetRaceEvent.set(...)} liefert:
- * <pre>{@code set(oldRace, entity, newRace, resetSkills, cancelled, message)}</pre>
- * Wir lesen die NEUE Rasse ({@code newRace.getRaceId()}) und die Entity.
+ * Koppelt exklusive „Shadow"-Rassen an die Argonauts-Gilden-Erstellungs-
+ * Berechtigung (via LuckPerms). Reagiert auf das ManasCore-Rassenwechsel-Event
+ * im Architectury-Stil ({@link RaceEvents#SET_RACE}).
  */
 public final class ShadowGuildPermissionHandler {
     private ShadowGuildPermissionHandler() {}
 
-    /** Persistenz-Flag — unter PERSISTED_NBT_TAG gespeichert, ueberlebt so den Tod. */
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    /** Persistenz-Flag im NBT (unter PERSISTED_NBT_TAG -> ueberlebt den Tod). */
     private static final String FLAG = "hasUnlockedShadowGuild";
 
-    /** Exklusive Shadow-Rassen, die die Gilden-Erstellung freischalten. */
-    private static final List<String> SHADOW_RACES = List.of(
-            "tensura_abyss:shadow_tier_1",
-            "tensura_abyss:stylish_bandit_slayer"
+    /** LuckPerms-Node fuer die Gilden-Erstellung. */
+    private static final String PERMISSION = "argonauts.guild.create";
+
+    /** Ziel-Rassen, die die Gilden-Erstellung freischalten. */
+    private static final Set<ResourceLocation> SHADOW_RACES = Set.of(
+            ResourceLocation.parse("tensura_abyss:shadow_tier_1"),
+            ResourceLocation.parse("tensura_abyss:stylish_bandit_slayer")
             // ... weitere Shadow-Rassen hier ergaenzen
     );
 
-    private static final String PERM = "argonauts.guild.create";
-
-    /**
-     * Registriert den SET_RACE-Listener. Einmalig aus dem Mod-Konstruktor
-     * aufrufen: {@code ShadowGuildPermissionHandler.init();}
-     */
+    /** Einmalig beim Mod-Start aufrufen (aus dem Mod-Konstruktor). */
     public static void init() {
-        // 6 Parameter gemaess SetRaceEvent#set(...). Rueckgabe: EventResult.pass()
-        // = wir beobachten nur, blockieren den Rassenwechsel nicht.
+        // ┌──────────────────────────────────────────────────────────────────┐
+        // │ WICHTIG: SetRaceEvent#set hat gegen die ECHTE Jar SECHS Parameter: │
+        // │   (oldRace, entity, newRace, resetSkills, cancelled, message)      │
+        // │ Ein 3-Parameter-Lambda kompiliert NICHT. Wir brauchen nur die      │
+        // │ ersten drei — die restlichen bleiben ungenutzt.                    │
+        // └──────────────────────────────────────────────────────────────────┘
         RaceEvents.SET_RACE.register((oldRace, entity, newRace, resetSkills, cancelled, message) -> {
-            // Nur serverseitig + nur fuer echte Spieler handeln.
-            if (entity instanceof ServerPlayer player) {
-                // >>> Falls die Freischaltung auf der FALSCHEN Rasse triggert:
-                //     hier 'oldRace' statt 'newRace' verwenden (Parameter-Reihenfolge
-                //     einmal im Spiel mit einem Log verifizieren). <<<
-                ResourceLocation raceId = newRace.getRaceId();
-                handleRaceChange(player, raceId);
+            // 1) Nur echte Spieler auf der LOGISCHEN SERVER-Seite.
+            if (entity instanceof Player player && !player.level().isClientSide()) {
+
+                ResourceLocation oldId = (oldRace != null) ? oldRace.getRaceId() : null;
+                ResourceLocation newId = (newRace != null) ? newRace.getRaceId() : null;
+
+                // 4) Debug-Log zur Verifikation der Parameter-Reihenfolge.
+                LOGGER.info("[Tensura Abyss] SET_RACE: player={} old={} new={}",
+                        player.getGameProfile().getName(), oldId, newId);
+
+                MinecraftServer server = player.getServer();
+                if (server != null && newId != null) {
+                    updateGuildPermission(server, player, newId);
+                }
             }
+            // 2) Nur beobachten, den Rassenwechsel NICHT blockieren.
             return EventResult.pass();
         });
     }
 
-    private static void handleRaceChange(ServerPlayer player, ResourceLocation raceId) {
-        MinecraftServer server = player.getServer();
-        if (server == null) return;   // sollte serverseitig nie null sein
-
-        String id = raceId.toString().toLowerCase(Locale.ROOT);
-        boolean isShadowRace = SHADOW_RACES.contains(id);
+    private static void updateGuildPermission(MinecraftServer server, Player player, ResourceLocation raceId) {
+        boolean isShadowRace = SHADOW_RACES.contains(raceId);
         boolean hasFlag = getFlag(player);
+        String name = player.getGameProfile().getName();
 
         if (isShadowRace && !hasFlag) {
+            // Freischalten
             setFlag(player, true);
-            runSilent(server, "lp user " + player.getGameProfile().getName()
-                    + " permission set " + PERM + " true");
+            runSilent(server, "lp user " + name + " permission set " + PERMISSION + " true");
         } else if (!isShadowRace && hasFlag) {
+            // Entziehen
             setFlag(player, false);
-            runSilent(server, "lp user " + player.getGameProfile().getName()
-                    + " permission set " + PERM + " false");
+            runSilent(server, "lp user " + name + " permission set " + PERMISSION + " false");
         }
     }
 
     /**
-     * Fuehrt einen Befehl STILL (kein Chat-/Log-Feedback) mit Server-/OP-Rechten
-     * aus — garantiert auf dem Server-Haupt-Thread, um Race-Conditions/Crashes
-     * zu vermeiden.
+     * Fuehrt einen Befehl STILL (kein Chat-/Log-Spam) mit OP-Level 4 aus —
+     * garantiert auf dem Server-Haupt-Thread (verhindert Race-Conditions/Crashes).
      */
     private static void runSilent(MinecraftServer server, String command) {
         server.execute(() -> {
             CommandSourceStack source = server.createCommandSourceStack()  // Konsole = Level 4
                     .withPermission(4)
-                    .withSuppressedOutput();                               // still
+                    .withSuppressedOutput();
             server.getCommands().performPrefixedCommand(source, command);
         });
     }
 
-    // ── Persistenz-Flag (survives death via PERSISTED_NBT_TAG) ──
-    private static boolean getFlag(ServerPlayer player) {
+    // ── Persistenz-Flag unter PERSISTED_NBT_TAG (survives death) ──
+    private static boolean getFlag(Player player) {
         return player.getPersistentData()
                 .getCompound(Player.PERSISTED_NBT_TAG)
                 .getBoolean(FLAG);
     }
 
-    private static void setFlag(ServerPlayer player, boolean value) {
+    private static void setFlag(Player player, boolean value) {
         var root = player.getPersistentData();
         var persisted = root.getCompound(Player.PERSISTED_NBT_TAG);
         persisted.putBoolean(FLAG, value);
