@@ -1,48 +1,36 @@
 package net.tensura.abyss.registry;
 
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import net.tensura.abyss.TensuraAbyss;
 import net.tensura.abyss.race.AbyssRace;
+import net.tensura.abyss.race.AbyssRaceDef;
 
-// ── ECHTER Tensura-Race-Registry-Halter (aus den Beispiel-Addons verifiziert) ──
-import com.github.manasmods.tensura.registry.race.TensuraRaces;
+// ── ECHTE 1.21.1-API (io.github.manasmods, per javap verifiziert) ──
+import io.github.manasmods.manascore.race.api.ManasRace;
+import io.github.manasmods.manascore.race.api.RaceAPI;
+import dev.architectury.registry.registries.DeferredRegister;
 
 import java.util.List;
 
 /**
  * Registriert die 37 Tensura-Abyss-Custom-Rassen (4 Pfade x 9 + geheime Rasse)
- * in Tensuras Race-Registry, damit sie im ORIGINALEN Evolutionsmenue auftauchen
- * und von Tensura: Ascension erkannt werden.
+ * in der ManasCore/Tensura-Race-Registry, damit sie im ORIGINALEN
+ * Evolutionsmenue auftauchen und von Tensura: Ascension erkannt werden.
  *
- * <p><b>Muster (verifiziert):</b> Tensura registriert Rassen ueber das
- * {@link RegisterEvent} in die von {@link TensuraRaces} bereitgestellte
- * Race-Registry — NICHT ueber einen DeferredRegister. Jede Rasse ist ein
- * {@link AbyssRace} (Subklasse von {@code com.github.manasmods.tensura.race.Race}),
- * das seine Werte aus einer {@link AbyssRaceDef} liest.
+ * <p><b>Mechanik (per javap gegen die 1.21.1-Jars verifiziert):</b> Rassen
+ * werden ueber einen <em>Architectury</em>-{@link DeferredRegister} in die von
+ * {@link RaceAPI#getRaceRegistryKey()} bereitgestellte Registry eingetragen.
+ * Der registrierte Typ ist ManasCores {@link ManasRace}; jede Rasse ist ein
+ * {@link AbyssRace} (erbt von {@code io.github.manasmods.tensura.race.TensuraRace}).
  *
  * <p>Stat-Werte generiert aus config/tensura/ascension-races.toml (konsistent).
  * Die 7 Legacy-Rassen sind bewusst nicht dabei (abgeloestes virtuelles System).
  */
-@EventBusSubscriber(modid = TensuraAbyss.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public final class AbyssRaces {
     private AbyssRaces() {}
 
-    /**
-     * Kompakte Rassen-Definition, gemappt auf die echten Race-Felder:
-     * baseHealth (physisch), attackDamage, movementSpeed, aura (Range-Basis),
-     * magiculeBase (aus altem "spiritualHealth"; Range-Basis).
-     */
-    public record AbyssRaceDef(
-            String id,
-            double baseHealth,
-            double attackDamage,
-            double movementSpeed,
-            double aura,
-            double magiculeBase
-    ) {}
+    /** Architectury-DeferredRegister auf die ManasCore-Race-Registry. */
+    public static final DeferredRegister<ManasRace> RACES =
+            DeferredRegister.create(TensuraAbyss.MOD_ID, RaceAPI.getRaceRegistryKey());
 
     /** Alle 37 Abyss-Rassen (4 Pfade x 9 Stufen + geheime Rasse). */
     public static final List<AbyssRaceDef> DEFS = List.of(
@@ -95,34 +83,23 @@ public final class AbyssRaces {
             new AbyssRaceDef("stylish_bandit_slayer", 2000.0, 55.0, 0.21, 7500.0, 2400.0)
     );
 
+    // Alle Rassen beim DeferredRegister anmelden (laeuft beim Klassen-Laden).
+    static {
+        for (AbyssRaceDef def : DEFS) {
+            RACES.register(def.id(), () -> new AbyssRace(def));
+        }
+    }
+
     /**
-     * Registriert alle Rassen beim Tensura-Race-Registry-Event.
-     *
-     * <p><b>>>> EINZIGE verbleibende 1.21.1-Unbekannte <<<</b> — der Registry-Key.
-     * In 1.19.2/Forge (Beispiel-Addons):
-     * <pre>{@code
-     *   event.register(((IForgeRegistry) TensuraRaces.RACE_REGISTRY.get())
-     *           .getRegistryKey(), helper -> { ... });
-     * }</pre>
-     * In 1.21.1/NeoForge gibt es kein {@code IForgeRegistry}; Tensura stellt den
-     * Race-Registry-Key als {@code ResourceKey} bereit. Bestaetige den exakten
-     * Accessor in der 1.21.1-Jar (z.B. {@code TensuraRaces.RACE_REGISTRY_KEY}
-     * oder {@code TensuraRaces.RACES.key()}) und setze ihn unten ein.
+     * Finalisiert die Registrierung. Wird einmalig aus dem Mod-Konstruktor
+     * aufgerufen (Architectury-DeferredRegister#register).
      */
-    @SubscribeEvent
-    public static void onRegisterRaces(RegisterEvent event) {
-        // TODO(API-1.21.1): korrekten Race-Registry-ResourceKey einsetzen:
-        event.register(TensuraRaces.RACE_REGISTRY_KEY, helper -> {
-            for (AbyssRaceDef def : DEFS) {
-                helper.register(
-                        ResourceLocation.fromNamespaceAndPath(TensuraAbyss.MOD_ID, def.id()),
-                        new AbyssRace(def));
-            }
-        });
+    public static void register() {
+        RACES.register();
         TensuraAbyss.LOGGER.info("[Tensura Abyss] {} Custom-Rassen registriert.", DEFS.size());
     }
 
-    /** Anzahl der Rassen (fuers Log im Mod-Konstruktor). */
+    /** Anzahl der Rassen (fuers Log). */
     public static int count() {
         return DEFS.size();
     }

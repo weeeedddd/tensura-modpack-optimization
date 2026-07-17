@@ -31,10 +31,9 @@ public class TensuraAbyss {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-        // Custom-Rassen: Registrierung laeuft automatisch ueber die
-        // @EventBusSubscriber-Annotation an AbyssRaces (RegisterEvent).
-        LOGGER.info("[Tensura Abyss] {} Custom-Rassen fuer die Tensura-Registry vorbereitet.",
-                AbyssRaces.count());
+        // Custom-Rassen in die ManasCore/Tensura-Race-Registry eintragen (Weg B),
+        // via Architectury-DeferredRegister.
+        AbyssRaces.register();
 
         // Server-/Game-Events (Gilden-Login-Tracking, Commands)
         NeoForge.EVENT_BUS.register(new GuildEventHandler());

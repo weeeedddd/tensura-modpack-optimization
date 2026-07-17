@@ -6,7 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.saved.SavedData;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,87 +1,72 @@
 package net.tensura.abyss.race;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
-// ══════════════════════════════════════════════════════════════════════════
-//  ECHTE Tensura-API (com.github.manasmods:tensura — via CurseMaven).
-//  Verifiziert gegen die offiziellen Beispiel-Addons (BanditHelps/vel-mc/
-//  ShinNoShinigami). ACHTUNG: Diese Beispiele sind 1.19.2/Forge. Die Race-
-//  Basisklasse + Methodensignaturen sind das stabile Kern-Design und mit hoher
-//  Wahrscheinlichkeit auf 1.21.1 identisch. Sollte 1.21.1 den Package-Root
-//  geaendert haben, hier die drei Imports anpassen (sonst nichts).
-// ══════════════════════════════════════════════════════════════════════════
-import com.github.manasmods.tensura.race.Race;
-import com.github.manasmods.tensura.ability.TensuraSkill;
-import com.github.manasmods.tensura.util.JumpPowerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
+// ── ECHTE Tensura/ManasCore-API (1.21.1), verifiziert per javap gegen die
+//    heruntergeladenen Jars (io.github.manasmods — NICHT com.github!). ──
+import io.github.manasmods.tensura.race.TensuraRace;
+import io.github.manasmods.manascore.race.api.ManasRace;
 
 /**
- * Eine parametrisierte Tensura-Rasse: EIN Subklassen-Typ, der seine Werte aus
- * einer {@link AbyssRaceDef} liest — so brauchen wir statt 37 Klassen nur
- * {@code new AbyssRace(def)}.
+ * Eine parametrisierte Tensura-Rasse (1.21.1). Erbt von {@link TensuraRace}
+ * (das wiederum von ManasCores {@code ManasRace} erbt) und liest ihre Werte aus
+ * einer {@link AbyssRaceDef}.
  *
- * <p>Basiert 1:1 auf dem echten Muster {@code ExampleRace extends Race} aus den
- * Tensura-Beispiel-Addons.
- *
- * <p><b>Wert-Mapping</b> (unsere TOML -> Tensura-API):
- * physicalHealth -> {@link #getBaseHealth()}, attackDamage ->
- * {@link #getBaseAttackDamage()}, movementSpeed -> {@link #getMovementSpeed()}
- * (+Sprint *1.45), aura -> {@link #getBaseAuraRange()} (0.8..1.0),
- * spiritualHealth -> {@link #getBaseMagiculeRange()} (0.75..1.0).
- * Tensura hat keinen eigenen "Spiritual Health"-Rassenwert; die Magicule-Range
- * ist der naechste Aequivalent-Pool.
+ * <p><b>Wichtig (1.21.1-Design):</b> Stats werden NICHT ueber getBaseHealth()-
+ * Overrides gesetzt (die gibt es nicht mehr), sondern ueber
+ * {@link ManasRace#addAttributeModifier} im Konstruktor. Nur die beiden
+ * abstrakten Methoden {@link #getBaseAuraRange()} und
+ * {@link #getBaseMagiculeRange()} muessen implementiert werden.
  */
-public class AbyssRace extends Race {
+public class AbyssRace extends TensuraRace {
 
     private final AbyssRaceDef def;
 
     public AbyssRace(AbyssRaceDef def) {
-        // 'Difficulty' ist eine verschachtelte Enum von Race (INTERMEDIATE ist
-        // aus dem Beispiel bestaetigt). Weitere Konstanten erst nach Blick in
-        // die 1.21.1-Jar nutzen.
-        super(Difficulty.INTERMEDIATE);
+        // Difficulty ist eine Enum von ManasRace: EASY / INTERMEDIATE / HARD / EXTREME.
+        super(ManasRace.Difficulty.INTERMEDIATE);
         this.def = def;
+
+        // Eindeutige Modifier-IDs pro Attribut+Rasse.
+        ResourceLocation hpId  = rl(def.id() + "_hp");
+        ResourceLocation atkId = rl(def.id() + "_atk");
+        ResourceLocation spdId = rl(def.id() + "_spd");
+
+        // baseHealth/attackDamage als additive Boni auf die Vanilla-Basiswerte.
+        addAttributeModifier(Attributes.MAX_HEALTH, hpId, def.baseHealth(),
+                AttributeModifier.Operation.ADD_VALUE);
+        addAttributeModifier(Attributes.ATTACK_DAMAGE, atkId, def.attackDamage(),
+                AttributeModifier.Operation.ADD_VALUE);
+        // Bewegung: Delta auf die Vanilla-Basis (0.1), damit die Ziel-Endgeschwindigkeit
+        // dem TOML-Wert entspricht (statt ihn oben drauf zu addieren). Bei Bedarf tunen.
+        addAttributeModifier(Attributes.MOVEMENT_SPEED, spdId, def.movementSpeed() - 0.1,
+                AttributeModifier.Operation.ADD_VALUE);
     }
 
-    @Override public double getBaseHealth()         { return def.baseHealth(); }
-    @Override public double getBaseAttackDamage()   { return def.attackDamage(); }
-    @Override public double getBaseAttackSpeed()    { return 3.0; }
-    @Override public double getKnockbackResistance(){ return 0.0; }
-    @Override public double getMovementSpeed()      { return def.movementSpeed(); }
-    @Override public double getSprintSpeed()        { return def.movementSpeed() * 1.45; }
-    @Override public float  getPlayerSize()         { return 2.0f; }
-
-    @Override
-    public double getJumpHeight() {
-        // Sprunghoehe ist in Tensura ueber diesen Helfer gekapselt (wie im Beispiel).
-        return JumpPowerHelper.defaultPlayer(1.0);
+    private static ResourceLocation rl(String path) {
+        return ResourceLocation.fromNamespaceAndPath("tensura_abyss", path);
     }
 
+    /** Aura-Range (min..max) — abstrakt in TensuraRace. */
     @Override
     public Pair<Double, Double> getBaseAuraRange() {
         return Pair.of(def.aura() * 0.8, def.aura());
     }
 
+    /** Magicule-Range (min..max) — abstrakt in TensuraRace. */
     @Override
     public Pair<Double, Double> getBaseMagiculeRange() {
         return Pair.of(def.magiculeBase() * 0.75, def.magiculeBase());
     }
 
-    /**
-     * Intrinsic-Skills der Rasse. Aktuell leer — hier spaeter eigene oder
-     * vorhandene Tensura-Skills eintragen, z.B.
-     * {@code list.add(IntrinsicSkills.BODY_ARMOR.get());}
-     */
+    /** Anzeigename -> nutzt unseren Lang-Key tensura_abyss.race.&lt;id&gt;. */
     @Override
-    public List<TensuraSkill> getIntrinsicSkills(Player player) {
-        return new ArrayList<>();
+    public MutableComponent getName() {
+        return Component.translatable("tensura_abyss.race." + def.id());
     }
-
-    // ── Typ-Flags (Semantik gegen Tensura-Doku pruefen; Default = false) ──
-    public boolean isMajin()     { return false; }
-    public boolean isSpiritual() { return false; }
-    public boolean isDivine()    { return false; }
 }

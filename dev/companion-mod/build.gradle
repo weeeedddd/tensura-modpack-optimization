@@ -39,6 +39,7 @@ dependencies {
     // ── Compile gegen die echte Tensura-API (AbyssRaces braucht die Race-Klasse) ──
     // NeoForge 1.21.1 nutzt offizielle Mappings -> Produktions-Jars sind direkt
     // kompilierbar (kein deobf noetig). ManasCore ist Tensuras Basis-Lib.
+    implementation "curse.maven:architectury-api-${architectury_project_id}:${architectury_file_id}"
     implementation "curse.maven:manascore-${manascore_project_id}:${manascore_file_id}"
     implementation "curse.maven:tensura-reincarnated-${tensura_project_id}:${tensura_file_id}"
     implementation "curse.maven:nightmares-tensura-utils-${nightmareutils_project_id}:${nightmareutils_file_id}"
