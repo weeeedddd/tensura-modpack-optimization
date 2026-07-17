@@ -37,11 +37,18 @@ public final class ShadowGuildPermissionHandler {
     /** LuckPerms-Node fuer die Gilden-Erstellung. */
     private static final String PERMISSION = "argonauts.guild.create";
 
-    /** Ziel-Rassen, die die Gilden-Erstellung freischalten. */
+    /** Ziel-Rassen, die die Gilden-Erstellung freischalten: voller Slime-Pfad + geheime Rasse. */
     private static final Set<ResourceLocation> SHADOW_RACES = Set.of(
-            ResourceLocation.parse("tensura_abyss:shadow_tier_1"),
-            ResourceLocation.parse("tensura_abyss:stylish_bandit_slayer")
-            // ... weitere Shadow-Rassen hier ergaenzen
+            ResourceLocation.parse("tensura_abyss:shadow_slime"),          // Stufe 1
+            ResourceLocation.parse("tensura_abyss:magicule_slime"),        // Stufe 2
+            ResourceLocation.parse("tensura_abyss:abyss_slime"),           // Stufe 3
+            ResourceLocation.parse("tensura_abyss:shadow_garden_guard"),   // Stufe 4
+            ResourceLocation.parse("tensura_abyss:dark_slime_sovereign"),  // Stufe 5
+            ResourceLocation.parse("tensura_abyss:shadow_lord"),           // Stufe 6
+            ResourceLocation.parse("tensura_abyss:awakened_shadow_lord"),  // Stufe 7
+            ResourceLocation.parse("tensura_abyss:abyss_monarch"),         // Stufe 8
+            ResourceLocation.parse("tensura_abyss:eminence_of_the_abyss"), // Stufe 9
+            ResourceLocation.parse("tensura_abyss:stylish_bandit_slayer")  // geheime Rasse
     );
 
     /** Einmalig beim Mod-Start aufrufen (aus dem Mod-Konstruktor). */
