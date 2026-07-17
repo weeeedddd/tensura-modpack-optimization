@@ -29,7 +29,7 @@ versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
-# Tensura Reincarnated MUSS vorher laden (Bridge greift auf dessen Daten zu).
+# Tensura Reincarnated MUSS vorher laden (wir registrieren in seine Race-Registry).
 [[dependencies.${mod_id}]]
 modId = "tensura"
 type = "required"
@@ -37,18 +37,18 @@ versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
-# Tensura Ascensions liefert das Evolutions-Framework.
+# ManasCore: Basis-Lib (Race-Klasse ManasRace, RaceAPI) — MUSS vorher laden.
 [[dependencies.${mod_id}]]
-modId = "tensura_ascensions"
+modId = "manascore"
 type = "required"
-versionRange = "[1.0,)"
+versionRange = "[4.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
-# Nightmare's Tensura Utils: API-Library, MUSS vorher laden.
+# Architectury: liefert den DeferredRegister fuer die Rassen-Registrierung.
 [[dependencies.${mod_id}]]
-modId = "nightmarestensurautils"
+modId = "architectury"
 type = "required"
-versionRange = "[0.1,)"
+versionRange = "[13.0,)"
 ordering = "AFTER"
 side = "BOTH"
