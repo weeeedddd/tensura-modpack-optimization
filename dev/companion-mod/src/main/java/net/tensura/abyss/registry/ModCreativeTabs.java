@@ -24,6 +24,10 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.DARK_AETHER.get());
                         output.accept(ModItems.I_AM_ATOMIC_CATALYST.get());
                         output.accept(ModItems.SIGNATURE_RECORD.get());
+                        output.accept(ModItems.CULT_INSIGNIA.get());
+                        output.accept(ModItems.MITSUGOSHI_LEDGER.get());
+                        output.accept(ModItems.SHADOW_PLEDGE_NOTE.get());
+                        output.accept(ModItems.ABYSS_PORTAL_FRAME.get());
                         output.accept(ModItems.SLIME_SUIT_HELMET.get());
                         output.accept(ModItems.SLIME_SUIT_CHESTPLATE.get());
                         output.accept(ModItems.SLIME_SUIT_LEGGINGS.get());

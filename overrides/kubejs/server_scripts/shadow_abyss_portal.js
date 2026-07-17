@@ -15,25 +15,25 @@ const RETURN_Y  = 110   // Ruecksprunghoehe in der Overworld
 
 // ── Rezept: Portal-Rahmen ──
 ServerEvents.recipes(event => {
-  event.shaped('4x kubejs:abyss_portal_frame', [
+  event.shaped('4x tensura_abyss:abyss_portal_frame', [
     'OCO',
     'CAC',
     'OCO'
   ], {
     O: 'minecraft:obsidian',
     C: 'minecraft:crying_obsidian',
-    A: 'kubejs:dark_aether'
+    A: 'tensura_abyss:dark_aether'
   }).id('tensurapack:abyss_portal_frame')
 })
 
 // ── Portal aktivieren / Reisen ──
-BlockEvents.rightClicked('kubejs:abyss_portal_frame', event => {
+BlockEvents.rightClicked('tensura_abyss:abyss_portal_frame', event => {
   const { player, item, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
 
   // Nur mit Dunklem Aether in der Hand
-  if (!item || item.id !== 'kubejs:dark_aether') {
+  if (!item || item.id !== 'tensura_abyss:dark_aether') {
     player.tell(Text.gray('Der Rahmen verlangt §5Dunklen Aether§7, um zu erwachen.'))
     return
   }

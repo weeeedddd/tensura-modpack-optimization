@@ -6,7 +6,8 @@
 // (/damage, /particle, /execute if items, /team, /summon), die via KubeJS
 // ausgefuehrt werden. Das ist versionsstabil und vermeidet fragile Java-Mappings.
 //
-// ABHAENGIGKEIT: kubejs/startup_scripts/shadow_garden_items.js muss geladen sein.
+// ABHAENGIGKEIT: die Items (tensura_abyss:dark_slime, ...slime_suit_*, ...)
+// registriert die Companion-Mod 'tensura_abyss' in Java.
 //
 // ─────────────────────────────────────────────────────────────────────────────
 // Modul-State (server-seitig, robust ueber eigenen Tick-Zaehler)
@@ -34,41 +35,41 @@ const SUIT_INTERVAL_TICKS = 40    // Set-Bonus alle 2s erneuern
 ServerEvents.recipes(event => {
 
   // Dark Slime: veredelter Schleim aus Schleimbaellen + Wither-Rose (dunkle Essenz)
-  event.shapeless('2x kubejs:dark_slime', [
+  event.shapeless('2x tensura_abyss:dark_slime', [
     'minecraft:slime_ball', 'minecraft:slime_ball', 'minecraft:slime_ball',
     'minecraft:wither_rose', 'minecraft:ink_sac'
   ]).id('tensurapack:dark_slime')
 
   // Dark Aether: Endgame-Kern (Netherstern-Gate = erst nach Wither-Kill)
   // Muster: 6x Dark Slime + 2x Echo Shard + 1x Nether Star
-  event.shaped('2x kubejs:dark_aether', [
+  event.shaped('2x tensura_abyss:dark_aether', [
     'SES',
     'SNS',
     'SES'
   ], {
-    S: 'kubejs:dark_slime',
+    S: 'tensura_abyss:dark_slime',
     E: 'minecraft:echo_shard',
     N: 'minecraft:nether_star'
   }).id('tensurapack:dark_aether')
 
   // "I Am Atomic" Katalysator: 1x Dark Aether + Obsidian-Rahmen + Netherstern
-  event.shaped('kubejs:i_am_atomic_catalyst', [
+  event.shaped('tensura_abyss:i_am_atomic_catalyst', [
     'ONO',
     'OAO',
     'OOO'
   ], {
     O: 'minecraft:obsidian',
     N: 'minecraft:nether_star',
-    A: 'kubejs:dark_aether'
+    A: 'tensura_abyss:dark_aether'
   }).id('tensurapack:i_am_atomic_catalyst')
 
   // Shadow-Garden-Pledge (Rang-Aufstieg-Token, guenstig)
-  event.shapeless('4x kubejs:shadow_pledge_note', [
-    'minecraft:paper', 'minecraft:paper', 'kubejs:dark_slime', 'minecraft:ink_sac'
+  event.shapeless('4x tensura_abyss:shadow_pledge_note', [
+    'minecraft:paper', 'minecraft:paper', 'tensura_abyss:dark_slime', 'minecraft:ink_sac'
   ]).id('tensurapack:shadow_pledge_note')
 
   // Mitsugoshi Trade Ledger (schaltet Tarn-/Raid-Mechanik frei)
-  event.shaped('kubejs:mitsugoshi_ledger', [
+  event.shaped('tensura_abyss:mitsugoshi_ledger', [
     'LGL',
     'GBG',
     'LGL'
@@ -81,17 +82,17 @@ ServerEvents.recipes(event => {
   // ── Slime Suit: Netherit-Basis + Dark Slime + Kult-Insignie ──
   const suit = { helmet: 'helmet', chestplate: 'chestplate', leggings: 'leggings', boots: 'boots' }
   Object.keys(suit).forEach(piece => {
-    event.shapeless(`kubejs:slime_suit_${piece}`, [
+    event.shapeless(`tensura_abyss:slime_suit_${piece}`, [
       `minecraft:netherite_${piece}`,
-      'kubejs:dark_slime', 'kubejs:dark_slime',
-      'kubejs:cult_insignia'
+      'tensura_abyss:dark_slime', 'tensura_abyss:dark_slime',
+      'tensura_abyss:cult_insignia'
     ]).id(`tensurapack:slime_suit_${piece}`)
   })
 
   // ── High-Tier Reworks: Dark Aether ERSETZT Diamanten-Upgrades ──
   // Netherit-Waffe + 1x Dark Aether -> garantiertes Endgame-Enchant-Paket
   event.shapeless('minecraft:netherite_sword', [
-    'minecraft:netherite_sword', 'kubejs:dark_aether'
+    'minecraft:netherite_sword', 'tensura_abyss:dark_aether'
   ]).enchant('minecraft:sharpness', 5)
     .enchant('minecraft:mending', 1)
     .enchant('minecraft:unbreaking', 3)
@@ -99,7 +100,7 @@ ServerEvents.recipes(event => {
     .id('tensurapack:rework_netherite_sword')
 
   event.shapeless('minecraft:netherite_axe', [
-    'minecraft:netherite_axe', 'kubejs:dark_aether'
+    'minecraft:netherite_axe', 'tensura_abyss:dark_aether'
   ]).enchant('minecraft:sharpness', 5)
     .enchant('minecraft:mending', 1)
     .enchant('minecraft:unbreaking', 3)
@@ -107,7 +108,7 @@ ServerEvents.recipes(event => {
 
   Object.keys(suit).forEach(piece => {
     event.shapeless(`minecraft:netherite_${piece}`, [
-      `minecraft:netherite_${piece}`, 'kubejs:dark_aether'
+      `minecraft:netherite_${piece}`, 'tensura_abyss:dark_aether'
     ]).enchant('minecraft:protection', 4)
       .enchant('minecraft:unbreaking', 3)
       .enchant('minecraft:mending', 1)
@@ -121,7 +122,7 @@ ServerEvents.recipes(event => {
 //    Riesige neon-blaue Partikelexplosion + massiver AoE-Schaden.
 //    WICHTIG: Nutzt /damage + /particle -> ZERSTOERT KEINE BLOECKE (kein Server-Lag).
 // ═════════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('kubejs:i_am_atomic_catalyst', event => {
+ItemEvents.rightClicked('tensura_abyss:i_am_atomic_catalyst', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -196,7 +197,7 @@ ItemEvents.rightClicked('kubejs:i_am_atomic_catalyst', event => {
 //    !! Die exakte Tensura-Skill-Grant-Syntax MUSS im Spiel verifiziert werden !!
 //    (Tensura hat eigene Commands; teste /tensura help oder pruefe das Wiki.)
 // ═════════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('kubejs:dark_aether', event => {
+ItemEvents.rightClicked('tensura_abyss:dark_aether', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -238,7 +239,7 @@ ServerEvents.loaded(event => {
 })
 
 // Pledge einloesen -> Rang steigt an Schwellen; Team-Zuweisung setzt den Praefix.
-ItemEvents.rightClicked('kubejs:shadow_pledge_note', event => {
+ItemEvents.rightClicked('tensura_abyss:shadow_pledge_note', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -262,7 +263,7 @@ ItemEvents.rightClicked('kubejs:shadow_pledge_note', event => {
 // 5) MITSUGOSHI-TARNUNG (Toggle) + INFRASTRUKTUR-HINWEIS
 //    Aktiviert die Kult-Invasions-Mechanik fuer den Spieler/seine Kolonie.
 // ═════════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('kubejs:mitsugoshi_ledger', event => {
+ItemEvents.rightClicked('tensura_abyss:mitsugoshi_ledger', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
@@ -292,10 +293,10 @@ ServerEvents.tick(event => {
   // EIN gekettetes /execute-if-items prueft alle 4 Slots -> nur bei vollem Set.
   // "true" am Ende = Partikel verstecken (echter Stealth, kein Leuchten).
   if (SG_TICK % SUIT_INTERVAL_TICKS === 0) {
-    const check = 'execute if items entity @s armor.head kubejs:slime_suit_helmet' +
-      ' if items entity @s armor.chest kubejs:slime_suit_chestplate' +
-      ' if items entity @s armor.legs kubejs:slime_suit_leggings' +
-      ' if items entity @s armor.feet kubejs:slime_suit_boots run '
+    const check = 'execute if items entity @s armor.head tensura_abyss:slime_suit_helmet' +
+      ' if items entity @s armor.chest tensura_abyss:slime_suit_chestplate' +
+      ' if items entity @s armor.legs tensura_abyss:slime_suit_leggings' +
+      ' if items entity @s armor.feet tensura_abyss:slime_suit_boots run '
     for (let i = 0; i < count; i++) {
       const p = players.get(i)
       p.runCommandSilent(check + 'effect give @s minecraft:speed 3 1 true')
@@ -356,5 +357,5 @@ EntityEvents.death(event => {
 
   const drop = knight ? (2 + Math.floor(Math.random() * 3)) : (Math.random() < 0.6 ? 1 : 0)
   if (drop <= 0) return
-  SG_SERVER.runCommandSilent(`summon item ${e.x} ${e.y} ${e.z} {Item:{id:"kubejs:cult_insignia",count:${drop}}}`)
+  SG_SERVER.runCommandSilent(`summon item ${e.x} ${e.y} ${e.z} {Item:{id:"tensura_abyss:cult_insignia",count:${drop}}}`)
 })

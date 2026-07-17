@@ -31,6 +31,26 @@ public final class ModItems {
             props -> new Item(props.rarity(Rarity.EPIC).stacksTo(64).fireResistant())
     );
 
+    // ── Kult von Diablos: Drop + Fraktions-Werkzeuge (aus KubeJS uebernommen) ──
+    public static final DeferredItem<Item> CULT_INSIGNIA = ITEMS.registerItem(
+            "cult_insignia",
+            props -> new Item(props.rarity(Rarity.UNCOMMON).stacksTo(64))
+    );
+
+    public static final DeferredItem<Item> MITSUGOSHI_LEDGER = ITEMS.registerItem(
+            "mitsugoshi_ledger",
+            props -> new Item(props.rarity(Rarity.RARE).stacksTo(1))
+    );
+
+    public static final DeferredItem<Item> SHADOW_PLEDGE_NOTE = ITEMS.registerItem(
+            "shadow_pledge_note",
+            props -> new Item(props.rarity(Rarity.UNCOMMON).stacksTo(16))
+    );
+
+    // ── BlockItem fuer den Abyss-Portal-Rahmen ──
+    public static final DeferredItem<net.minecraft.world.item.BlockItem> ABYSS_PORTAL_FRAME =
+            ITEMS.registerSimpleBlockItem("abyss_portal_frame", ModBlocks.ABYSS_PORTAL_FRAME);
+
     // ── Gilden-Item: signiertes Mitglieds-Dokument ──
     public static final DeferredItem<Item> SIGNATURE_RECORD = ITEMS.registerItem(
             "signature_record",

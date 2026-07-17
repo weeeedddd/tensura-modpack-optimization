@@ -19,7 +19,7 @@
 //   (identisch zum alten System — Spieler kennen den Handgriff schon).
 // Baum-Wahl: /shadowtree <slime|demon|hero|vampire>  (einmalig)
 
-const NS = 'kubejs'
+const NS = 'tensura_abyss'
 const ABYSS_DIM = 'tensura_abyss:shadow_abyss'
 
 // ── Java-Bridge (optional) mit lautlosem Fallback ──

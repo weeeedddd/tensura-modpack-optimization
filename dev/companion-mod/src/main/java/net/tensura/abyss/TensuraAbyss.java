@@ -7,6 +7,7 @@ import net.tensura.abyss.command.ShadowCommands;
 import net.tensura.abyss.guild.GuildEventHandler;
 import net.tensura.abyss.registry.AbyssRaces;
 import net.tensura.abyss.registry.ModArmorMaterials;
+import net.tensura.abyss.registry.ModBlocks;
 import net.tensura.abyss.registry.ModCreativeTabs;
 import net.tensura.abyss.registry.ModItems;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class TensuraAbyss {
     public TensuraAbyss(IEventBus modEventBus) {
         // Registry-Objekte am Mod-Event-Bus anmelden
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
+        ModBlocks.BLOCKS.register(modEventBus);      // vor den Items (BlockItem braucht den Block)
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
 

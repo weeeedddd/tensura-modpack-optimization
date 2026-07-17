@@ -2,7 +2,7 @@
 // server_scripts/ — /kubejs reload server_scripts
 //
 // Item-Namespace: bei installierter Companion-Mod auf 'tensura_abyss' stellen.
-const NS = 'kubejs'
+const NS = 'tensura_abyss'
 
 // >>> ZU VERIFIZIEREN: exakte Item-IDs aus den installierten Mods <<<
 const SOUL_ECHO    = 'tensura_ascensions:soul_echo' // Drop von Ascension-Bossen

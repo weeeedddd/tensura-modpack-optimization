@@ -1,32 +1,17 @@
-// KubeJS 6 — Tensura Abyss: Startup Fixes & Tag Assignments
-// Läuft einmal beim Spiel-Start (vor dem Laden der Welt).
-// Hier: Cross-Mod-Tags setzen, damit Mods sich gegenseitig erkennen.
+// KubeJS — Tensura Abyss: Startup-Hinweise
+// Laeuft einmal beim Spiel-Start.
+//
+// HINWEIS ZU TAGS: In KubeJS 2101 (1.21.1) gibt es KEIN 'StartupEvents.tags'.
+// Item-/Block-Tags werden in SERVER-SCRIPTS gesetzt, ueber:
+//     ServerEvents.tags('item',  event => { event.add('c:slimeballs', 'id') })
+//     ServerEvents.tags('block', event => { event.add('minecraft:mineable/pickaxe', 'id') })
+// (In 1.21 heisst der Sammel-Namespace 'c:' statt 'forge:', z.B. 'c:slimeballs'.)
+//
+// Beispiele — bei Bedarf in eine server_scripts/-Datei uebernehmen und die
+// realen IDs mit /kubejs hand verifizieren:
+//   event.add('c:slimeballs', 'tensura:slime')
+//   event.add('c:gems',       'tensura_magic_growth:magic_crystal')
+//   event.add('minecraft:mineable/pickaxe', 'tensura_magic_growth:magicule_ore')
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ITEM TAG ASSIGNMENTS
-// Sorgt dafür, dass Tensura-Items in Create/anderen Mods als korrekte
-// Ressourcen erkannt werden (z.B. als "Slimeball" für Rezepte).
-// ─────────────────────────────────────────────────────────────────────────────
-StartupEvents.tags('item', event => {
-
-  // Beispiele — deaktiviere Kommentare nach ID-Verifikation mit /kubejs hand:
-
-  // Tensura Slime-Materialien als forge:slimeballs registrieren
-  // (damit Create-Rezepte sie akzeptieren)
-  // event.add('forge:slimeballs', 'tensura_magic_growth:slime_ball');
-  // event.add('forge:slimeballs', 'tensura_magic_growth:dark_slime_ball');
-
-  // Tensura-Edelsteine als forge:gems/* registrieren
-  // event.add('forge:gems', 'tensura_magic_growth:magic_crystal');
-
-  // Tensura-Ingots für Create-Rezepte
-  // event.add('forge:ingots', 'tensura_magic_growth:magicule_ingot');
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// BLOCK TAG ASSIGNMENTS
-// ─────────────────────────────────────────────────────────────────────────────
-StartupEvents.tags('block', event => {
-  // Beispiel: Tensura-Blöcke als mineable/pickaxe registrieren
-  // event.add('minecraft:mineable/pickaxe', 'tensura_magic_growth:magicule_ore');
-});
+// (Aktuell keine Startup-Aktionen noetig — Items/Bloecke registriert die
+//  Companion-Mod 'tensura_abyss' in Java.)
