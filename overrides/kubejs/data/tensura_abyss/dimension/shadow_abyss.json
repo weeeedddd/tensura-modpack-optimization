@@ -2,7 +2,7 @@
   "type": "tensura_abyss:shadow_abyss",
   "generator": {
     "type": "minecraft:noise",
-    "settings": "tectonic:overworld",
+    "settings": "minecraft:overworld",
     "biome_source": {
       "type": "minecraft:multi_noise",
       "biomes": [
