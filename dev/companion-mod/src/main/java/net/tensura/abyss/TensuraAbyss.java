@@ -4,6 +4,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.tensura.abyss.command.ShadowCommands;
+import net.tensura.abyss.event.ShadowGuildPermissionHandler;
 import net.tensura.abyss.guild.GuildEventHandler;
 import net.tensura.abyss.registry.AbyssRaces;
 import net.tensura.abyss.registry.ModArmorMaterials;
@@ -40,6 +41,9 @@ public class TensuraAbyss {
         // Server-/Game-Events (Gilden-Login-Tracking, Commands)
         NeoForge.EVENT_BUS.register(new GuildEventHandler());
         NeoForge.EVENT_BUS.register(new ShadowCommands());
+
+        // Architectury-Event: Rassenwechsel -> Gilden-Berechtigung (LuckPerms)
+        ShadowGuildPermissionHandler.init();
 
         LOGGER.info("[Tensura Abyss] Companion mod initialised.");
     }
