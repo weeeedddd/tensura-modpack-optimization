@@ -59,6 +59,20 @@ ServerEvents.recipes(event => {
     'minecraft:paper', 'minecraft:paper', 'tensura_abyss:dark_slime', 'minecraft:ink_sac'
   ]).id('tensurapack:shadow_pledge_note')
 
+  // Insignia of False Eminence — endgame rank-forging relic.
+  // Deliberately brutal cost: post-Wither, deep Abyss progression required.
+  event.shaped('tensura_abyss:false_eminence_insignia', [
+    'APA',
+    'DND',
+    'ACA'
+  ], {
+    A: 'tensura_abyss:dark_aether',
+    N: 'minecraft:nether_star',
+    D: 'tensura_abyss:dark_slime',
+    P: 'tensura_abyss:shadow_pledge_note',
+    C: 'tensura_abyss:cult_insignia'
+  }).id('tensurapack:false_eminence_insignia')
+
   // Mitsugoshi Trade Ledger (schaltet Tarn-/Raid-Mechanik frei)
   event.shaped('tensura_abyss:mitsugoshi_ledger', [
     'LGL',
@@ -145,16 +159,20 @@ ItemEvents.rightClicked('tensura_abyss:dark_aether', event => {
 // ═════════════════════════════════════════════════════════════════════════════
 ServerEvents.loaded(event => {
   const s = event.server
-  // [id, prefix, color]
+  // Teams carry NO prefix anymore: rank visibility over heads is handled
+  // client-side by ShadowSightHandler (only shadow-race viewers see ranks,
+  // and the Insignia of False Eminence can spoof/mask them). Chat formatting
+  // is owned by shadow_chat.js. Teams remain the rank DATA carrier + color.
   const teams = [
-    ['sg_shadow',  '[Shadow] ',        'gray'],
-    ['sg_numbers', '[Numbers] ',       'aqua'],
-    ['sg_seven',   '[Seven Shadows] ', 'dark_aqua'],
-    ['sg_lord',    '[Shadow Lord] ',   'dark_purple']
+    ['sg_shadow',  'gray'],
+    ['sg_numbers', 'aqua'],
+    ['sg_seven',   'dark_aqua'],
+    ['sg_lord',    'dark_purple']
   ]
   teams.forEach(t => {
     s.runCommandSilent(`team add ${t[0]}`)
-    s.runCommandSilent(`team modify ${t[0]} prefix {"text":"${t[1]}","color":"${t[2]}"}`)
+    s.runCommandSilent(`team modify ${t[0]} prefix {"text":""}`)
+    s.runCommandSilent(`team modify ${t[0]} color ${t[1]}`)
   })
 })
 

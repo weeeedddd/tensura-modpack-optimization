@@ -45,6 +45,9 @@ public class TensuraAbyss {
         // Architectury-Event: Rassenwechsel -> Gilden-Berechtigung (LuckPerms)
         ShadowGuildPermissionHandler.init();
 
+        // Architectury-Event: Shadow-Pfad betreten -> Slime Sword vergeben
+        net.tensura.abyss.event.ShadowGearHandler.init();
+
         LOGGER.info("[Tensura Abyss] Companion mod initialised.");
     }
 }

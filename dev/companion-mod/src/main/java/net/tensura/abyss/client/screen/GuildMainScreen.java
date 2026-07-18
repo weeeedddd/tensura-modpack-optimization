@@ -11,26 +11,33 @@ import net.tensura.abyss.network.ClientboundOpenGuildScreenPayload;
 import net.tensura.abyss.network.ServerboundMarketActionPacket;
 
 /**
- * Gilden-Hauptmenue im "Eminence in Shadow"-Stil:
- * dunkler Schieferstein mit feinen Rissen, umrandet von zaehfluessigem,
- * tiefviolettem Schleim mit pulsierendem "Atem"-Glow (Alpha 0.6 – 1.0),
- * Texte in Dunkelgold &amp; Violett.
+ * Shadow Garden guild interface — obsidian &amp; deep-violet redesign.
  *
- * Rein mit {@link GuiGraphics} gerendert (keine Textur-Assets noetig).
+ * Rendered purely with {@link GuiGraphics} (no texture assets):
+ *   • layered obsidian body (vertical gradient bands) with subtle cracks
+ *   • 1px violet outer frame, gold hairline inlay, gold corner studs
+ *   • pulsing molten-slime border glow with viscous drips
+ *   • stat rows as inset obsidian cards (label left, value right)
  */
 public class GuildMainScreen extends Screen {
 
-    // Farbpalette
+    // ── Palette ──
     private static final int GOLD       = 0xFFD4AF37;
-    private static final int GOLD_DIM   = 0xFFB8912E;
+    private static final int GOLD_DIM   = 0xFF8A6E24;
     private static final int VIOLET     = 0xFFB56BE0;
-    private static final int SLATE      = 0xF00B0B10;
-    private static final int SLATE_EDGE = 0xFF16161F;
-    private static final int CRACK      = 0xFF1E1E28;
-    private static final int SLIME_RGB  = 0x7A2FBF; // violetter Schleim (ohne Alpha)
+    private static final int VIOLET_DIM = 0xFF6B3F94;
+    private static final int LABEL      = 0xFF8C86A0;
+    private static final int VALUE      = 0xFFEFEAFF;
+    private static final int CRACK      = 0xFF14101E;
+    private static final int CARD_BG    = 0xC8120C1E;
+    private static final int CARD_EDGE  = 0xFF241634;
+    private static final int SLIME_RGB  = 0x7A2FBF;
 
-    private static final int PANEL_W = 236;
-    private static final int PANEL_H = 196;
+    // Obsidian gradient bands (top -> bottom)
+    private static final int[] OBSIDIAN = { 0xF80A0612, 0xF80C0716, 0xF80F091C, 0xF8110A20, 0xF80D081A };
+
+    private static final int PANEL_W = 252;
+    private static final int PANEL_H = 208;
 
     private final ClientboundOpenGuildScreenPayload data;
     private int left, top;
@@ -45,65 +52,80 @@ public class GuildMainScreen extends Screen {
         this.left = (this.width - PANEL_W) / 2;
         this.top = (this.height - PANEL_H) / 2;
 
-        int btnW = 150, btnH = 20, gap = 6;
+        int btnW = 168, btnH = 20, gap = 5;
         int bx = left + (PANEL_W - btnW) / 2;
-        int by = top + PANEL_H - 84;
+        int by = top + PANEL_H - 3 * btnH - 2 * gap - 12;
 
-        // "Einladen" -> schliesst dieses GUI und oeffnet den Einladungs-Screen
-        addRenderableWidget(Button.builder(Component.literal("§5» Invite «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§5◆ §dInvite to the Shadows §5◆"), b ->
                 Minecraft.getInstance().setScreen(new GuildInviteScreen(this)))
                 .bounds(bx, by, btnW, btnH).build());
 
-        // "Schwarzmarkt" -> Server oeffnet das Mitsugoshi-Handels-GUI
-        addRenderableWidget(Button.builder(Component.literal("§6» Mitsugoshi Black Market «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§6◆ §eMitsugoshi Black Market §6◆"), b ->
                 PacketDistributor.sendToServer(new ServerboundMarketActionPacket(ServerboundMarketActionPacket.OPEN)))
                 .bounds(bx, by + btnH + gap, btnW, btnH).build());
 
-        // "Schliessen"
-        addRenderableWidget(Button.builder(Component.literal("§8Close"), b -> this.onClose())
+        addRenderableWidget(Button.builder(Component.literal("§8Withdraw into darkness"), b -> this.onClose())
                 .bounds(bx, by + (btnH + gap) * 2, btnW, btnH).build());
     }
 
-    /** Pulsierende Schleim-Farbe: Alpha fadet sanft zwischen 0.6 und 1.0. */
+    /** Pulsing slime color: alpha breathes between 0.55 and 1.0. */
     private int slimeColor() {
         double phase = (Util.getMillis() % 2600L) / 2600.0;
-        float pulse = 0.6F + 0.4F * (float) (0.5 + 0.5 * Math.sin(phase * Math.PI * 2.0));
+        float pulse = 0.55F + 0.45F * (float) (0.5 + 0.5 * Math.sin(phase * Math.PI * 2.0));
         int a = Math.max(0, Math.min(255, (int) (pulse * 255)));
         return (a << 24) | SLIME_RGB;
     }
 
     @Override
     public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderTransparentBackground(g);   // Welt dahinter abdunkeln
-        drawSlatePanel(g);
+        this.renderTransparentBackground(g);
+        drawObsidianBody(g);
+        drawFrame(g);
         drawSlimeBorder(g);
     }
 
-    private void drawSlatePanel(GuiGraphics g) {
+    /** Layered obsidian: vertical gradient bands + hairline cracks. */
+    private void drawObsidianBody(GuiGraphics g) {
+        int bandH = PANEL_H / OBSIDIAN.length;
+        for (int i = 0; i < OBSIDIAN.length; i++) {
+            int y1 = top + i * bandH;
+            int y2 = (i == OBSIDIAN.length - 1) ? top + PANEL_H : y1 + bandH;
+            g.fill(left, y1, left + PANEL_W, y2, OBSIDIAN[i]);
+        }
+        // subtle cracks, kept away from the text column
+        crack(g, 26, 30, 40, 66);
+        crack(g, 40, 66, 33, 104);
+        crack(g, 33, 104, 50, 140);
+        crack(g, 224, 34, 210, 72);
+        crack(g, 210, 72, 226, 112);
+        crack(g, 226, 112, 212, 152);
+        crack(g, 118, 168, 130, 194);
+    }
+
+    /** 1px violet outer frame + gold hairline inlay + gold corner studs. */
+    private void drawFrame(GuiGraphics g) {
         int x2 = left + PANEL_W, y2 = top + PANEL_H;
-        // Grundflaeche
-        g.fill(left, top, x2, y2, SLATE);
-        // dezenter Innenrand (Steinkante)
-        g.fill(left + 4, top + 4, x2 - 4, top + 5, SLATE_EDGE);
-        g.fill(left + 4, y2 - 5, x2 - 4, y2 - 4, SLATE_EDGE);
-        g.fill(left + 4, top + 4, left + 5, y2 - 4, SLATE_EDGE);
-        g.fill(x2 - 5, top + 4, x2 - 4, y2 - 4, SLATE_EDGE);
-        drawCracks(g);
+        // violet frame
+        g.fill(left - 1, top - 1, x2 + 1, top, VIOLET_DIM);
+        g.fill(left - 1, y2, x2 + 1, y2 + 1, VIOLET_DIM);
+        g.fill(left - 1, top, left, y2, VIOLET_DIM);
+        g.fill(x2, top, x2 + 1, y2, VIOLET_DIM);
+        // gold hairline inlay
+        g.fill(left + 5, top + 5, x2 - 5, top + 6, GOLD_DIM);
+        g.fill(left + 5, y2 - 6, x2 - 5, y2 - 5, GOLD_DIM);
+        g.fill(left + 5, top + 5, left + 6, y2 - 5, GOLD_DIM);
+        g.fill(x2 - 6, top + 5, x2 - 5, y2 - 5, GOLD_DIM);
+        // corner studs
+        stud(g, left + 3, top + 3);
+        stud(g, x2 - 5, top + 3);
+        stud(g, left + 3, y2 - 5);
+        stud(g, x2 - 5, y2 - 5);
     }
 
-    /** Feine, gotische Risse im Schiefer (feste Segmente, relativ zum Panel). */
-    private void drawCracks(GuiGraphics g) {
-        crack(g, 30, 24, 46, 60);
-        crack(g, 46, 60, 40, 96);
-        crack(g, 40, 96, 58, 130);
-        crack(g, 200, 30, 188, 70);
-        crack(g, 188, 70, 205, 110);
-        crack(g, 205, 110, 190, 150);
-        crack(g, 120, 150, 132, 178);
-        crack(g, 90, 40, 105, 66);
+    private void stud(GuiGraphics g, int x, int y) {
+        g.fill(x, y, x + 2, y + 2, GOLD);
     }
 
-    /** Zeichnet ein "Riss"-Segment als treppenfoermige 1px-Linie. */
     private void crack(GuiGraphics g, int x1, int y1, int x2, int y2) {
         int ax = left + x1, ay = top + y1, bx = left + x2, by = top + y2;
         int steps = Math.max(Math.abs(bx - ax), Math.abs(by - ay));
@@ -115,24 +137,23 @@ public class GuildMainScreen extends Screen {
         }
     }
 
-    /** Pulsierender Schleim-Rand + ein paar zaehe "Tropfen". */
+    /** Pulsing molten-slime border + viscous drips along the bottom edge. */
     private void drawSlimeBorder(GuiGraphics g) {
         int c = slimeColor();
         int x2 = left + PANEL_W, y2 = top + PANEL_H;
-        int t = 4; // Randdicke
-        g.fill(left - t, top - t, x2 + t, top, c);       // oben
-        g.fill(left - t, y2, x2 + t, y2 + t, c);         // unten
-        g.fill(left - t, top, left, y2, c);              // links
-        g.fill(x2, top, x2 + t, y2, c);                  // rechts
-        // zaehe Tropfen an der Unterkante
-        g.fill(left + 40, y2 + t, left + 46, y2 + t + 6, c);
-        g.fill(left + 120, y2 + t, left + 126, y2 + t + 9, c);
-        g.fill(left + 190, y2 + t, left + 196, y2 + t + 5, c);
+        int t = 3;
+        g.fill(left - 1 - t, top - 1 - t, x2 + 1 + t, top - 1, c);
+        g.fill(left - 1 - t, y2 + 1, x2 + 1 + t, y2 + 1 + t, c);
+        g.fill(left - 1 - t, top - 1, left - 1, y2 + 1, c);
+        g.fill(x2 + 1, top - 1, x2 + 1 + t, y2 + 1, c);
+        g.fill(left + 42, y2 + 1 + t, left + 47, y2 + 1 + t + 6, c);
+        g.fill(left + 126, y2 + 1 + t, left + 131, y2 + 1 + t + 9, c);
+        g.fill(left + 198, y2 + 1 + t, left + 203, y2 + 1 + t + 5, c);
     }
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        super.render(g, mouseX, mouseY, partialTick); // renderBackground + Widgets
+        super.render(g, mouseX, mouseY, partialTick);
         drawTexts(g);
     }
 
@@ -140,21 +161,30 @@ public class GuildMainScreen extends Screen {
         int cx = left + PANEL_W / 2;
         int y = top + 16;
         g.drawCenteredString(this.font, Component.literal("S H A D O W  G A R D E N"), cx, y, GOLD);
+        y += 13;
+        g.drawCenteredString(this.font, Component.literal("§5◆ §d" + data.guildName() + " §5◆"), cx, y, VIOLET);
         y += 14;
-        g.drawCenteredString(this.font, Component.literal(data.guildName()), cx, y, VIOLET);
-        y += 24;
+        // divider
+        g.fill(left + 28, y, left + PANEL_W - 28, y + 1, CARD_EDGE);
+        g.fill(cx - 2, y - 1, cx + 2, y + 2, VIOLET_DIM);
+        y += 8;
 
-        int lx = left + 24;
-        line(g, lx, y, "Abenteurer-Rang", data.adventurerRank());            y += 16;
-        line(g, lx, y, "Your rank", data.memberRank());                      y += 16;
-        line(g, lx, y, "Member no.", "#" + data.memberNumber());          y += 16;
-        line(g, lx, y, "Members", data.memberCount() + " / " + data.memberLimit());
+        card(g, y,      "Adventurer Rank", data.adventurerRank(), GOLD);
+        card(g, y + 19, "Your Standing",   data.memberRank(), VALUE);
+        card(g, y + 38, "Member Number",   "#" + data.memberNumber(), VALUE);
+        card(g, y + 57, "Sworn Shadows",   data.memberCount() + " / " + data.memberLimit(), VIOLET);
     }
 
-    /** Label (Dunkelgold) : Wert (Violett). */
-    private void line(GuiGraphics g, int x, int y, String label, String value) {
-        g.drawString(this.font, label + ":", x, y, GOLD_DIM, false);
-        g.drawString(this.font, value, x + 118, y, VIOLET, false);
+    /** Inset obsidian stat card: label left (muted), value right (bright). */
+    private void card(GuiGraphics g, int y, String label, String value, int valueColor) {
+        int x1 = left + 22, x2 = left + PANEL_W - 22, y2 = y + 16;
+        g.fill(x1, y, x2, y2, CARD_BG);
+        g.fill(x1, y, x2, y + 1, CARD_EDGE);
+        g.fill(x1, y2 - 1, x2, y2, CARD_EDGE);
+        g.fill(x1, y, x1 + 1, y2, VIOLET_DIM);        // accent spine
+        g.fill(x2 - 1, y, x2, y2, CARD_EDGE);
+        g.drawString(this.font, label, x1 + 7, y + 4, LABEL, false);
+        g.drawString(this.font, value, x2 - 7 - this.font.width(value), y + 4, valueColor, false);
     }
 
     @Override

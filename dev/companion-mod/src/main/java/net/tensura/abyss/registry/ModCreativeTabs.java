@@ -22,6 +22,8 @@ public final class ModCreativeTabs {
                     .displayItems((params, output) -> {
                         output.accept(ModItems.DARK_SLIME.get());
                         output.accept(ModItems.DARK_AETHER.get());
+                        output.accept(ModItems.SLIME_SWORD.get());
+                        output.accept(ModItems.FALSE_EMINENCE_INSIGNIA.get());
                         output.accept(ModItems.I_AM_ATOMIC_CATALYST.get());
                         output.accept(ModItems.SIGNATURE_RECORD.get());
                         output.accept(ModItems.CULT_INSIGNIA.get());

@@ -11,6 +11,7 @@ import net.tensura.abyss.item.CultInsigniaItem;
 import net.tensura.abyss.item.IAmAtomicItem;
 import net.tensura.abyss.item.SignatureRecordItem;
 import net.tensura.abyss.item.SlimeSuitArmorItem;
+import net.tensura.abyss.item.SlimeSwordItem;
 
 /**
  * Alle Items der Companion-Mod. Item-Texturen (Inventar) liegen unter
@@ -57,6 +58,18 @@ public final class ModItems {
     public static final DeferredItem<Item> SIGNATURE_RECORD = ITEMS.registerItem(
             "signature_record",
             props -> new SignatureRecordItem(props.rarity(Rarity.EPIC).stacksTo(1))
+    );
+
+    // ── Slime Sword: auto-granted on entering the Shadow Slime path ──
+    public static final DeferredItem<Item> SLIME_SWORD = ITEMS.registerItem(
+            "slime_sword",
+            props -> new SlimeSwordItem(props.rarity(Rarity.RARE))
+    );
+
+    // ── Insignia of False Eminence: endgame rank-spoofing relic ──
+    public static final DeferredItem<Item> FALSE_EMINENCE_INSIGNIA = ITEMS.registerItem(
+            "false_eminence_insignia",
+            props -> new AbyssLoreItem(props.rarity(Rarity.EPIC).stacksTo(1).fireResistant())
     );
 
     // ── Ultimate-Skill-Katalysator "I Am Atomic" ──

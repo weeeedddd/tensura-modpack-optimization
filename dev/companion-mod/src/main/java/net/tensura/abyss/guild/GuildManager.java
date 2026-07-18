@@ -7,9 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.tensura.abyss.bridge.TensuraBridge;
-import net.tensura.abyss.network.ClientboundHudStatusPayload;
 import net.tensura.abyss.registry.ModItems;
 
 import java.util.UUID;
@@ -27,14 +25,6 @@ public final class GuildManager {
         return TensuraBridge.hasTensuraRace(player);
     }
 
-    /** Pushes the player's current guild name to the client sidebar HUD. */
-    public static void syncHud(ServerPlayer player) {
-        GuildSavedData data = GuildSavedData.get(player.getServer());
-        Guild g = data.guildOf(player.getUUID());
-        PacketDistributor.sendToPlayer(player, new ClientboundHudStatusPayload(
-                g == null ? ClientboundHudStatusPayload.NO_GUILD : g.name));
-    }
-
     public static boolean createGuild(ServerPlayer leader, String name) {
         if (!canUseGuildSystem(leader)) return false;
         MinecraftServer server = leader.getServer();
@@ -50,7 +40,6 @@ public final class GuildManager {
         data.setDirty();
 
         giveSignatureRecord(leader, g, number);
-        syncHud(leader);
         leader.sendSystemMessage(Component.literal("§5Shadow Garden: guild \"" + name +
                 "\" founded. You are §lMember #" + number + "§r§5 (Leader)."));
         return true;
@@ -69,7 +58,6 @@ public final class GuildManager {
         data.setDirty();
 
         giveSignatureRecord(player, g, number);
-        syncHud(player);
         player.sendSystemMessage(Component.literal("§5You joined the guild \"" + g.name +
                 "\" — §lMember #" + number + "§r§5, rank " + g.rank().name() + "."));
         return true;
@@ -84,7 +72,6 @@ public final class GuildManager {
         data.playerToGuild.remove(player.getUUID());
         if (g.members.isEmpty()) data.guilds.remove(g.name.toLowerCase());
         data.setDirty();
-        syncHud(player);
         player.sendSystemMessage(Component.literal("§7You left the guild."));
         return true;
     }

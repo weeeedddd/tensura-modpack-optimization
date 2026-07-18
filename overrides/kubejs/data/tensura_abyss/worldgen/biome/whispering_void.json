@@ -18,8 +18,18 @@
   },
   "spawners": {
     "monster": [
-      { "type": "minecraft:skeleton", "weight": 80, "minCount": 1, "maxCount": 3 },
-      { "type": "minecraft:phantom", "weight": 10, "minCount": 1, "maxCount": 2 }
+      {
+        "type": "minecraft:skeleton",
+        "weight": 80,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:phantom",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      }
     ],
     "creature": [],
     "ambient": [],
@@ -31,7 +41,32 @@
   },
   "spawn_costs": {},
   "carvers": {
-    "air": ["minecraft:cave", "minecraft:cave_extra_underground", "minecraft:canyon"]
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
   },
-  "features": []
+  "features": [
+    [],
+    [],
+    [
+      "tensura_abyss:abyss_geode"
+    ],
+    [],
+    [],
+    [],
+    [
+      "tensura_abyss:surface_ash"
+    ],
+    [
+      "tensura_abyss:abyss_sculk",
+      "minecraft:glow_lichen"
+    ],
+    [],
+    [
+      "tensura_abyss:abyss_flora"
+    ],
+    []
+  ]
 }
