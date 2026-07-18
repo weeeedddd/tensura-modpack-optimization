@@ -1,0 +1,90 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  TENSURA ABYSS — Reincarnation menu configuration
+#
+#  This file controls which races appear in Tensura's native selection
+#  (reincarnation) menu. The pack ships it because the four Abyss starter
+#  races are custom (registered by the tensura_abyss companion mod) and are
+#  NOT part of Tensura's defaults — without this file they never show up in
+#  the menu.
+#
+#  Vanilla default lists were extracted 1:1 from tensura-reincarnated
+#  (1.21.1, file 7905367) and kept intact; only the tensura_abyss starters
+#  were appended. Higher Abyss forms (Abyss Slime and beyond) are reached
+#  through the in-menu EVOLUTION system, not selected at spawn.
+# ═══════════════════════════════════════════════════════════════════════════
+
+[Races]
+	# Races offered when choosing a starting race
+	startingRaces = [
+		"tensura:human", "tensura:elf", "tensura:dwarf", "tensura:merfolk",
+		"tensura:beastfolk", "tensura:harpy", "tensura:goblin", "tensura:lizardman",
+		"tensura:ogre", "tensura:orc", "tensura:slime", "tensura:wight",
+		"tensura:ghoul", "tensura:lesser_daemon", "tensura:giant",
+		"tensura_abyss:shadow_slime", "tensura_abyss:low_shadow_demon",
+		"tensura_abyss:human_apprentice", "tensura_abyss:vampire_spawn"
+	]
+	# Pool used for the "random race" option
+	randomRaces = [
+		"tensura:human", "tensura:elf", "tensura:dwarf", "tensura:merfolk",
+		"tensura:beastfolk", "tensura:harpy", "tensura:goblin", "tensura:lizardman",
+		"tensura:ogre", "tensura:orc", "tensura:slime", "tensura:wight",
+		"tensura:ghoul", "tensura:lesser_daemon", "tensura:giant",
+		"tensura_abyss:shadow_slime", "tensura_abyss:low_shadow_demon",
+		"tensura_abyss:human_apprentice", "tensura_abyss:vampire_spawn"
+	]
+	# Races offered on reincarnation (vanilla defaults)
+	reincarnationRaces = [
+		"tensura:human", "tensura:elf", "tensura:dwarf", "tensura:merfolk",
+		"tensura:beastfolk", "tensura:harpy", "tensura:goblin", "tensura:lizardman",
+		"tensura:orc", "tensura:slime", "tensura:wight", "tensura:ghoul"
+	]
+	# Races offered on mastered reincarnation (vanilla defaults)
+	reincarnationRacesMastered = [
+		"tensura:human", "tensura:elf", "tensura:dwarf", "tensura:merfolk",
+		"tensura:beastfolk", "tensura:harpy", "tensura:hobgoblin", "tensura:dragonewt",
+		"tensura:ogre", "tensura:high_orc", "tensura:slime", "tensura:wight",
+		"tensura:vampire", "tensura:lesser_daemon", "tensura:giant"
+	]
+
+[Skills]
+	# Unique-skill pool for reincarnation (vanilla defaults, unchanged)
+	startingSkills = [
+		"tensura:absolute_severance", "tensura:analyst", "tensura:berserk",
+		"tensura:berserker", "tensura:bewilder", "tensura:chef", "tensura:chosen_one",
+		"tensura:commander", "tensura:cook", "tensura:creator", "tensura:degenerate",
+		"tensura:engorger", "tensura:envy", "tensura:falsifier", "tensura:fighter",
+		"tensura:fusionist", "tensura:gourmand", "tensura:gourmet", "tensura:great_sage",
+		"tensura:greed", "tensura:guardian", "tensura:healer", "tensura:infinity_prison",
+		"tensura:lust", "tensura:martial_master", "tensura:mathematician",
+		"tensura:merciless", "tensura:murderer", "tensura:musician", "tensura:observer",
+		"tensura:oppressor", "tensura:predator", "tensura:pride", "tensura:reflector",
+		"tensura:researcher", "tensura:royal_beast", "tensura:reaper", "tensura:reverser",
+		"tensura:seeker", "tensura:seer", "tensura:severer", "tensura:shadow_striker",
+		"tensura:sloth", "tensura:sniper", "tensura:spearhead", "tensura:suppressor",
+		"tensura:survivor", "tensura:traveler", "tensura:thrower", "tensura:tuner",
+		"tensura:unyielding", "tensura:usurper", "tensura:villain", "tensura:wrath"
+	]
+	skillNumber = 1
+	additionalUniqueChance = 100.0
+	secondSkills = [
+		"tensura:analyst", "tensura:chef", "tensura:commander", "tensura:degenerate",
+		"tensura:falsifier", "tensura:gourmand", "tensura:great_sage", "tensura:guardian",
+		"tensura:mathematician", "tensura:merciless", "tensura:murderer",
+		"tensura:observer", "tensura:researcher", "tensura:royal_beast",
+		"tensura:reverser", "tensura:seeker", "tensura:seer", "tensura:suppressor",
+		"tensura:survivor"
+	]
+	learnableResistances = [
+		"tensura:abnormal_condition_resistance", "tensura:cold_resistance",
+		"tensura:corrosion_resistance", "tensura:darkness_attack_resistance",
+		"tensura:earth_attack_resistance", "tensura:electricity_resistance",
+		"tensura:flame_attack_resistance", "tensura:gravity_attack_resistance",
+		"tensura:heat_resistance", "tensura:holy_attack_resistance",
+		"tensura:light_attack_resistance", "tensura:magic_resistance",
+		"tensura:physical_attack_resistance", "tensura:pain_resistance",
+		"tensura:paralysis_resistance", "tensura:pierce_resistance",
+		"tensura:poison_resistance", "tensura:spatial_attack_resistance",
+		"tensura:spiritual_attack_resistance", "tensura:water_attack_resistance",
+		"tensura:wind_attack_resistance"
+	]
+	nonPlayerResistance = true

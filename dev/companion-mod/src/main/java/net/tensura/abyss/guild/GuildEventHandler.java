@@ -10,7 +10,10 @@ public class GuildEventHandler {
 
     @SubscribeEvent
     public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        touch(event.getEntity() instanceof ServerPlayer sp ? sp : null);
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            touch(sp);
+            GuildManager.syncHud(sp); // seed the sidebar HUD guild line
+        }
     }
 
     @SubscribeEvent

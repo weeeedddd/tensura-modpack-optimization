@@ -49,6 +49,11 @@ public final class NetworkHandler {
                     ClientboundMarketSyncPayload.STREAM_CODEC,
                     ClientPayloadHandler::handleMarketSync
             );
+            registrar.playToClient(
+                    ClientboundHudStatusPayload.TYPE,
+                    ClientboundHudStatusPayload.STREAM_CODEC,
+                    ClientPayloadHandler::handleHudStatus
+            );
         } else {
             registrar.playToClient(
                     ClientboundOpenGuildScreenPayload.TYPE,
@@ -58,6 +63,11 @@ public final class NetworkHandler {
             registrar.playToClient(
                     ClientboundMarketSyncPayload.TYPE,
                     ClientboundMarketSyncPayload.STREAM_CODEC,
+                    (payload, context) -> { }
+            );
+            registrar.playToClient(
+                    ClientboundHudStatusPayload.TYPE,
+                    ClientboundHudStatusPayload.STREAM_CODEC,
                     (payload, context) -> { }
             );
         }

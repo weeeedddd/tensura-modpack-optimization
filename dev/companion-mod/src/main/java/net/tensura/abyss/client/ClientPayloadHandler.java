@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.tensura.abyss.client.screen.BlackMarketScreen;
 import net.tensura.abyss.client.screen.GuildMainScreen;
+import net.tensura.abyss.network.ClientboundHudStatusPayload;
 import net.tensura.abyss.network.ClientboundMarketSyncPayload;
 import net.tensura.abyss.network.ClientboundOpenGuildScreenPayload;
 
@@ -17,6 +18,10 @@ public final class ClientPayloadHandler {
     public static void handleOpenGuild(ClientboundOpenGuildScreenPayload payload, IPayloadContext context) {
         context.enqueueWork(() ->
                 Minecraft.getInstance().setScreen(new GuildMainScreen(payload)));
+    }
+
+    public static void handleHudStatus(ClientboundHudStatusPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ClientHudState.setGuildName(payload.guildName()));
     }
 
     public static void handleMarketSync(ClientboundMarketSyncPayload payload, IPayloadContext context) {

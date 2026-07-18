@@ -9,7 +9,9 @@ import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.api.RaceAPI;
 import dev.architectury.registry.registries.DeferredRegister;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Registriert die 37 Tensura-Abyss-Custom-Rassen (4 Pfade x 9 + geheime Rasse)
@@ -83,8 +85,46 @@ public final class AbyssRaces {
             new AbyssRaceDef("stylish_bandit_slayer", 2000.0, 55.0, 0.21, 7500.0, 2400.0)
     );
 
+    // ═══════════════ EVOLUTION CHAINS (native menu integration) ═══════════════
+    // Each tree is a strict 9-stage ladder. These chains feed AbyssRace's
+    // getNextEvolutions/getPreviousEvolutions overrides so the NATIVE Tensura
+    // evolution menu shows the full path instead of dead-ending after the
+    // starter race. The secret race stays quest-only (no chain entry).
+    private static final String[][] TREES = {
+            { "shadow_slime", "magicule_slime", "abyss_slime", "shadow_garden_guard",
+              "dark_slime_sovereign", "shadow_lord", "awakened_shadow_lord",
+              "abyss_monarch", "eminence_of_the_abyss" },
+            { "low_shadow_demon", "shadow_demon_peer", "blood_shadow_demon",
+              "arcane_demon_guard", "arch_demon_of_shadows", "shadow_duke",
+              "awakened_demon_king", "void_overlord", "diablos_eminence" },
+            { "human_apprentice", "shadow_spellsword", "shadow_blade", "cult_breaker",
+              "master_of_garden", "ancient_knight", "true_hero_of_shadows",
+              "light_shadow_monarch", "sovereign_of_midnight" },
+            { "vampire_spawn", "blood_shadow", "mist_walker", "crimson_noble",
+              "night_stalker", "pureblood_vampire", "awakened_blood_lord",
+              "monarch_of_the_red_moon", "progenitor_of_the_abyss" }
+    };
+
+    /** EP needed to REACH stage index i (mirrors the KubeJS magicule curve). */
+    private static final double[] STAGE_EP =
+            { 0, 5_000, 15_000, 40_000, 100_000, 250_000, 600_000, 1_400_000, 3_000_000 };
+
+    /** race id -> next race id in its tree (absent = final form). */
+    public static final Map<String, String> NEXT = new HashMap<>();
+    /** race id -> previous race id in its tree (absent = starter). */
+    public static final Map<String, String> PREV = new HashMap<>();
+    /** race id -> EP required to evolve INTO that race. */
+    public static final Map<String, Double> EVOLUTION_EP = new HashMap<>();
+
     // Alle Rassen beim DeferredRegister anmelden (laeuft beim Klassen-Laden).
     static {
+        for (String[] tree : TREES) {
+            for (int i = 0; i < tree.length; i++) {
+                if (i + 1 < tree.length) NEXT.put(tree[i], tree[i + 1]);
+                if (i > 0) PREV.put(tree[i], tree[i - 1]);
+                EVOLUTION_EP.put(tree[i], STAGE_EP[i]);
+            }
+        }
         for (AbyssRaceDef def : DEFS) {
             RACES.register(def.id(), () -> new AbyssRace(def));
         }
