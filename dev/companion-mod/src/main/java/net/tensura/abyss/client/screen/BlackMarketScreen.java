@@ -31,7 +31,7 @@ public class BlackMarketScreen extends Screen {
     private int left, top;
 
     public BlackMarketScreen(int coins) {
-        super(Component.literal("Mitsugoshi Schwarzmarkt"));
+        super(Component.literal("Mitsugoshi Black Market"));
         this.coins = coins;
     }
 
@@ -47,19 +47,19 @@ public class BlackMarketScreen extends Screen {
         int rowY = top + 66;
         for (int i = 0; i < MarketManager.OFFERS.size(); i++) {
             final int index = i;
-            addRenderableWidget(Button.builder(Component.literal("§5Kaufen"), b ->
+            addRenderableWidget(Button.builder(Component.literal("§5Buy"), b ->
                     send(ServerboundMarketActionPacket.BUY_BASE + index))
                     .bounds(left + PANEL_W - 78, rowY, 60, 18).build());
             rowY += ROW_H;
         }
 
         // Erzeugnisse -> Muenzen
-        addRenderableWidget(Button.builder(Component.literal("§6» Erzeugnisse einschmelzen «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§6» Convert Trade Goods «"), b ->
                 send(ServerboundMarketActionPacket.CONVERT))
                 .bounds(left + 24, top + PANEL_H - 52, PANEL_W - 48, 20).build());
 
         // zurueck
-        addRenderableWidget(Button.builder(Component.literal("§8Zurueck"), b -> this.onClose())
+        addRenderableWidget(Button.builder(Component.literal("§8Back"), b -> this.onClose())
                 .bounds(left + 24, top + PANEL_H - 28, PANEL_W - 48, 20).build());
     }
 
@@ -99,8 +99,8 @@ public class BlackMarketScreen extends Screen {
         super.render(g, mouseX, mouseY, partialTick);
         int cx = left + PANEL_W / 2;
         g.drawCenteredString(this.font, Component.literal("M I T S U G O S H I"), cx, top + 14, GOLD);
-        g.drawCenteredString(this.font, Component.literal("§oSchwarzmarkt der Schatten"), cx, top + 28, VIOLET);
-        g.drawString(this.font, "Muenzen:", left + 24, top + 46, GOLD_DIM, false);
+        g.drawCenteredString(this.font, Component.literal("§oBlack Market of the Shadows"), cx, top + 28, VIOLET);
+        g.drawString(this.font, "Coins:", left + 24, top + 46, GOLD_DIM, false);
         g.drawString(this.font, String.valueOf(coins), left + 82, top + 46, GOLD, false);
 
         int rowY = top + 66;

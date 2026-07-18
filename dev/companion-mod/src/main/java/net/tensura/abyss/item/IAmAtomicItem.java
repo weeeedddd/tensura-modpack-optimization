@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -22,21 +23,37 @@ import net.tensura.abyss.bridge.TensuraBridge;
 import java.util.List;
 
 /**
- * Der ultimative Skill "I Am Atomic" als Item.
+ * The ultimate skill "I Am Atomic" as an item.
  *
- * Voraussetzungen (server-seitig geprueft):
- *   • Rang "Shadow" (persistentData sgEvoRank >= 6 — von shadow_evos.js gesetzt)
- *   • >= 5.000.000 Max EP (via {@link TensuraBridge#getMaxEP} — Scoreboard-Fallback)
- * Effekt:
- *   • gigantisches neon-blaues Partikel-Dornenfeld (kreisfoermig ausbreitend)
- *   • tiefer Bass-Sound
- *   • massiver Schaden an ALLEN feindlichen Mobs im Umkreis von 30 Bloecken
- * Server-Schutz:
- *   • Schaden direkt ueber entity.hurt(...) — KEINE Explosion, KEINE Blockschaeden.
+ * Requirements (checked server-side):
+ *   • Active race {@code tensura_abyss:eminence_of_the_abyss} — read live from
+ *     the native ManasCore race system via {@link TensuraBridge#hasRace}.
+ *   • >= 5,000,000 EP (via {@link TensuraBridge#getMaxEP} — scoreboard fallback)
+ * Effect:
+ *   • giant neon-blue particle thorn field (expanding rings)
+ *   • deep bass sound
+ *   • massive damage to ALL hostile mobs within 30 blocks
+ * Server safety:
+ *   • damage goes through entity.hurt(...) — NO explosion, NO block damage.
+ *
+ * CUSTOM VISUAL HOOK PLAN (structural, for later polish):
+ *   1. Particles: register a custom ParticleType in a new
+ *      {@code net.tensura.abyss.registry.ModParticles} (DeferredRegister on
+ *      BuiltInRegistries.PARTICLE_TYPE), texture under
+ *      {@code assets/tensura_abyss/textures/particle/atomic_thorn.png} +
+ *      {@code assets/tensura_abyss/particles/atomic_thorn.json}, then swap it
+ *      in for SOUL_FIRE_FLAME/ELECTRIC_SPARK inside {@link #spawnThornField}.
+ *   2. Sound: custom event in {@code assets/tensura_abyss/sounds.json}
+ *      ("skill.i_am_atomic") + ogg under sounds/skill/, registered via a
+ *      {@code ModSounds} DeferredRegister, replacing WARDEN_SONIC_BOOM.
+ *   3. Item texture: assets/tensura_abyss/textures/item/i_am_atomic_catalyst.png
+ *      (already wired through the standard item model).
  */
 public class IAmAtomicItem extends Item {
 
-    private static final int    REQUIRED_RANK   = 6;        // "Shadow"
+    /** Only the final slime-tree form may unleash the skill. */
+    private static final ResourceLocation REQUIRED_RACE =
+            ResourceLocation.parse("tensura_abyss:eminence_of_the_abyss");
     private static final double REQUIRED_MAX_EP = 5_000_000.0;
     private static final double RADIUS          = 30.0;
     private static final float  DAMAGE          = 120.0F;
@@ -54,19 +71,20 @@ public class IAmAtomicItem extends Item {
             return InteractionResultHolder.success(stack);
         }
 
-        // ── Gate 1: Rang "Shadow" ──
-        if (player.getPersistentData().getInt("sgEvoRank") < REQUIRED_RANK) {
+        // ── Gate 1: active race must be [Eminence of the Abyss] ──
+        // Read live from the native race system — no stale script flags.
+        if (!TensuraBridge.hasRace(player, REQUIRED_RACE)) {
             player.displayClientMessage(Component.literal(
-                    "Nur der Rang [Shadow] kann \"I Am Atomic\" entfesseln.")
-                    .withStyle(ChatFormatting.GRAY), true);
+                    "Only the Eminence of the Abyss can unleash I Am Atomic.")
+                    .withStyle(ChatFormatting.DARK_PURPLE), true);
             return InteractionResultHolder.fail(stack);
         }
 
-        // ── Gate 2: >= 5.000.000 Max EP ──
+        // ── Gate 2: >= 5,000,000 EP ──
         double maxEp = TensuraBridge.getMaxEP(player);
         if (maxEp < REQUIRED_MAX_EP) {
             player.displayClientMessage(Component.literal(
-                    "Zu wenig Max EP: " + (long) maxEp + " / " + (long) REQUIRED_MAX_EP)
+                    "Not enough Existence Points: " + (long) maxEp + " / " + (long) REQUIRED_MAX_EP)
                     .withStyle(ChatFormatting.GRAY), true);
             return InteractionResultHolder.fail(stack);
         }

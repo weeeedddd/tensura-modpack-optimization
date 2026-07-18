@@ -95,7 +95,7 @@ public final class CommissionManager {
                 c.rewardExp = 500;
                 c.rewardItem = "minecraft:emerald";
                 c.rewardCount = 4 + rng.nextInt(8);
-                c.title = "Dwarf Commission: liefere " + c.amount + "x " + shortName(c.targetId);
+                c.title = "Dwarf Commission: deliver " + c.amount + "x " + shortName(c.targetId);
             }
         }
         return c;

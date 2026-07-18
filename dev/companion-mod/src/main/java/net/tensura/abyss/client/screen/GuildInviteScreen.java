@@ -48,7 +48,7 @@ public class GuildInviteScreen extends Screen {
     private int completionIndex = 0;
 
     public GuildInviteScreen(Screen parent) {
-        super(Component.literal("Geheimbefehl"));
+        super(Component.literal("Covert Order"));
         this.parent = parent;
     }
 
@@ -58,21 +58,21 @@ public class GuildInviteScreen extends Screen {
         this.top = (this.height - PANEL_H) / 2;
 
         nameField = new EditBox(this.font, left + 24, top + 44, PANEL_W - 48, 18,
-                Component.literal("Spielername"));
+                Component.literal("Player name"));
         nameField.setMaxLength(32);
-        nameField.setHint(Component.literal("Name eingeben… (TAB)"));
+        nameField.setHint(Component.literal("Enter a name… (TAB)"));
         addRenderableWidget(nameField);
 
         noteField = new MultiLineEditBox(this.font, left + 24, top + 84, PANEL_W - 48, 66,
-                Component.literal("Tritt den Schatten bei…"),
-                Component.literal("Geheimbotschaft"));
+                Component.literal("Join the shadows…"),
+                Component.literal("Secret message"));
         noteField.setValue("");
         addRenderableWidget(noteField);
 
         int btnW = 96, btnH = 20;
-        addRenderableWidget(Button.builder(Component.literal("§5» Senden «"), b -> send())
+        addRenderableWidget(Button.builder(Component.literal("§5» Send «"), b -> send())
                 .bounds(left + 24, top + PANEL_H - 30, btnW, btnH).build());
-        addRenderableWidget(Button.builder(Component.literal("§8Zurueck"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§8Back"), b ->
                 Minecraft.getInstance().setScreen(parent))
                 .bounds(left + PANEL_W - 24 - btnW, top + PANEL_H - 30, btnW, btnH).build());
 
@@ -157,7 +157,7 @@ public class GuildInviteScreen extends Screen {
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
         int cx = left + PANEL_W / 2;
-        g.drawCenteredString(this.font, Component.literal("» Geheimbefehl «"), cx, top + 14, INK);
+        g.drawCenteredString(this.font, Component.literal("» Covert Order «"), cx, top + 14, INK);
         g.drawString(this.font, "An:", left + 24, top + 32, INK_DIM, false);
         g.drawString(this.font, "Botschaft:", left + 24, top + 72, INK_DIM, false);
         drawSeal(g, x_seal(), top + PANEL_H - 34);

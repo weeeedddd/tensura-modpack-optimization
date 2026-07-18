@@ -6,6 +6,8 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.tensura.abyss.TensuraAbyss;
+import net.tensura.abyss.item.AbyssLoreItem;
+import net.tensura.abyss.item.CultInsigniaItem;
 import net.tensura.abyss.item.IAmAtomicItem;
 import net.tensura.abyss.item.SignatureRecordItem;
 import net.tensura.abyss.item.SlimeSuitArmorItem;
@@ -20,31 +22,31 @@ public final class ModItems {
     public static final DeferredRegister.Items ITEMS =
             DeferredRegister.createItems(TensuraAbyss.MOD_ID);
 
-    // ── Kern-Ressourcen ──
+    // ── Core resources (lore tooltips come from en_us.json via AbyssLoreItem) ──
     public static final DeferredItem<Item> DARK_SLIME = ITEMS.registerItem(
             "dark_slime",
-            props -> new Item(props.rarity(Rarity.RARE).stacksTo(64))
+            props -> new AbyssLoreItem(props.rarity(Rarity.RARE).stacksTo(64))
     );
 
     public static final DeferredItem<Item> DARK_AETHER = ITEMS.registerItem(
             "dark_aether",
-            props -> new Item(props.rarity(Rarity.EPIC).stacksTo(64).fireResistant())
+            props -> new AbyssLoreItem(props.rarity(Rarity.EPIC).stacksTo(64).fireResistant())
     );
 
-    // ── Kult von Diablos: Drop + Fraktions-Werkzeuge (aus KubeJS uebernommen) ──
+    // ── Cult of Diablos: challenge trigger + faction tools ──
     public static final DeferredItem<Item> CULT_INSIGNIA = ITEMS.registerItem(
             "cult_insignia",
-            props -> new Item(props.rarity(Rarity.UNCOMMON).stacksTo(64))
+            props -> new CultInsigniaItem(props.rarity(Rarity.UNCOMMON).stacksTo(64))
     );
 
     public static final DeferredItem<Item> MITSUGOSHI_LEDGER = ITEMS.registerItem(
             "mitsugoshi_ledger",
-            props -> new Item(props.rarity(Rarity.RARE).stacksTo(1))
+            props -> new AbyssLoreItem(props.rarity(Rarity.RARE).stacksTo(1))
     );
 
     public static final DeferredItem<Item> SHADOW_PLEDGE_NOTE = ITEMS.registerItem(
             "shadow_pledge_note",
-            props -> new Item(props.rarity(Rarity.UNCOMMON).stacksTo(16))
+            props -> new AbyssLoreItem(props.rarity(Rarity.UNCOMMON).stacksTo(16))
     );
 
     // ── BlockItem fuer den Abyss-Portal-Rahmen ──

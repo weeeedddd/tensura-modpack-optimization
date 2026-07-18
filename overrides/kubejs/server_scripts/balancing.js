@@ -108,5 +108,5 @@ ItemEvents.rightClicked('kubejs:breath_attunement_crystal', event => {
   // player.runCommandSilent('tensura skillpoint add @s 1');
   // player.runCommandSilent('tensura ultimateskill unlock @s breath_of_the_abyss');
 
-  player.tell('§b§lBreath Attunement Crystal §rverbraucht §7(Skill-Unlock: siehe Kommentar in balancing.js)');
+  player.tell('§b§lBreath Attunement Crystal §rconsumed §7— the Abyss resonates with your breath.');
 });

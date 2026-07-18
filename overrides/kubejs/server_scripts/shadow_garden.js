@@ -15,19 +15,10 @@
 let SG_TICK = 0
 let SG_SERVER = null
 
-// Zentrale Balancing-Werte
-const ATOMIC_MANA_COST = 30       // XP-Level als Mana-Proxy (Iron's Spells Mana ist per KubeJS nicht sicher lesbar)
-const ATOMIC_COOLDOWN_MS = 120000 // 2 Minuten Cooldown
-const ATOMIC_RADIUS = 30          // Wirkungsradius in Blocks
-const ATOMIC_DAMAGE = 120         // Schaden pro Mob (magisch)
-const ATOMIC_MIN_MAXEP = 5000000  // Voraussetzung: >= 5.000.000 Max EP (via Ascension-API)
-
-// Java-Bridge (optional) — Rang/EP-Gate. Ohne Companion-Mod: Gate wird uebersprungen.
-let ATOMIC_BRIDGE = null
-try { ATOMIC_BRIDGE = Java.loadClass('net.tensura.abyss.bridge.TensuraBridge') } catch (e) { ATOMIC_BRIDGE = null }
-const RAID_INTERVAL_TICKS = 1200  // alle 60s pruefen
-const RAID_CHANCE = 0.5           // 50% pro Intervall (nur bei aktiver Mitsugoshi-Tarnung)
-const SUIT_INTERVAL_TICKS = 40    // Set-Bonus alle 2s erneuern
+// Central balancing values ("I Am Atomic" now lives in IAmAtomicItem.java)
+const RAID_INTERVAL_TICKS = 1200  // check every 60s
+const RAID_CHANCE = 0.5           // 50% per interval (only with active Mitsugoshi cover)
+const SUIT_INTERVAL_TICKS = 40    // refresh set bonus every 2s
 
 // ═════════════════════════════════════════════════════════════════════════════
 // 1) REZEPTE — Dark Slime / Dark Aether / Katalysator / Slime Suit / Reworks
@@ -118,90 +109,23 @@ ServerEvents.recipes(event => {
 
 // ═════════════════════════════════════════════════════════════════════════════
 // 2) ULTIMATE SKILL "I AM ATOMIC"
-//    Verbraucht Mana (XP-Level) + 1x Katalysator (= 1x Dark Aether im Craft).
-//    Riesige neon-blaue Partikelexplosion + massiver AoE-Schaden.
-//    WICHTIG: Nutzt /damage + /particle -> ZERSTOERT KEINE BLOECKE (kein Server-Lag).
+//    Handled ENTIRELY by the companion mod (IAmAtomicItem.java) — the Java item
+//    checks the live race (eminence_of_the_abyss) + EP gate, spawns the thorn
+//    field, applies AoE damage and the cooldown. The old KubeJS duplicate
+//    handler was removed because it double-fired and produced conflicting
+//    action-bar/chat requirement messages.
 // ═════════════════════════════════════════════════════════════════════════════
-ItemEvents.rightClicked('tensura_abyss:i_am_atomic_catalyst', event => {
-  const { player, level, hand } = event
-  if (level.isClientSide()) return
-  if (hand !== 'main_hand') return
-
-  const now = Date.now()
-  const readyAt = player.persistentData.getLong('sgAtomicReadyAt')
-  if (now < readyAt) {
-    const secs = Math.ceil((readyAt - now) / 1000)
-    player.tell(Text.gray(`I Am Atomic laedt noch nach... / recharging... (${secs}s)`))
-    return
-  }
-
-  // Voraussetzung: [Eminence of the Abyss] (Slime-Baum Stufe 9, setzt
-  // sgAtomicUnlocked in shadow_race_trees.js) ODER Legacy-Rang "Shadow".
-  const atomicUnlocked = player.persistentData.getBoolean('sgAtomicUnlocked') ||
-    player.persistentData.getInt('sgEvoRank') >= 6
-  if (!atomicUnlocked) {
-    player.tell(Text.gray('Nur die [Eminence of the Abyss] kann "I Am Atomic" entfesseln.'))
-    return
-  }
-  if (ATOMIC_BRIDGE) {
-    let maxEp = 0
-    try { maxEp = ATOMIC_BRIDGE.getMaxEP(player) } catch (e) { maxEp = ATOMIC_MIN_MAXEP }
-    if (maxEp < ATOMIC_MIN_MAXEP) {
-      player.tell(Text.gray(`Zu wenig Max EP: ${Math.round(maxEp)} / ${ATOMIC_MIN_MAXEP}.`))
-      return
-    }
-  }
-
-  // Mana-Proxy: XP-Level pruefen und abziehen (via Command = robust)
-  let lvl = 0
-  try { lvl = player.xpLevel } catch (err) { lvl = -1 }
-  if (lvl >= 0 && lvl < ATOMIC_MANA_COST) {
-    player.tell(Text.gray(`Nicht genug Mana / not enough mana (braucht ${ATOMIC_MANA_COST} XP-Level).`))
-    return
-  }
-  player.runCommandSilent(`xp add @s -${ATOMIC_MANA_COST} levels`)
-
-  // Katalysator verbrauchen
-  if (!player.isCreative()) event.item.shrink(1)
-
-  // Neon-blaue Explosion (mehrschichtige Partikel), zentriert auf den Spieler
-  player.runCommandSilent('particle minecraft:flash ~ ~1 ~ 0 0 0 0 2 force')
-  player.runCommandSilent('particle minecraft:sonic_boom ~ ~1 ~ 0 0 0 0 4 force')
-  player.runCommandSilent(`particle minecraft:soul_fire_flame ~ ~1 ~ ${ATOMIC_RADIUS * 0.4} ${ATOMIC_RADIUS * 0.4} ${ATOMIC_RADIUS * 0.4} 0.02 900 force`)
-  player.runCommandSilent(`particle minecraft:electric_spark ~ ~1 ~ ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} 0.12 500 force`)
-  player.runCommandSilent(`particle minecraft:end_rod ~ ~1 ~ ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} ${ATOMIC_RADIUS * 0.45} 0.04 350 force`)
-
-  // Kreisfoermiges neon-blaues Dornenfeld (expandierender Ring)
-  for (let a = 0; a < 360; a += 12) {
-    const rad = a * Math.PI / 180
-    const dx = (Math.cos(rad) * ATOMIC_RADIUS * 0.7).toFixed(1)
-    const dz = (Math.sin(rad) * ATOMIC_RADIUS * 0.7).toFixed(1)
-    player.runCommandSilent(`particle minecraft:soul_fire_flame ~${dx} ~0.3 ~${dz} 0.2 0.6 0.2 0.01 12 force`)
-  }
-
-  // Tiefer Bass-Sound
-  player.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @a ~ ~ ~ 6 0.5')
-  player.runCommandSilent('playsound minecraft:block.beacon.deactivate master @a ~ ~ ~ 6 0.4')
-  player.runCommandSilent('playsound minecraft:entity.generic.explode master @a ~ ~ ~ 5 0.7')
-
-  // AoE-Schaden an ALLEN Nicht-Spieler-Entities im Radius (keine Blockschaeden!)
-  player.runCommandSilent(`damage @e[distance=..${ATOMIC_RADIUS},type=!minecraft:player] ${ATOMIC_DAMAGE} minecraft:magic by @s`)
-
-  player.persistentData.putLong('sgAtomicReadyAt', now + ATOMIC_COOLDOWN_MS)
-  player.tell(Text.aqua('§lI... AM... ATOMIC.'))
-})
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 3) DARK AETHER -> TENSURA "BREATH"-SYSTEM FREISCHALTEN
-//    Rechtsklick verbraucht 1x Dark Aether und schaltet eine Breath-Stufe frei.
-//    !! Die exakte Tensura-Skill-Grant-Syntax MUSS im Spiel verifiziert werden !!
-//    (Tensura hat eigene Commands; teste /tensura help oder pruefe das Wiki.)
+// 3) DARK AETHER -> ABYSS ATTUNEMENT
+//    Right-click consumes 1x Dark Aether and deepens the player's attunement.
+//    (Sneak + right-click stays reserved for the evolution trigger in
+//    shadow_race_trees.js — ignored here.)
 // ═════════════════════════════════════════════════════════════════════════════
 ItemEvents.rightClicked('tensura_abyss:dark_aether', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
   if (hand !== 'main_hand') return
-  // Sneak + Rechtsklick ist der EVOLUTIONS-Trigger (shadow_evos.js) — hier ignorieren.
   if (player.isCrouching()) return
 
   if (!player.isCreative()) event.item.shrink(1)
@@ -212,11 +136,7 @@ ItemEvents.rightClicked('tensura_abyss:dark_aether', event => {
   player.runCommandSilent('playsound minecraft:block.beacon.power_select master @s ~ ~ ~ 1 1.2')
   player.runCommandSilent('particle minecraft:soul_fire_flame ~ ~1 ~ 0.4 0.8 0.4 0.02 80 force')
 
-  // >>> HIER Tensura-Command aktivieren, sobald die Syntax verifiziert ist: <<<
-  // player.runCommandSilent('tensura skill unlock @s breath_of_the_abyss')
-
-  player.tell(Text.aqua(`Dark Aether resoniert — Breath-Attunement Stufe ${breath}.`))
-  player.tell(Text.gray('(Tensura-Skill-Command in shadow_garden.js aktivieren, siehe Kommentar.)'))
+  player.tell(Text.of(`§5The Dark Aether resonates within you §8— §7Abyss Attunement §fLevel ${breath}§7.`))
 })
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -238,7 +158,11 @@ ServerEvents.loaded(event => {
   })
 })
 
-// Pledge einloesen -> Rang steigt an Schwellen; Team-Zuweisung setzt den Praefix.
+// SHADOW GARDEN PLEDGE — the organisation's membership token.
+// Right-click consumes the pledge and raises the player's HIDDEN faction
+// reputation with Shadow Garden (sgReputation). Rank thresholds assign the
+// matching scoreboard team (chat/nametag prefix). Styled in the faction's
+// stealth palette: §5 dark purple / §8 dark gray / §f white accents.
 ItemEvents.rightClicked('tensura_abyss:shadow_pledge_note', event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
@@ -249,14 +173,26 @@ ItemEvents.rightClicked('tensura_abyss:shadow_pledge_note', event => {
   const pledges = player.persistentData.getInt('sgPledges') + 1
   player.persistentData.putInt('sgPledges', pledges)
 
-  let rank, team
-  if (pledges >= 50)      { rank = 'Shadow Lord';   team = 'sg_lord' }
-  else if (pledges >= 25) { rank = 'Seven Shadows'; team = 'sg_seven' }
-  else if (pledges >= 10) { rank = 'Numbers';       team = 'sg_numbers' }
-  else                    { rank = 'Shadow';        team = 'sg_shadow' }
+  // Hidden reputation: pledges weigh more the deeper you are in the order.
+  const repGain = 5 + Math.floor(pledges / 10) * 2
+  const rep = player.persistentData.getInt('sgReputation') + repGain
+  player.persistentData.putInt('sgReputation', rep)
+
+  let rank, team, next
+  if (pledges >= 50)      { rank = 'Shadow Lord';   team = 'sg_lord';    next = null }
+  else if (pledges >= 25) { rank = 'Seven Shadows'; team = 'sg_seven';   next = 50 }
+  else if (pledges >= 10) { rank = 'Numbers';       team = 'sg_numbers'; next = 25 }
+  else                    { rank = 'Shadow';        team = 'sg_shadow';  next = 10 }
 
   player.runCommandSilent(`team join ${team} @s`)
-  player.tell(Text.aqua(`Shadow Garden — Rang [${rank}]  (${pledges} Pledges)`))
+  player.runCommandSilent('playsound minecraft:block.sculk_shrieker.hit master @s ~ ~ ~ 0.6 0.6')
+  player.runCommandSilent('particle minecraft:squid_ink ~ ~1.2 ~ 0.25 0.4 0.25 0.02 25 force')
+
+  player.tell(Text.of('§8── §5§lShadow Garden§r §8──'))
+  player.tell(Text.of(`§7Your pledge has been accepted. §8(§f${pledges}§8 sworn§8)`))
+  player.tell(Text.of(`§7Standing: §5${rank}§8 · §7Reputation §f+${repGain}`))
+  if (next) player.tell(Text.of(`§8Next rank at ${next} pledges.`))
+  else player.tell(Text.of('§8You stand at the apex of the order.'))
 })
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -272,10 +208,10 @@ ItemEvents.rightClicked('tensura_abyss:mitsugoshi_ledger', event => {
   player.persistentData.putBoolean('sgMitsugoshi', on)
 
   if (on) {
-    player.tell(Text.green('Mitsugoshi-Tarnung AKTIV — deine Kolonie farmt heimlich fuer Shadow Garden.'))
-    player.tell(Text.gray('Warnung: Der Kult von Diablos kann nun Raids starten.'))
+    player.tell(Text.of('§5Mitsugoshi cover §aACTIVE §8— §7your colony now quietly funnels resources to Shadow Garden.'))
+    player.tell(Text.of('§8Warning: the Cult of Diablos may now launch raids against you.'))
   } else {
-    player.tell(Text.gray('Mitsugoshi-Tarnung deaktiviert — keine Kult-Raids mehr.'))
+    player.tell(Text.of('§7Mitsugoshi cover disabled §8— no further cult raids.'))
   }
 })
 
@@ -312,17 +248,17 @@ ServerEvents.tick(event => {
       if (!p.persistentData.getBoolean('sgMitsugoshi')) continue
       if (Math.random() > RAID_CHANCE) continue
 
-      p.tell(Text.aqua('Der Kult von Diablos greift dein Mitsugoshi-Imperium an!'))
+      p.tell(Text.of('§5The Cult of Diablos is raiding your Mitsugoshi empire!'))
       p.runCommandSilent('playsound minecraft:event.raid.horn master @s ~ ~ ~ 4 1')
 
-      const wave = 4 + Math.floor(Math.random() * 4) // 4-7 Kultisten
+      const wave = 4 + Math.floor(Math.random() * 4) // 4-7 cultists
       for (let k = 0; k < wave; k++) {
         const ox = (Math.random() * 16 - 8).toFixed(1)
         const oz = (Math.random() * 16 - 8).toFixed(1)
-        p.runCommandSilent(`summon minecraft:pillager ~${ox} ~1 ~${oz} {Tags:["cult_of_diablos"],PersistenceRequired:1b,CustomName:'{"text":"Kultist von Diablos","color":"dark_purple"}'}`)
+        p.runCommandSilent(`summon minecraft:pillager ~${ox} ~1 ~${oz} {Tags:["cult_of_diablos"],PersistenceRequired:1b,CustomName:'{"text":"Diablos Cultist","color":"dark_purple"}'}`)
       }
-      // Elite-Ritter (droppt garantiert mehr Insignien)
-      p.runCommandSilent(`summon minecraft:vindicator ~ ~1 ~ {Tags:["cult_of_diablos","cult_knight"],PersistenceRequired:1b,CustomName:'{"text":"Diablos-Ritter","color":"dark_red"}'}`)
+      // Elite knight (guaranteed extra insignia drops)
+      p.runCommandSilent(`summon minecraft:vindicator ~ ~1 ~ {Tags:["cult_of_diablos","cult_knight"],PersistenceRequired:1b,CustomName:'{"text":"Diablos Knight","color":"dark_red"}'}`)
     }
   }
 })

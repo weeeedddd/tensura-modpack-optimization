@@ -22,39 +22,39 @@ public final class ServerGuildInviteHandler {
             GuildSavedData data = GuildSavedData.get(sender.getServer());
             Guild g = data.guildOf(sender.getUUID());
             if (g == null) {
-                sender.sendSystemMessage(Component.literal("§cDu bist in keiner Gilde."));
+                sender.sendSystemMessage(Component.literal("§cYou are not in a guild."));
                 return;
             }
             // Nur Leader/Vize duerfen einladen.
             GuildRank rank = g.members.get(sender.getUUID());
             if (rank == GuildRank.MEMBER) {
-                sender.sendSystemMessage(Component.literal("§cNur Leader/Vize koennen einladen."));
+                sender.sendSystemMessage(Component.literal("§cOnly the leader/vice can invite."));
                 return;
             }
 
             String targetName = payload.targetName().trim();
             ServerPlayer target = sender.getServer().getPlayerList().getPlayerByName(targetName);
             if (target == null) {
-                sender.sendSystemMessage(Component.literal("§cSpieler nicht online: " + targetName));
+                sender.sendSystemMessage(Component.literal("§cPlayer not online: " + targetName));
                 return;
             }
             if (!GuildManager.canUseGuildSystem(target)) {
-                sender.sendSystemMessage(Component.literal("§cZiel ist kein Shadow-Garden-Mitglied."));
+                sender.sendSystemMessage(Component.literal("§cThat player is not a Shadow Garden member."));
                 return;
             }
 
             String note = payload.note() == null ? "" : payload.note().trim();
             GuildInviteManager.invite(target.getUUID(), g.name, note, sender.getName().getString());
 
-            sender.sendSystemMessage(Component.literal("§dEinladung an " + targetName + " gesendet."));
+            sender.sendSystemMessage(Component.literal("§dInvitation sent to " + targetName + "."));
             target.sendSystemMessage(Component.literal("§5§l» Shadow Garden «")
                     .withStyle(ChatFormatting.DARK_PURPLE));
             target.sendSystemMessage(Component.literal("§7" + sender.getName().getString() +
-                    " lädt dich in die Gilde \"" + g.name + "\" ein."));
+                    " invites you to the guild \"" + g.name + "\"."));
             if (!note.isEmpty()) {
                 target.sendSystemMessage(Component.literal("§d“" + note + "”"));
             }
-            target.sendSystemMessage(Component.literal("§7Annehmen mit §f/shadow guild accept"));
+            target.sendSystemMessage(Component.literal("§7Accept with §f/shadowguild accept"));
         });
     }
 }

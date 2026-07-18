@@ -80,10 +80,10 @@ public final class MarketManager {
         if (gained > 0) {
             addCoins(player, gained);
             player.sendSystemMessage(Component.literal(
-                    "§6Mitsugoshi: +" + gained + " Muenzen aus Handels-Erzeugnissen."));
+                    "§6Mitsugoshi: +" + gained + " coins from trade goods."));
         } else {
             player.sendSystemMessage(Component.literal(
-                    "§7Keine umwandelbaren Erzeugnisse im Inventar."));
+                    "§7No convertible trade goods in your inventory."));
         }
         return gained;
     }
@@ -94,11 +94,11 @@ public final class MarketManager {
         Offer offer = OFFERS.get(offerIndex);
         Item item = resolve(offer.itemId());
         if (item == null) {
-            player.sendSystemMessage(Component.literal("§cAngebot nicht verfuegbar: " + offer.itemId()));
+            player.sendSystemMessage(Component.literal("§cOffer not available: " + offer.itemId()));
             return false;
         }
         if (!trySpend(player, offer.cost())) {
-            player.sendSystemMessage(Component.literal("§cNicht genug Mitsugoshi-Muenzen (" +
+            player.sendSystemMessage(Component.literal("§cNot enough Mitsugoshi coins (" +
                     getCoins(player) + "/" + offer.cost() + ")."));
             return false;
         }
@@ -106,7 +106,7 @@ public final class MarketManager {
         if (!player.getInventory().add(result)) {
             player.drop(result, false);
         }
-        player.sendSystemMessage(Component.literal("§dGekauft: " + offer.count() + "x " + offer.label() +
+        player.sendSystemMessage(Component.literal("§dPurchased: " + offer.count() + "x " + offer.label() +
                 " (−" + offer.cost() + " Muenzen)."));
         return true;
     }

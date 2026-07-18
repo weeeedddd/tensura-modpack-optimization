@@ -50,17 +50,17 @@ public class GuildMainScreen extends Screen {
         int by = top + PANEL_H - 84;
 
         // "Einladen" -> schliesst dieses GUI und oeffnet den Einladungs-Screen
-        addRenderableWidget(Button.builder(Component.literal("§5» Einladen «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§5» Invite «"), b ->
                 Minecraft.getInstance().setScreen(new GuildInviteScreen(this)))
                 .bounds(bx, by, btnW, btnH).build());
 
         // "Schwarzmarkt" -> Server oeffnet das Mitsugoshi-Handels-GUI
-        addRenderableWidget(Button.builder(Component.literal("§6» Mitsugoshi Schwarzmarkt «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("§6» Mitsugoshi Black Market «"), b ->
                 PacketDistributor.sendToServer(new ServerboundMarketActionPacket(ServerboundMarketActionPacket.OPEN)))
                 .bounds(bx, by + btnH + gap, btnW, btnH).build());
 
         // "Schliessen"
-        addRenderableWidget(Button.builder(Component.literal("§8Schliessen"), b -> this.onClose())
+        addRenderableWidget(Button.builder(Component.literal("§8Close"), b -> this.onClose())
                 .bounds(bx, by + (btnH + gap) * 2, btnW, btnH).build());
     }
 
@@ -146,9 +146,9 @@ public class GuildMainScreen extends Screen {
 
         int lx = left + 24;
         line(g, lx, y, "Abenteurer-Rang", data.adventurerRank());            y += 16;
-        line(g, lx, y, "Dein Rang", data.memberRank());                      y += 16;
-        line(g, lx, y, "Mitglieds-Nr.", "#" + data.memberNumber());          y += 16;
-        line(g, lx, y, "Mitglieder", data.memberCount() + " / " + data.memberLimit());
+        line(g, lx, y, "Your rank", data.memberRank());                      y += 16;
+        line(g, lx, y, "Member no.", "#" + data.memberNumber());          y += 16;
+        line(g, lx, y, "Members", data.memberCount() + " / " + data.memberLimit());
     }
 
     /** Label (Dunkelgold) : Wert (Violett). */

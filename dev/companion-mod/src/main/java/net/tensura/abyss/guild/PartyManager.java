@@ -47,7 +47,7 @@ public final class PartyManager {
     public static void chat(MinecraftServer server, ServerPlayer sender, String message) {
         Party p = PARTY_OF.get(sender.getUUID());
         if (p == null) {
-            sender.sendSystemMessage(Component.literal("§7Du bist in keiner Party. /shadow party create"));
+            sender.sendSystemMessage(Component.literal("§7You are not in a party. /shadow party create"));
             return;
         }
         Component line = Component.literal("§d[Party] §f" + sender.getName().getString() + "§7: §d" + message);

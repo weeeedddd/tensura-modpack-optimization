@@ -12,3 +12,7 @@ Thumbs.db
 # Temp
 .temp/
 *.tmp
+
+# Gradle build output (companion mod)
+dev/companion-mod/.gradle/
+dev/companion-mod/build/

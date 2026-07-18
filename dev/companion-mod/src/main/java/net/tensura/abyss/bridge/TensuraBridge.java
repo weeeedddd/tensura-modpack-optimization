@@ -1,124 +1,67 @@
 package net.tensura.abyss.bridge;
 
+import io.github.manasmods.manascore.race.api.ManasRaceInstance;
+import io.github.manasmods.manascore.race.api.RaceAPI;
+import io.github.manasmods.manascore.race.api.Races;
+import io.github.manasmods.manascore.storage.api.StorageHolder;
+import io.github.manasmods.tensura.storage.ep.ExistenceStorage;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.ScoreAccess;
 import net.minecraft.world.scores.ScoreHolder;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.tensura.abyss.TensuraAbyss;
 
-import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
- * ┌────────────────────────────────────────────────────────────────────────────┐
- * │  TENSURA-BRIDGE — der EINZIGE Ort, der Tensura-Interna beruehrt.            │
- * │                                                                            │
- * │  Bewusst per REFLECTION und maximal crash-sicher:                          │
- * │   • Kompiliert OHNE Tensura am Classpath.                                   │
- * │   • Lazy-Init + gecachte Method-Handles  -> KEINE Reflection pro Aufruf.    │
- * │   • Schlaegt die Tensura-API einmal fehl, wird der Modus DAUERHAFT auf      │
- * │     "unavailable" gesetzt  -> ab dann lag-frei nur noch Scoreboard.         │
- * │   • Es wird HOECHSTENS EINE INFO-Zeile geloggt (kein Error-/WARN-Spam,      │
- * │     keine Stacktraces).                                                     │
- * │   • Fallback = das Scoreboard "sg_magicule" / "sg_maxep" (identisch zu      │
- * │     den KubeJS-Skripten).                                                   │
- * └────────────────────────────────────────────────────────────────────────────┘
+ * TENSURA BRIDGE — the single place that touches Tensura/ManasCore internals.
  *
- * >>> ZU VERIFIZIEREN: die Klassen-/Methodennamen unten gegen die installierten
- *     Tensura-/Ascensions-Jars abgleichen (z.B. via `javap` oder dem Open-Source-
- *     Repo). Stimmen sie nicht, laeuft alles verlustfrei ueber das Scoreboard.
+ * Verified via javap against the REAL 1.21.1 jars (tensura-reincarnated
+ * 643695:7905367, manascore 4.0.0.2):
+ *   • EP/Magicules:  {@link ExistenceStorage} obtained through
+ *     {@code ((StorageHolder) player).manasCore$getStorage(ExistenceStorage.getKey())}
+ *     with {@code getMagicule()/setMagicule(double)/getEP()}.
+ *   • Race:          {@link RaceAPI#getRaceFrom} → {@link Races#getRace()}
+ *     → {@link ManasRaceInstance#getRaceId()} / {@link Races#setRace}.
+ *
+ * Every call is wrapped in try/catch with a silent scoreboard fallback
+ * ("sg_magicule"/"sg_maxep") so a Tensura API change can never crash the pack.
+ * KubeJS scripts load this class via {@code Java.loadClass(...)}.
  */
 public final class TensuraBridge {
     private TensuraBridge() {}
 
-    // ── Fallback-Scoreboards ──
+    // ── Fallback scoreboards (shared with the KubeJS scripts) ──
     public static final String MAGICULE_OBJ = "sg_magicule";
     public static final String MAXEP_OBJ = "sg_maxep";
 
-    // ── ZU VERIFIZIERENDE PFADE ──
-    private static final String TENSURA_CAP_CLASS =
-            "com.github.manasmods.tensura.capability.ep.TensuraEPCapability";
-    private static final String CAP_GETTER    = "getFrom";     // static (Player) -> cap/optional
-    private static final String M_GET_MAGICULE = "getMagicule"; // () -> double
-    private static final String M_SET_MAGICULE = "setMagicule"; // (double)
-    private static final String M_GET_MAXEP    = "getMaxEP";     // () -> double
-    private static final String ASCENSION_RACE_HELPER =
-            "com.github.manasmods.tensura_ascensions.race.RaceHelper";
-    private static final String M_SET_RACE = "setRace";         // (Player, String|ResourceLocation)
-
-    // ── Zustands-Cache (lazy) ──
-    private enum State { UNKNOWN, AVAILABLE, UNAVAILABLE }
-    private static volatile State epState = State.UNKNOWN;
-    private static volatile State raceState = State.UNKNOWN;
     private static boolean degradeLogged = false;
 
-    // gecachte Handles (nur wenn AVAILABLE)
-    private static Method capGetter, mGetMag, mSetMag, mGetMaxEp;
-    private static Method mSetRaceStr, mSetRaceRl;
-    private static Class<?> resourceLocationClass, raceHelperClass;
-
-    // ═══════════════════════════════ INIT ═══════════════════════════════
-    private static void logDegradeOnce() {
+    private static void logDegradeOnce(Throwable t) {
         if (!degradeLogged) {
             degradeLogged = true;
             TensuraAbyss.LOGGER.info(
-                "[TensuraBridge] Tensura-EP-API nicht erkannt — nutze lautlosen " +
-                "Scoreboard-Fallback ('{}'/'{}'). Das ist erwartbar, falls die " +
-                "Companion-Mod ohne Tensura laeuft.", MAGICULE_OBJ, MAXEP_OBJ);
+                "[TensuraBridge] Tensura storage API unavailable ({}) — using the "
+                + "silent scoreboard fallback ('{}'/'{}').",
+                t.getClass().getSimpleName(), MAGICULE_OBJ, MAXEP_OBJ);
         }
     }
 
-    private static boolean epReady() {
-        State s = epState;
-        if (s == State.AVAILABLE) return true;
-        if (s == State.UNAVAILABLE) return false;
-        synchronized (TensuraBridge.class) {
-            if (epState != State.UNKNOWN) return epState == State.AVAILABLE;
-            try {
-                Class<?> cap = Class.forName(TENSURA_CAP_CLASS);
-                capGetter = cap.getMethod(CAP_GETTER, Player.class);
-                // Getter/Setter werden am zurueckgegebenen Cap-Objekt gesucht (dynamisch),
-                // hier nur die Existenz der Kernklasse pruefen:
-                epState = State.AVAILABLE;
-                return true;
-            } catch (Throwable t) {
-                epState = State.UNAVAILABLE;
-                logDegradeOnce();
-                return false;
-            }
-        }
-    }
-
-    /** Holt (einmalig aufgeloest) das Cap-Objekt; null bei Problemen -> Fallback. */
-    private static Object cap(Player player) {
+    /** The player's Tensura existence storage, or null when unavailable. */
+    private static ExistenceStorage storage(Player player) {
         try {
-            Object result = capGetter.invoke(null, player);
-            if (result == null) return null;
-            try {
-                Method orElse = result.getClass().getMethod("orElse", Object.class);
-                Object unwrapped = orElse.invoke(result, new Object[]{ null });
-                return unwrapped != null ? unwrapped : result;
-            } catch (NoSuchMethodException ignored) {
-                return result;
-            }
+            return ((StorageHolder) player).manasCore$getStorage(ExistenceStorage.getKey());
         } catch (Throwable t) {
-            markEpUnavailable();
+            logDegradeOnce(t);
             return null;
         }
     }
 
-    private static void markEpUnavailable() {
-        epState = State.UNAVAILABLE;
-        logDegradeOnce();
-    }
-
-    private static Method cachedMethod(Object target, String name, Class<?>... args) throws NoSuchMethodException {
-        return target.getClass().getMethod(name, args);
-    }
-
-    // ═══════════════════════════ SCOREBOARD-FALLBACK ═══════════════════════════
+    // ═══════════════════════════ SCOREBOARD FALLBACK ═══════════════════════════
     private static Scoreboard scoreboard(Player p) {
         return p.level().getScoreboard();
     }
@@ -149,106 +92,83 @@ public final class TensuraBridge {
 
     // ═══════════════════════════════ PUBLIC API ═══════════════════════════════
 
-    /** Aktueller Magicule-Wert (Tensura, sonst Scoreboard-Fallback). */
+    /** Current magicule value (real Tensura storage; scoreboard fallback). */
     public static double getMagicules(Player player) {
-        if (epReady()) {
-            Object c = cap(player);
-            if (c != null) {
-                try {
-                    if (mGetMag == null) mGetMag = cachedMethod(c, M_GET_MAGICULE);
-                    Object v = mGetMag.invoke(c);
-                    if (v instanceof Number n) return n.doubleValue();
-                } catch (Throwable t) { markEpUnavailable(); }
-            }
+        ExistenceStorage s = storage(player);
+        if (s != null) {
+            try { return s.getMagicule(); } catch (Throwable t) { logDegradeOnce(t); }
         }
         return readScore(player, MAGICULE_OBJ);
     }
 
-    /** Setzt den Magicule-Wert absolut. */
+    /** Sets the magicule value absolutely and syncs it to the client HUD. */
     public static void setMagicules(Player player, double amount) {
-        if (epReady()) {
-            Object c = cap(player);
-            if (c != null) {
-                try {
-                    if (mSetMag == null) mSetMag = cachedMethod(c, M_SET_MAGICULE, double.class);
-                    mSetMag.invoke(c, amount);
-                    return;
-                } catch (Throwable t) { markEpUnavailable(); }
-            }
+        ExistenceStorage s = storage(player);
+        if (s != null) {
+            try {
+                s.setMagicule(amount);
+                ((StorageHolder) player).manasCore$sync();
+                return;
+            } catch (Throwable t) { logDegradeOnce(t); }
         }
         writeScore(player, MAGICULE_OBJ, (int) Math.round(amount));
     }
 
-    /** Erhoeht den Magicule-Wert (z.B. Dunkler Schleim: +10.000). */
+    /** Adds magicules (e.g. Refined Dark Slime: +10,000). */
     public static void addMagicules(Player player, double delta) {
-        double cur = getMagicules(player);
-        setMagicules(player, cur + delta);
+        setMagicules(player, getMagicules(player) + delta);
     }
 
-    /** Maximale Existence Points (I-Am-Atomic-Gate). Fallback: sg_maxep. */
+    /** Total Existence Points (the "I Am Atomic" gate). Fallback: sg_maxep. */
     public static double getMaxEP(Player player) {
-        if (epReady()) {
-            Object c = cap(player);
-            if (c != null) {
-                try {
-                    if (mGetMaxEp == null) mGetMaxEp = cachedMethod(c, M_GET_MAXEP);
-                    Object v = mGetMaxEp.invoke(c);
-                    if (v instanceof Number n) return n.doubleValue();
-                } catch (Throwable t) { markEpUnavailable(); }
-            }
+        ExistenceStorage s = storage(player);
+        if (s != null) {
+            try { return s.getEP(); } catch (Throwable t) { logDegradeOnce(t); }
         }
         return readScore(player, MAXEP_OBJ);
     }
 
+    /** The player's current ManasCore race id, or null when raceless. */
+    public static ResourceLocation getRaceId(Player player) {
+        try {
+            Optional<ManasRaceInstance> race = RaceAPI.getRaceFrom(player).getRace();
+            return race.map(ManasRaceInstance::getRaceId).orElse(null);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /** True when the player's active race matches {@code raceId} exactly. */
+    public static boolean hasRace(Player player, ResourceLocation raceId) {
+        return raceId != null && raceId.equals(getRaceId(player));
+    }
+
+    /** Convenience overload for KubeJS ({@code BRIDGE.hasRaceId(p, "modid:path")}). */
+    public static boolean hasRaceId(Player player, String raceId) {
+        try {
+            return hasRace(player, ResourceLocation.parse(raceId));
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
     /**
-     * In-Mod-Rassenaenderung ueber Tensura Ascensions.
-     * @return true, wenn der echte API-Aufruf durchlief; false -> KubeJS nutzt
-     *         Rang/Praefix als sichtbaren Fallback.
+     * Sets the player's race through the native ManasCore race system
+     * (the same path the Tensura menu uses). Skills are kept.
+     *
+     * @return true when the race change went through.
      */
     public static boolean setTensuraRace(Player player, String racePath) {
-        if (!raceReady()) return false;
         try {
-            if (mSetRaceStr != null) {
-                mSetRaceStr.invoke(null, player, racePath);
-                return true;
-            }
-            if (mSetRaceRl != null && resourceLocationClass != null) {
-                Method parse = resourceLocationClass.getMethod("parse", String.class);
-                Object id = parse.invoke(null, racePath);
-                mSetRaceRl.invoke(null, player, id);
-                return true;
-            }
+            ResourceLocation id = ResourceLocation.parse(racePath);
+            return RaceAPI.getRaceFrom(player).setRace(id, false);
         } catch (Throwable t) {
-            raceState = State.UNAVAILABLE; // dauerhaft degradieren, kein Spam
-        }
-        return false;
-    }
-
-    private static boolean raceReady() {
-        State s = raceState;
-        if (s == State.AVAILABLE) return true;
-        if (s == State.UNAVAILABLE) return false;
-        synchronized (TensuraBridge.class) {
-            if (raceState != State.UNKNOWN) return raceState == State.AVAILABLE;
-            try {
-                raceHelperClass = Class.forName(ASCENSION_RACE_HELPER);
-                try {
-                    mSetRaceStr = raceHelperClass.getMethod(M_SET_RACE, Player.class, String.class);
-                } catch (NoSuchMethodException nse) {
-                    resourceLocationClass = Class.forName("net.minecraft.resources.ResourceLocation");
-                    mSetRaceRl = raceHelperClass.getMethod(M_SET_RACE, Player.class, resourceLocationClass);
-                }
-                raceState = State.AVAILABLE;
-                return true;
-            } catch (Throwable t) {
-                raceState = State.UNAVAILABLE;
-                return false; // stiller Fallback, keine Log-Zeile noetig
-            }
+            return false;
         }
     }
 
-    /** Gilden-Gate: Spieler mit Tensura-Rasse (Possessed+) ODER gesetztem Score. */
+    /** Guild gate: the player carries any ManasCore race at all. */
     public static boolean hasTensuraRace(Player player) {
-        return getMagicules(player) > 0.0 || getMaxEP(player) > 0.0;
+        return getRaceId(player) != null;
     }
 }

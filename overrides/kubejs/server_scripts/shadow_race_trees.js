@@ -60,8 +60,8 @@ const AETHER_COST = [0, 1, 2, 3, 4, 5, 7, 9, 12]
 
 const TREES = {
   slime: {
-    label: 'Schatten-Schleim',
-    catalyst: { id: `${NS_TREE}:dark_slime`, n: 4, label: '4x Dunkler Schleim' },
+    label: 'Shadow Slime',
+    catalyst: { id: `${NS_TREE}:dark_slime`, n: 4, label: '4x Refined Dark Slime' },
     stages: [
       'tensura_abyss:shadow_slime',        'tensura_abyss:magicule_slime',
       'tensura_abyss:abyss_slime',         'tensura_abyss:shadow_garden_guard',
@@ -74,8 +74,8 @@ const TREES = {
       'Eminence of the Abyss']
   },
   demon: {
-    label: 'Schatten-Daemon',
-    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    label: 'Shadow Demon',
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dark Aether (extra)' },
     stages: [
       'tensura_abyss:low_shadow_demon',    'tensura_abyss:shadow_demon_peer',
       'tensura_abyss:blood_shadow_demon',  'tensura_abyss:arcane_demon_guard',
@@ -88,8 +88,8 @@ const TREES = {
       'Diablos Eminence']
   },
   hero: {
-    label: 'Antiker Schatten-Held',
-    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    label: 'Ancient Shadow Hero',
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dark Aether (extra)' },
     stages: [
       'tensura_abyss:human_apprentice',    'tensura_abyss:shadow_spellsword',
       'tensura_abyss:shadow_blade',        'tensura_abyss:cult_breaker',
@@ -102,8 +102,8 @@ const TREES = {
       'Sovereign of Midnight']
   },
   vampire: {
-    label: 'Urvampir',
-    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dunkler Aether (extra)' },
+    label: 'Progenitor Vampire',
+    catalyst: { id: `${NS_TREE}:dark_aether`, n: 2, label: '2x Dark Aether (extra)' },
     stages: [
       'tensura_abyss:vampire_spawn',       'tensura_abyss:blood_shadow',
       'tensura_abyss:mist_walker',         'tensura_abyss:crimson_noble',
@@ -120,13 +120,13 @@ const TREES = {
 // Gate-Definition pro Stufen-Index (0-basiert): Ziel-Stufe 3 = Index 2, usw.
 function extraGate(treeKey, targetIdx, p) {
   if (targetIdx === 2 && !condCultLeader(p))
-    return 'Besiege zuerst einen §5Diablos-Kult-Anfuehrer§7 (Diablos-Ritter).'
+    return 'Defeat a §5Diablos cult leader§7 (Diablos Knight) first.'
   if (targetIdx === 4) {
     const c = TREES[treeKey].catalyst
-    if (countItem(p, c.id) < c.n) return `Benoetigt zusaetzlich: §3${c.label}§7.`
+    if (countItem(p, c.id) < c.n) return `Additionally requires: §3${c.label}§7.`
   }
   if (targetIdx === 7 && !condAbyss(p))
-    return 'Betrete zuerst den §5§lShadow Abyss§r§7 (Aether-Portal).'
+    return 'Enter the §5§lShadow Abyss§r§7 first (Aether portal).'
   return null
 }
 
@@ -141,17 +141,17 @@ ServerEvents.commandRegistry(event => {
   const { commands: Commands, arguments: Args } = event
 
   event.register(Commands.literal('shadowtree')
-    .then(Commands.argument('baum', Args.STRING.create(event))
+    .then(Commands.argument('path', Args.STRING.create(event))
       .executes(ctx => {
         const p = ctx.source.player
         if (!p) return 0
-        const key = String(Args.STRING.getResult(ctx, 'baum')).toLowerCase()
+        const key = String(Args.STRING.getResult(ctx, 'path')).toLowerCase()
         if (!TREES[key]) {
-          p.tell(Text.red('Unbekannter Baum. Waehle: slime | demon | hero | vampire'))
+          p.tell(Text.red('Unknown path. Choose: slime | demon | hero | vampire'))
           return 0
         }
         if (p.persistentData.getString('sgTree')) {
-          p.tell(Text.red('Du hast deinen Pfad bereits gewaehlt — er ist endgueltig.'))
+          p.tell(Text.red('You have already chosen your path — it is final.'))
           return 0
         }
         const t = TREES[key]
@@ -160,8 +160,8 @@ ServerEvents.commandRegistry(event => {
         setRace(p, t.stages[0])
         applyPerks(p, key, 0)
         p.runCommandSilent('playsound minecraft:block.beacon.activate master @s ~ ~ ~ 1 0.7')
-        p.tell(Text.aqua(`§lPfad gewaehlt: [${t.label}]§r§b — Startform: ${t.names[0]}.`))
-        p.tell(Text.gray('Evolution: SNEAK + Rechtsklick mit Dunklem Aether.'))
+        p.tell(Text.aqua(`§lPath chosen: [${t.label}]§r§b — starting form: ${t.names[0]}.`))
+        p.tell(Text.gray('Evolution: SNEAK + right-click with Dark Aether.'))
         return 1
       })))
 })
@@ -175,13 +175,13 @@ ItemEvents.rightClicked(`${NS_TREE}:dark_aether`, event => {
 
   const treeKey = player.persistentData.getString('sgTree')
   if (!treeKey || !TREES[treeKey]) {
-    player.tell(Text.gray('Waehle zuerst deinen Pfad: /shadowtree <slime|demon|hero|vampire>'))
+    player.tell(Text.gray('Choose your path first: /shadowtree <slime|demon|hero|vampire>'))
     return
   }
   const tree = TREES[treeKey]
   const idx = player.persistentData.getInt('sgTreeStage')
   if (idx >= tree.stages.length - 1) {
-    player.tell(Text.gold(`§lMaximale Form erreicht: [${tree.names[idx]}].`))
+    player.tell(Text.gold(`§lFinal form reached: [${tree.names[idx]}].`))
     return
   }
   const nextIdx = idx + 1
@@ -190,15 +190,15 @@ ItemEvents.rightClicked(`${NS_TREE}:dark_aether`, event => {
   const need = MAGICULE[nextIdx]
   const mag = getMagicules(player)
   if (mag < need) {
-    player.tell(Text.red(`✖ Evolution [${tree.names[nextIdx]}] gesperrt.`))
-    player.tell(Text.gray(`Magicule: ${Math.round(mag)} / ${need}.`))
+    player.tell(Text.red(`✖ Evolution [${tree.names[nextIdx]}] locked.`))
+    player.tell(Text.gray(`Magicules: ${Math.round(mag)} / ${need}.`))
     return
   }
 
   // 2) hartes Zusatz-Gate (Boss / Item / Dimension)
   const gateMsg = extraGate(treeKey, nextIdx, player)
   if (gateMsg) {
-    player.tell(Text.red(`✖ Bedingung nicht erfuellt fuer [${tree.names[nextIdx]}].`))
+    player.tell(Text.red(`✖ Requirement not met for [${tree.names[nextIdx]}].`))
     player.tell(Text.gray('» ' + gateMsg))
     return
   }
@@ -206,7 +206,7 @@ ItemEvents.rightClicked(`${NS_TREE}:dark_aether`, event => {
   // 3) Aether-Kosten
   const aetherNeed = AETHER_COST[nextIdx]
   if (countItem(player, `${NS_TREE}:dark_aether`) < aetherNeed) {
-    player.tell(Text.red(`✖ Katalysator fehlt: ${aetherNeed}x Dunkler Aether.`))
+    player.tell(Text.red(`✖ Missing catalyst: ${aetherNeed}x Dark Aether.`))
     return
   }
 
@@ -229,8 +229,8 @@ ItemEvents.rightClicked(`${NS_TREE}:dark_aether`, event => {
   player.runCommandSilent('effect give @s minecraft:strength 30 1 true')
   player.runCommandSilent('effect give @s minecraft:resistance 30 0 true')
 
-  player.tell(Text.aqua(`§l✦ EVOLUTION ✦ §r§bStufe ${nextIdx + 1}/9 — [${tree.names[nextIdx]}]!`))
-  if (!evolved) player.tell(Text.gray('(In-Mod-Rasse folgt via Companion-Mod/Ascension-Menue; Gating & Perks sind gesetzt.)'))
+  player.tell(Text.aqua(`§l✦ EVOLUTION ✦ §r§bStage ${nextIdx + 1}/9 — [${tree.names[nextIdx]}]!`))
+  if (!evolved) player.tell(Text.gray('(The in-mod race follows via the companion mod / ascension menu; gating & perks are applied.)'))
 })
 
 // ═══════════════ PERKS pro Baum & Stufe ═══════════════
@@ -246,7 +246,7 @@ function applyPerks(p, treeKey, idx) {
     p.persistentData.putBoolean('sgAtomicUnlocked', true)
     p.runCommandSilent(`give @s ${NS_TREE}:i_am_atomic_catalyst 1`)
     p.runCommandSilent('title @s title {"text":"I AM ATOMIC","color":"aqua","bold":true}')
-    p.runCommandSilent('title @s subtitle {"text":"Der finale Skill ist entfesselt.","color":"dark_aqua"}')
+    p.runCommandSilent('title @s subtitle {"text":"The final skill has been unleashed.","color":"dark_aqua"}')
     p.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @s ~ ~ ~ 3 0.5')
   }
 }
@@ -270,7 +270,7 @@ ServerEvents.tick(event => {
         p.runCommandSilent('effect give @s minecraft:slow_falling 45 0 true')
         p.runCommandSilent('effect give @s minecraft:resistance 15 4 true')
         p.runCommandSilent('playsound minecraft:block.amethyst_block.chime master @s ~ ~ ~ 2 0.5')
-        p.tell(Text.darkPurple('Der Abyss traegt seinen Monarchen — die Leere hat keine Macht ueber dich.'))
+        p.tell(Text.darkPurple('The Abyss carries its monarch — the void holds no power over you.'))
       }
     }
   }
@@ -306,7 +306,10 @@ EntityEvents.death(event => {
   killer.runCommandSilent('particle minecraft:damage_indicator ~ ~1 ~ 0.3 0.5 0.3 0.05 12 force')
 })
 
-// ═══════════════ DUNKLER SCHLEIM: +10.000 Magicules (aus shadow_evos.js uebernommen) ═══════════════
+// ═══════════════ REFINED DARK SLIME: +10,000 magicules ═══════════════
+// The bridge now writes DIRECTLY into Tensura's ExistenceStorage
+// (setMagicule + client sync) — the gain is real, not just a chat line.
+// The scoreboard is only the emergency fallback without the companion mod.
 ItemEvents.rightClicked(`${NS_TREE}:dark_slime`, event => {
   const { player, level, hand } = event
   if (level.isClientSide()) return
@@ -321,5 +324,5 @@ ItemEvents.rightClicked(`${NS_TREE}:dark_slime`, event => {
   player.persistentData.putInt('sgSlimeMastery', tier)
   player.runCommandSilent('playsound minecraft:entity.slime.squish master @s ~ ~ ~ 1 0.8')
   player.runCommandSilent('particle minecraft:item_slime ~ ~1 ~ 0.4 0.6 0.4 0.1 50 force')
-  player.tell(Text.aqua(`Dunkler Schleim absorbiert — +10.000 Magicules (Meisterschaft ${tier}).`))
+  player.tell(Text.of(`§5Refined Dark Slime absorbed §8— §6+10,000 Magicules §7(Mastery ${tier})`))
 })

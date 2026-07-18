@@ -40,8 +40,8 @@ public final class GuildManager {
         data.setDirty();
 
         giveSignatureRecord(leader, g, number);
-        leader.sendSystemMessage(Component.literal("§bShadow Garden: Gilde \"" + name +
-                "\" gegruendet. Du bist §lMember #" + number + "§r§b (Leader)."));
+        leader.sendSystemMessage(Component.literal("§5Shadow Garden: guild \"" + name +
+                "\" founded. You are §lMember #" + number + "§r§5 (Leader)."));
         return true;
     }
 
@@ -58,8 +58,8 @@ public final class GuildManager {
         data.setDirty();
 
         giveSignatureRecord(player, g, number);
-        player.sendSystemMessage(Component.literal("§bDu bist der Gilde \"" + g.name +
-                "\" beigetreten — §lMember #" + number + "§r§b, Rang " + g.rank().name() + "."));
+        player.sendSystemMessage(Component.literal("§5You joined the guild \"" + g.name +
+                "\" — §lMember #" + number + "§r§5, rank " + g.rank().name() + "."));
         return true;
     }
 
@@ -72,7 +72,7 @@ public final class GuildManager {
         data.playerToGuild.remove(player.getUUID());
         if (g.members.isEmpty()) data.guilds.remove(g.name.toLowerCase());
         data.setDirty();
-        player.sendSystemMessage(Component.literal("§7Du hast die Gilde verlassen."));
+        player.sendSystemMessage(Component.literal("§7You left the guild."));
         return true;
     }
 
@@ -103,8 +103,8 @@ public final class GuildManager {
         if (after != before) {
             ServerPlayer p = server.getPlayerList().getPlayer(player);
             if (p != null) {
-                p.sendSystemMessage(Component.literal("§6Gilde \"" + g.name +
-                        "\" ist zu Abenteurer-Rang §l" + after.name() + "§r§6 aufgestiegen!"));
+                p.sendSystemMessage(Component.literal("§6Guild \"" + g.name +
+                        "\" has advanced to adventurer rank §l" + after.name() + "§r§6!"));
             }
         }
     }

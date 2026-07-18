@@ -34,7 +34,7 @@ BlockEvents.rightClicked('tensura_abyss:abyss_portal_frame', event => {
 
   // Nur mit Dunklem Aether in der Hand
   if (!item || item.id !== 'tensura_abyss:dark_aether') {
-    player.tell(Text.gray('Der Rahmen verlangt §5Dunklen Aether§7, um zu erwachen.'))
+    player.tell(Text.gray('The frame demands §5Dark Aether§7 to awaken.'))
     return
   }
 
@@ -58,9 +58,9 @@ BlockEvents.rightClicked('tensura_abyss:abyss_portal_frame', event => {
   player.runCommandSilent(`execute in ${target} run tp @s ~ ${y} ~`)
 
   if (inAbyss) {
-    player.tell(Text.aqua('Du kehrst aus dem §3Shadow Abyss§b in die Overworld zurueck.'))
+    player.tell(Text.aqua('You return from the §3Shadow Abyss§b to the Overworld.'))
   } else {
-    player.tell(Text.aqua('Das Portal erwacht — willkommen im §5§lShadow Abyss§r§b.'))
-    player.tell(Text.gray('Ein sicherer Landeplatz wurde gewaehlt. Vorsicht vor den Bewohnern.'))
+    player.tell(Text.aqua('The portal awakens — welcome to the §5§lShadow Abyss§r§b.'))
+    player.tell(Text.gray('A safe landing spot was chosen. Beware of the inhabitants.'))
   }
 })
