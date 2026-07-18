@@ -96,28 +96,20 @@ ServerEvents.recipes(event => {
 
   // ── High-Tier Reworks: Dark Aether ERSETZT Diamanten-Upgrades ──
   // Netherit-Waffe + 1x Dark Aether -> garantiertes Endgame-Enchant-Paket
-  event.shapeless('minecraft:netherite_sword', [
+  // Enchantments ride on the OUTPUT via 1.21 component syntax —
+  // recipe-level .enchant() no longer exists in KubeJS 2101.x.
+  event.shapeless('minecraft:netherite_sword[minecraft:enchantments={levels:{"minecraft:sharpness":5,"minecraft:mending":1,"minecraft:unbreaking":3,"minecraft:looting":3}}]', [
     'minecraft:netherite_sword', 'tensura_abyss:dark_aether'
-  ]).enchant('minecraft:sharpness', 5)
-    .enchant('minecraft:mending', 1)
-    .enchant('minecraft:unbreaking', 3)
-    .enchant('minecraft:looting', 3)
-    .id('tensurapack:rework_netherite_sword')
+  ]).id('tensurapack:rework_netherite_sword')
 
-  event.shapeless('minecraft:netherite_axe', [
+  event.shapeless('minecraft:netherite_axe[minecraft:enchantments={levels:{"minecraft:sharpness":5,"minecraft:mending":1,"minecraft:unbreaking":3}}]', [
     'minecraft:netherite_axe', 'tensura_abyss:dark_aether'
-  ]).enchant('minecraft:sharpness', 5)
-    .enchant('minecraft:mending', 1)
-    .enchant('minecraft:unbreaking', 3)
-    .id('tensurapack:rework_netherite_axe')
+  ]).id('tensurapack:rework_netherite_axe')
 
   Object.keys(suit).forEach(piece => {
-    event.shapeless(`minecraft:netherite_${piece}`, [
+    event.shapeless(`minecraft:netherite_${piece}[minecraft:enchantments={levels:{"minecraft:protection":4,"minecraft:unbreaking":3,"minecraft:mending":1}}]`, [
       `minecraft:netherite_${piece}`, 'tensura_abyss:dark_aether'
-    ]).enchant('minecraft:protection', 4)
-      .enchant('minecraft:unbreaking', 3)
-      .enchant('minecraft:mending', 1)
-      .id(`tensurapack:rework_netherite_${piece}`)
+    ]).id(`tensurapack:rework_netherite_${piece}`)
   })
 })
 

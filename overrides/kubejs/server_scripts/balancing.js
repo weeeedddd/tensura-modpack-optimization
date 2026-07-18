@@ -43,37 +43,28 @@ ServerEvents.recipes(event => {
   // ── STUFE 2 — WAFFEN-REWORK ──
   // Verzaubert bestehende High-Tier-Waffen mit einem garantierten,
   // sonst nicht erreichbaren Verzauberungs-Paket. Verbraucht die Basis-Waffe.
-  event.shapeless('minecraft:netherite_sword', [
+  // Enchantments ride on the OUTPUT via 1.21 component syntax —
+  // recipe-level .enchant() no longer exists in KubeJS 2101.x.
+  event.shapeless('minecraft:netherite_sword[minecraft:enchantments={levels:{"minecraft:sharpness":5,"minecraft:mending":1,"minecraft:unbreaking":3}}]', [
     'minecraft:netherite_sword',
     '2x kubejs:super_diamond',
     'minecraft:nether_star'
-  ])
-    .enchant('minecraft:sharpness', 5)
-    .enchant('minecraft:mending', 1)
-    .enchant('minecraft:unbreaking', 3)
-    .id('tensurapack:netherite_sword_rework');
+  ]).id('tensurapack:netherite_sword_rework');
 
-  event.shapeless('minecraft:netherite_axe', [
+  event.shapeless('minecraft:netherite_axe[minecraft:enchantments={levels:{"minecraft:sharpness":5,"minecraft:mending":1}}]', [
     'minecraft:netherite_axe',
     '2x kubejs:super_diamond',
     'minecraft:nether_star'
-  ])
-    .enchant('minecraft:sharpness', 5)
-    .enchant('minecraft:mending', 1)
-    .id('tensurapack:netherite_axe_rework');
+  ]).id('tensurapack:netherite_axe_rework');
 
   // ── STUFE 2 — RÜSTUNGS-REWORK ──
   // Jedes Teil einzeln reworkbar. Protection IV + Unbreaking III + Mending
   // sind sonst im Pack durch Enchanting-Limits nicht kombinierbar.
   ['helmet', 'chestplate', 'leggings', 'boots'].forEach(piece => {
-    event.shapeless(`minecraft:netherite_${piece}`, [
+    event.shapeless(`minecraft:netherite_${piece}[minecraft:enchantments={levels:{"minecraft:protection":4,"minecraft:unbreaking":3,"minecraft:mending":1}}]`, [
       `minecraft:netherite_${piece}`,
       '2x kubejs:super_diamond'
-    ])
-      .enchant('minecraft:protection', 4)
-      .enchant('minecraft:unbreaking', 3)
-      .enchant('minecraft:mending', 1)
-      .id(`tensurapack:netherite_${piece}_rework`);
+    ]).id(`tensurapack:netherite_${piece}_rework`);
   });
 
   // ── STUFE 3 — BREATH-SYSTEM / SKILL-UNLOCK-TOKEN ──

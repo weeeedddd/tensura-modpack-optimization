@@ -5,8 +5,8 @@
 const NS_REC = 'tensura_abyss'
 
 // >>> ZU VERIFIZIEREN: exakte Item-IDs aus den installierten Mods <<<
-const SOUL_ECHO    = 'tensura_ascensions:soul_echo' // Drop von Ascension-Bossen
-const TENSURA_SLIME = 'tensura:slime'               // normaler Tensura-Schleim
+const SOUL_ECHO    = 'minecraft:echo_shard'         // deep-dark echo (real item)
+const TENSURA_SLIME = 'tensura:slime_chunk'         // Tensura slime material (verified id)
 const ABYSS_ESSENCE = 'minecraft:wither_rose'       // "Abyss-Essenz" (Platzhalter-Zutat)
 
 ServerEvents.recipes(event => {
@@ -24,15 +24,19 @@ ServerEvents.recipes(event => {
     N: 'minecraft:nether_star'
   }).id('tensurapack:dark_aether_soulecho')
 
-  // ── Dunkler Schleim via Create Mixing: Tensura-Schleim + Abyss-Essenz ──
-  // Benoetigt Create + KubeJS-Create-Integration. Falls dein Build die
-  // Methode anders benennt, siehe KubeJS-Create-Doku (createMixing).
-  event.recipes.createMixing(`2x ${NS_REC}:dark_slime`, [
-    TENSURA_SLIME,
-    TENSURA_SLIME,
-    ABYSS_ESSENCE
-  ]).heated()
-    .id('tensurapack:dark_slime_mixing')
+  // ── Dark Slime via Create Mixing (heated) ──
+  // Written as a raw JSON recipe: the KubeJS-Create wrapper (createMixing /
+  // .heated()) changed its API in 1.21 — event.custom is version-proof.
+  event.custom({
+    type: 'create:mixing',
+    ingredients: [
+      { item: TENSURA_SLIME },
+      { item: TENSURA_SLIME },
+      { item: ABYSS_ESSENCE }
+    ],
+    results: [{ id: `${NS_REC}:dark_slime`, count: 2 }],
+    heat_requirement: 'heated'
+  }).id('tensurapack:dark_slime_mixing')
 
   // Fallback-Craft, falls Create/Tensura-IDs (noch) nicht vorhanden sind:
   // stellt Dunklen Schleim aus Vanilla-Zutaten her, damit die Kette nie blockt.
