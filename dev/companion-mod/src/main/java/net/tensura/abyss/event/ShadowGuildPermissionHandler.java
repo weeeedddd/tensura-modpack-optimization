@@ -60,6 +60,8 @@ public final class ShadowGuildPermissionHandler {
         // │ ersten drei — die restlichen bleiben ungenutzt.                    │
         // └──────────────────────────────────────────────────────────────────┘
         RaceEvents.SET_RACE.register((oldRace, entity, newRace, resetSkills, cancelled, message) -> {
+            // Parameter 3 is the new race; parameter 5 is Changeable<Boolean>.
+            if (cancelled.isPresent() && Boolean.TRUE.equals(cancelled.get())) return EventResult.pass();
             // 1) Nur echte Spieler auf der LOGISCHEN SERVER-Seite.
             if (entity instanceof Player player && !player.level().isClientSide()) {
 
@@ -71,7 +73,7 @@ public final class ShadowGuildPermissionHandler {
                         player.getGameProfile().getName(), oldId, newId);
 
                 MinecraftServer server = player.getServer();
-                if (server != null && newId != null) {
+                if (server != null && newId != null && !newId.equals(oldId)) {
                     updateGuildPermission(server, player, newId);
                 }
             }

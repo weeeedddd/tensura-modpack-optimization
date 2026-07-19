@@ -82,15 +82,14 @@ def aura(img, color, layers=((150, 2), (70, 1))):
 # ─────────────────────────────────────────────────────────────
 R_SLIME  = [(10,30,32),(16,58,60),(26,96,98),(42,146,142),(74,196,188),(155,238,228)]
 R_AETHER = [(8,20,30),(14,72,94),(24,122,152),(52,192,216),(122,242,250),(212,255,255)]
-R_ATOMIC = [(10,20,52),(26,48,124),(44,96,212),(96,156,255),(174,214,255),(232,246,255)]
 R_CULT   = [(20,8,22),(52,16,46),(92,30,76),(142,52,112),(188,92,152),(228,152,202)]
 R_BOOK   = [(58,38,12),(108,76,22),(168,118,40),(210,164,60),(240,208,118),(252,236,178)]
 R_PAPER  = [(120,114,94),(168,162,142),(206,200,182),(228,224,208),(242,240,228),(252,250,242)]
 R_SUIT   = [(12,64,62),(18,104,102),(30,150,146),(44,204,196),(120,238,230),(190,255,250)]
+R_ABYSS  = [(7,5,14),(18,12,32),(38,22,65),(72,38,112),(126,70,174),(204,160,232)]
 
 GLOW_TEAL   = (120, 240, 255)
 GLOW_CYAN   = (90, 220, 240)
-GLOW_BLUE   = (110, 170, 255)
 GLOW_PURPLE = (170, 110, 240)
 GLOW_GOLD   = (245, 210, 130)
 
@@ -151,22 +150,6 @@ def draw_dark_aether(size=16):
     # feine Energie-Funken
     setp(img, 8, 1, [180,250,255,180]); setp(img, 8, 14, [150,240,255,150])
     aura(img, GLOW_CYAN, layers=((150,2),(70,1)))
-    return img
-
-def draw_atomic(size=16):
-    img = img_new(size)
-    sphere(img, 8, 8, 5.2, R_ATOMIC, core=(230,245,255))
-    # weiss-heisser Kern
-    for (x,y,a) in [(8,8,255),(7,8,160),(8,7,160),(9,8,140),(8,9,140)]:
-        setp(img, x, y, [235,248,255,a])
-    # Spark-Strahlen (8 Richtungen)
-    rays = [(0,-7),(0,7),(-7,0),(7,0),(-5,-5),(5,-5),(-5,5),(5,5)]
-    for (rx,ry) in rays:
-        for s in (0.7, 1.0):
-            x = int(8 + rx*s*0.5); y = int(8 + ry*s*0.5)
-            setp(img, x, y, [190,225,255,200])
-        setp(img, int(8+rx*0.55), int(8+ry*0.55), [230,245,255,230])
-    aura(img, GLOW_BLUE, layers=((160,2),(80,1)))
     return img
 
 def draw_cult(size=16):
@@ -255,7 +238,7 @@ def rects_body(rects, size=16):
                 if 0<=r<size and 0<=c<size: b[r][c]=True
     return b
 
-def draw_suit(rects, size=16):
+def draw_suit(rects, size=16, ramp=R_SUIT, glow=GLOW_TEAL):
     img = img_new(size)
     body = rects_body(rects, size)
     # Bounding-Box fuer vertikales Shading
@@ -270,16 +253,66 @@ def draw_suit(rects, size=16):
                 if nr<0 or nr>=size or nc<0 or nc>=size or not body[nr][nc]:
                     edge=True; break
             if edge:
-                setp(img, c, r, shade(R_SUIT, 0.06)); continue
+                setp(img, c, r, shade(ramp, 0.06)); continue
             t = 0.72 - 0.42*((r-y0)/max(1,(y1-y0)))   # oben hell, unten dunkel
             if c <= size//2: t += 0.12                  # Licht von links
-            setp(img, c, r, shade(R_SUIT, t))
+            setp(img, c, r, shade(ramp, t))
     # Slime-Sheen (2 Glanzpunkte oben-links)
     for r in range(size):
         for c in range(size):
             if body[r][c] and r<=y0+2 and c<=size//2:
                 setp(img, c, r, [200,255,250,90]); break
-    aura(img, GLOW_TEAL, layers=((120,1),(50,1)))
+    aura(img, glow, layers=((120,1),(50,1)))
+    return img
+
+def draw_spire(size=16):
+    img = img_new(size)
+    points = [(7,1),(10,5),(9,12),(7,15),(4,11),(5,5)]
+    for y in range(size):
+        for x in range(size):
+            inside = False
+            j = len(points)-1
+            for i in range(len(points)):
+                xi, yi = points[i]; xj, yj = points[j]
+                if ((yi > y) != (yj > y)) and x < (xj-xi)*(y-yi)/max(.01, yj-yi)+xi:
+                    inside = not inside
+                j = i
+            if inside:
+                t = .25 + .55*(1-y/size) + (.18 if x < 7 else 0)
+                setp(img, x, y, shade(R_ABYSS, t))
+    for y in range(3, 13): setp(img, 7, y, [192,130,242,210])
+    aura(img, GLOW_PURPLE, layers=((135,1),(55,1)))
+    return img
+
+def draw_dark_matter(size=16):
+    img = img_new(size)
+    sphere(img, 8, 8, 5.5, R_ABYSS, core=GLOW_PURPLE)
+    for a in range(0, 360, 30):
+        r = math.radians(a)
+        setp(img, int(8+math.cos(r)*7), int(8+math.sin(r)*3), [130,70,210,180])
+    aura(img, GLOW_PURPLE, layers=((105,1),(40,1)))
+    return img
+
+def draw_ingot(size=16):
+    img = img_new(size)
+    body = [(x,y) for y in range(5,12) for x in range(3,13) if not ((x<5 or x>11) and y in (5,11))]
+    for x,y in body:
+        edge = x in (3,12) or y in (5,11)
+        setp(img, x, y, shade(R_ABYSS, .18 if edge else .65 - .035*y + .025*x))
+    for x in range(5,11): setp(img, x, 7, [196,140,230,180])
+    aura(img, GLOW_PURPLE, layers=((90,1),))
+    return img
+
+def draw_abyss_sword(size=16):
+    img = img_new(size)
+    for i in range(2,12):
+        x, y = 13-i, i
+        setp(img, x, y, shade(R_ABYSS, .85 if i < 7 else .55))
+        if x+1 < size: setp(img, x+1, y, shade(R_ABYSS, .25))
+    for x,y in [(3,12),(4,11),(5,10),(2,13),(3,13),(2,14)]:
+        setp(img, x, y, [42,25,62,255])
+    for x in range(2,8): setp(img, x, 11, [154,92,190,255])
+    aura(img, GLOW_PURPLE, layers=((100,1),))
     return img
 
 # ─────────────────────────────────────────────────────────────
@@ -310,7 +343,7 @@ def draw_portal_frame(size=16):
 # ─────────────────────────────────────────────────────────────
 # Armor-Layer (worn) 64x32 — passend zur Slime-Optik, nicht flach
 # ─────────────────────────────────────────────────────────────
-def armor_layer(w=64, h=32):
+def armor_layer(w=64, h=32, ramp=R_SUIT):
     img = img_new(w, h)
     for y in range(h):
         for x in range(w):
@@ -318,7 +351,7 @@ def armor_layer(w=64, h=32):
             t = 0.30 + 0.35*(1 - y/(h-1))
             if x % 8 == 0 or y % 8 == 0: t -= 0.22        # Panelkanten
             if (x+y) % 16 == 0: t += 0.25                  # Glanzpunkte
-            img[y][x] = shade(R_SUIT, t)
+            img[y][x] = shade(ramp, t)
     return img
 
 # ─────────────────────────────────────────────────────────────
@@ -406,11 +439,12 @@ def pack_icon(size=128):
 
 # ─────────────────────────────────────────────────────────────
 def main():
-    root = "kubejs/assets/kubejs/textures"
+    repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    root = os.path.join(repo, "dev", "companion-mod", "src", "main", "resources",
+                        "assets", "tensura_abyss", "textures")
     icons = {
         "dark_slime": draw_dark_slime(),
         "dark_aether": draw_dark_aether(),
-        "i_am_atomic_catalyst": draw_atomic(),
         "cult_insignia": draw_cult(),
         "mitsugoshi_ledger": draw_ledger(),
         "shadow_pledge_note": draw_pledge(),
@@ -419,15 +453,24 @@ def main():
         write_png(f"{root}/item/{name}.png", im)
     for piece, rects in SUIT_MASKS.items():
         write_png(f"{root}/item/slime_suit_{piece}.png", draw_suit(rects))
+        write_png(f"{root}/item/abyssal_netherite_{piece}.png",
+                  draw_suit(rects, ramp=R_ABYSS, glow=GLOW_PURPLE))
+
+    write_png(f"{root}/item/condensed_dark_matter.png", draw_dark_matter())
+    write_png(f"{root}/item/abyssal_netherite_ingot.png", draw_ingot())
+    write_png(f"{root}/item/abyssal_netherite_sword.png", draw_abyss_sword())
 
     write_png(f"{root}/models/armor/slime_suit_layer_1.png", armor_layer())
     write_png(f"{root}/models/armor/slime_suit_layer_2.png", armor_layer())
+    write_png(f"{root}/models/armor/abyssal_netherite_layer_1.png", armor_layer(ramp=R_ABYSS))
+    write_png(f"{root}/models/armor/abyssal_netherite_layer_2.png", armor_layer(ramp=R_ABYSS))
 
     # Block-Textur: Abyss Portal Frame
     write_png(f"{root}/block/abyss_portal_frame.png", draw_portal_frame())
+    write_png(f"{root}/block/magicule_spire_crystal.png", draw_spire())
 
     # Resourcepack-Icon
-    write_png("resourcepacks/TensuraAbyss_ShadowGarden/pack.png", pack_icon())
+    write_png(os.path.join(repo, "overrides", "resourcepacks", "TensuraAbyss_ShadowGarden", "pack.png"), pack_icon())
 
     print("Alle Texturen + Pack-Icon erzeugt.")
 

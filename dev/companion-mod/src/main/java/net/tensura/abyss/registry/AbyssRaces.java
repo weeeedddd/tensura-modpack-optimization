@@ -36,54 +36,59 @@ public final class AbyssRaces {
 
     /** Alle 37 Abyss-Rassen (4 Pfade x 9 Stufen + geheime Rasse). */
     public static final List<AbyssRaceDef> DEFS = List.of(
+            // Shadow Slime: resilient controller, culminating in I Am Atomic.
+            def("shadow_slime", "slime", 1, 10, 1.0, .103, 40, 70, 0),
+            def("magicule_slime", "slime", 2, 14, 1.5, .107, 95, 115, 0),
+            def("abyss_slime", "slime", 3, 20, 2.0, .111, 170, 185, 1),
+            def("shadow_garden_guard", "slime", 4, 28, 3.0, .116, 300, 275, 2),
+            def("dark_slime_sovereign", "slime", 5, 38, 4.5, .122, 510, 415, 3),
+            def("shadow_lord", "slime", 6, 50, 6.0, .129, 850, 600, 4),
+            def("awakened_shadow_lord", "slime", 7, 66, 8.0, .136, 1500, 875, 5),
+            def("abyss_monarch", "slime", 8, 86, 10.5, .143, 2800, 1265, 6),
+            def("eminence_of_the_abyss", "slime", 9, 110, 14.0, .150, 5400, 2070, 7),
 
-            // ── PFAD 1 — Shadow Slime ──
-            new AbyssRaceDef("shadow_slime", 45.0, 4.0, 0.105, 40.0, 70.0),
-            new AbyssRaceDef("magicule_slime", 72.0, 6.0, 0.11, 95.0, 115.0),
-            new AbyssRaceDef("abyss_slime", 117.0, 8.0, 0.115, 170.0, 185.0),
-            new AbyssRaceDef("shadow_garden_guard", 180.0, 11.0, 0.12, 300.0, 275.0),
-            new AbyssRaceDef("dark_slime_sovereign", 270.0, 14.0, 0.13, 510.0, 415.0),
-            new AbyssRaceDef("shadow_lord", 385.0, 18.0, 0.14, 850.0, 600.0),
-            new AbyssRaceDef("awakened_shadow_lord", 560.0, 24.0, 0.15, 1500.0, 875.0),
-            new AbyssRaceDef("abyss_monarch", 810.0, 32.0, 0.165, 2800.0, 1265.0),
-            new AbyssRaceDef("eminence_of_the_abyss", 1260.0, 45.0, 0.19, 5400.0, 2070.0),
+            // Shadow Demon: highest raw offense, lowest defensive curve.
+            def("low_shadow_demon", "demon", 1, 8, 1.5, .102, 50, 60, 0),
+            def("shadow_demon_peer", "demon", 2, 12, 2.0, .106, 115, 100, 0),
+            def("blood_shadow_demon", "demon", 3, 17, 3.0, .110, 200, 160, 1),
+            def("arcane_demon_guard", "demon", 4, 24, 4.0, .115, 350, 240, 1.5),
+            def("arch_demon_of_shadows", "demon", 5, 33, 5.5, .121, 600, 360, 2.5),
+            def("shadow_duke", "demon", 6, 45, 7.0, .127, 1000, 520, 3.5),
+            def("awakened_demon_king", "demon", 7, 60, 9.5, .133, 1750, 760, 4.5),
+            def("void_overlord", "demon", 8, 78, 12.0, .139, 3250, 1100, 5.5),
+            def("diablos_eminence", "demon", 9, 100, 15.5, .145, 6250, 1800, 6.5),
 
-            // ── PFAD 2 — Shadow Demon ──
-            new AbyssRaceDef("low_shadow_demon", 48.0, 4.5, 0.105, 50.0, 60.0),
-            new AbyssRaceDef("shadow_demon_peer", 76.0, 6.5, 0.11, 115.0, 100.0),
-            new AbyssRaceDef("blood_shadow_demon", 124.0, 9.0, 0.115, 200.0, 160.0),
-            new AbyssRaceDef("arcane_demon_guard", 190.0, 12.0, 0.12, 350.0, 240.0),
-            new AbyssRaceDef("arch_demon_of_shadows", 285.0, 15.5, 0.13, 600.0, 360.0),
-            new AbyssRaceDef("shadow_duke", 410.0, 20.0, 0.14, 1000.0, 520.0),
-            new AbyssRaceDef("awakened_demon_king", 590.0, 26.5, 0.15, 1750.0, 760.0),
-            new AbyssRaceDef("void_overlord", 855.0, 35.0, 0.165, 3250.0, 1100.0),
-            new AbyssRaceDef("diablos_eminence", 1330.0, 50.0, 0.19, 6250.0, 1800.0),
+            // Ancient Hero: mobile martial specialist.
+            def("human_apprentice", "hero", 1, 6, 2.0, .105, 34, 55, 0),
+            def("shadow_spellsword", "hero", 2, 10, 2.5, .110, 76, 92, 0),
+            def("shadow_blade", "hero", 3, 15, 3.5, .115, 136, 148, .5),
+            def("cult_breaker", "hero", 4, 22, 4.5, .121, 240, 220, 1),
+            def("master_of_garden", "hero", 5, 31, 6.0, .127, 410, 330, 2),
+            def("ancient_knight", "hero", 6, 42, 7.5, .134, 680, 480, 3),
+            def("true_hero_of_shadows", "hero", 7, 56, 10.0, .141, 1190, 700, 4),
+            def("light_shadow_monarch", "hero", 8, 72, 13.0, .148, 2210, 1010, 5),
+            def("sovereign_of_midnight", "hero", 9, 90, 16.0, .155, 4250, 1650, 6),
 
-            // ── PFAD 3 — Ancient Shadow Hero ──
-            new AbyssRaceDef("human_apprentice", 55.0, 5.0, 0.11, 34.0, 55.0),
-            new AbyssRaceDef("shadow_spellsword", 86.0, 7.0, 0.115, 76.0, 92.0),
-            new AbyssRaceDef("shadow_blade", 140.0, 10.0, 0.12, 136.0, 148.0),
-            new AbyssRaceDef("cult_breaker", 215.0, 13.0, 0.125, 240.0, 220.0),
-            new AbyssRaceDef("master_of_garden", 320.0, 17.0, 0.135, 410.0, 330.0),
-            new AbyssRaceDef("ancient_knight", 460.0, 21.5, 0.145, 680.0, 480.0),
-            new AbyssRaceDef("true_hero_of_shadows", 660.0, 29.0, 0.155, 1190.0, 700.0),
-            new AbyssRaceDef("light_shadow_monarch", 960.0, 38.5, 0.17, 2210.0, 1010.0),
-            new AbyssRaceDef("sovereign_of_midnight", 1500.0, 54.0, 0.195, 4250.0, 1650.0),
+            // Progenitor: sustain and night mobility.
+            def("vampire_spawn", "vampire", 1, 12, 1.0, .104, 38, 57, 0),
+            def("blood_shadow", "vampire", 2, 17, 1.5, .108, 86, 95, 0),
+            def("mist_walker", "vampire", 3, 23, 2.5, .113, 153, 152, 1),
+            def("crimson_noble", "vampire", 4, 31, 3.5, .119, 270, 228, 2),
+            def("night_stalker", "vampire", 5, 42, 5.0, .125, 460, 342, 3),
+            def("pureblood_vampire", "vampire", 6, 56, 6.5, .132, 765, 494, 4),
+            def("awakened_blood_lord", "vampire", 7, 72, 8.5, .139, 1340, 722, 5),
+            def("monarch_of_the_red_moon", "vampire", 8, 92, 11.0, .146, 2490, 1045, 6),
+            def("progenitor_of_the_abyss", "vampire", 9, 115, 14.0, .152, 5000, 1710, 7),
 
-            // ── PFAD 4 — Progenitor Blood-Shadow ──
-            new AbyssRaceDef("vampire_spawn", 60.0, 4.5, 0.108, 38.0, 57.0),
-            new AbyssRaceDef("blood_shadow", 96.0, 6.5, 0.113, 86.0, 95.0),
-            new AbyssRaceDef("mist_walker", 156.0, 8.5, 0.118, 153.0, 152.0),
-            new AbyssRaceDef("crimson_noble", 240.0, 11.5, 0.123, 270.0, 228.0),
-            new AbyssRaceDef("night_stalker", 360.0, 15.0, 0.133, 460.0, 342.0),
-            new AbyssRaceDef("pureblood_vampire", 516.0, 19.0, 0.143, 765.0, 494.0),
-            new AbyssRaceDef("awakened_blood_lord", 744.0, 25.5, 0.153, 1340.0, 722.0),
-            new AbyssRaceDef("monarch_of_the_red_moon", 1080.0, 34.0, 0.168, 2490.0, 1045.0),
-            new AbyssRaceDef("progenitor_of_the_abyss", 1680.0, 48.0, 0.192, 5000.0, 1710.0),
-
-            // ── GEHEIME RASSE ──
-            new AbyssRaceDef("stylish_bandit_slayer", 2000.0, 55.0, 0.21, 7500.0, 2400.0)
+            // Quest-only capstone: powerful, but no longer a four-digit-health cheat code.
+            def("stylish_bandit_slayer", "secret", 9, 130, 18.0, .160, 7500, 2400, 8)
     );
+
+    private static AbyssRaceDef def(String id, String path, int stage, double health,
+                                    double attack, double speed, double aura,
+                                    double magicules, double toughness) {
+        return new AbyssRaceDef(id, path, stage, health, attack, speed, aura, magicules, toughness);
+    }
 
     // ═══════════════ EVOLUTION CHAINS (native menu integration) ═══════════════
     // Each tree is a strict 9-stage ladder. These chains feed AbyssRace's

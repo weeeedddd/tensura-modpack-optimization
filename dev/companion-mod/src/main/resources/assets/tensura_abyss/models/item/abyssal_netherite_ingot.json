@@ -1,0 +1,1 @@
+{ "parent": "minecraft:item/generated", "textures": { "layer0": "tensura_abyss:item/abyssal_netherite_ingot" } }

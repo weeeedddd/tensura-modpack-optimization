@@ -3,7 +3,7 @@
 	default_quest_shape: "circle"
 	filename: "shadow_garden"
 	group: ""
-	icon: "kubejs:dark_aether"
+	icon: "tensura_abyss:dark_aether"
 	id: "5A00000000000011"
 	order_index: 0
 	quest_links: [ ]
@@ -36,14 +36,14 @@
 				"§7Veredle den Schleim zu §5Dunklem Schleim§7 und heile die Besessenheit."
 				"Refine slime into §5Dark Slime§7 to cure the possession."
 			]
-			icon: "kubejs:dark_slime"
+			icon: "tensura_abyss:dark_slime"
 			id: "5A00000000000002"
 			rewards: [
-				{ id: "5A00000000000014" type: "item" item: { id: "kubejs:dark_slime", count: 2 } }
+				{ id: "5A00000000000014" type: "item" item: { id: "tensura_abyss:dark_slime", count: 2 } }
 				{ id: "5A00000000000015" type: "xp" xp: 80 }
 			]
 			tasks: [
-				{ id: "5A00000000000016" type: "item" item: { id: "kubejs:dark_slime", count: 2 } }
+				{ id: "5A00000000000016" type: "item" item: { id: "tensura_abyss:dark_slime", count: 2 } }
 			]
 			title: "Heilung durch Schleim-Magie / Slime Healing"
 			x: -4.5d
@@ -60,14 +60,14 @@
 			]
 			shape: "diamond"
 			size: 1.25d
-			icon: "kubejs:shadow_pledge_note"
+			icon: "tensura_abyss:shadow_pledge_note"
 			id: "5A00000000000003"
 			rewards: [
-				{ id: "5A00000000000017" type: "item" item: { id: "kubejs:shadow_pledge_note", count: 4 } }
+				{ id: "5A00000000000017" type: "item" item: { id: "tensura_abyss:shadow_pledge_note", count: 4 } }
 				{ id: "5A00000000000018" type: "xp" xp: 100 }
 			]
 			tasks: [
-				{ id: "5A00000000000019" type: "item" item: { id: "kubejs:shadow_pledge_note", count: 1 } }
+				{ id: "5A00000000000019" type: "item" item: { id: "tensura_abyss:shadow_pledge_note", count: 1 } }
 			]
 			title: "Beitritt zum Shadow Garden / Join the Shadow Garden"
 			x: -3d
@@ -111,7 +111,7 @@
 				{ id: "5A0000000000001E" type: "xp" xp: 150 }
 			]
 			tasks: [
-				{ id: "5A0000000000001F" type: "item" item: { id: "kubejs:mitsugoshi_ledger", count: 1 } }
+				{ id: "5A0000000000001F" type: "item" item: { id: "tensura_abyss:mitsugoshi_ledger", count: 1 } }
 			]
 			title: "Klasse: Beta / Eta / Class: Beta / Eta"
 			x: -1.5d
@@ -212,10 +212,10 @@
 				"§cWarning: The Cult of Diablos will now start raids!"
 			]
 			shape: "diamond"
-			icon: "kubejs:mitsugoshi_ledger"
+			icon: "tensura_abyss:mitsugoshi_ledger"
 			id: "5A0000000000000A"
 			rewards: [
-				{ id: "5A0000000000002C" type: "item" item: { id: "kubejs:dark_aether", count: 1 } }
+				{ id: "5A0000000000002C" type: "item" item: { id: "tensura_abyss:dark_aether", count: 1 } }
 				{ id: "5A0000000000002D" type: "xp" xp: 250 }
 			]
 			tasks: [
@@ -237,11 +237,11 @@
 			icon: "minecraft:crossbow"
 			id: "5A0000000000000B"
 			rewards: [
-				{ id: "5A0000000000002F" type: "item" item: { id: "kubejs:cult_insignia", count: 2 } }
+				{ id: "5A0000000000002F" type: "item" item: { id: "tensura_abyss:cult_insignia", count: 2 } }
 				{ id: "5A00000000000030" type: "xp" xp: 300 }
 			]
 			tasks: [
-				{ id: "5A00000000000031" type: "item" item: { id: "kubejs:cult_insignia", count: 6 } }
+				{ id: "5A00000000000031" type: "item" item: { id: "tensura_abyss:cult_insignia", count: 6 } }
 			]
 			title: "Verteidige gegen den Diablos-Kult / Defend vs. the Cult"
 			x: 4.5d
@@ -258,14 +258,14 @@
 			]
 			shape: "hexagon"
 			size: 1.25d
-			icon: "kubejs:dark_aether"
+			icon: "tensura_abyss:dark_aether"
 			id: "5A0000000000000C"
 			rewards: [
-				{ id: "5A00000000000032" type: "item" item: { id: "kubejs:dark_aether", count: 2 } }
+				{ id: "5A00000000000032" type: "item" item: { id: "tensura_abyss:dark_aether", count: 2 } }
 				{ id: "5A00000000000033" type: "xp" xp: 300 }
 			]
 			tasks: [
-				{ id: "5A00000000000034" type: "item" item: { id: "kubejs:dark_aether", count: 1 } }
+				{ id: "5A00000000000034" type: "item" item: { id: "tensura_abyss:dark_aether", count: 1 } }
 			]
 			title: "Dunkler Aether / Dark Aether"
 			x: -1.5d
@@ -276,21 +276,21 @@
 			description: [
 				"§b§lI... AM... ATOMIC."
 				""
-				"§7Crafte den Katalysator und entfessle die neon-blaue Explosion."
-				"Craft the catalyst and unleash the neon-blue blast."
+				"§7Erreiche Eminence of the Abyss und druecke R."
+				"Reach Eminence of the Abyss and press R."
 				"§8Massiver AoE-Schaden, zerstoert KEINE Bloecke."
 				"§8Massive AoE damage, destroys NO blocks."
 			]
 			shape: "gear"
 			size: 1.5d
-			icon: "kubejs:i_am_atomic_catalyst"
+			icon: "tensura_abyss:dark_aether"
 			id: "5A0000000000000D"
 			rewards: [
-				{ id: "5A00000000000035" type: "item" item: { id: "kubejs:dark_aether", count: 3 } }
+				{ id: "5A00000000000035" type: "item" item: { id: "tensura_abyss:dark_aether", count: 3 } }
 				{ id: "5A00000000000036" type: "xp" xp: 500 }
 			]
 			tasks: [
-				{ id: "5A00000000000037" type: "item" item: { id: "kubejs:i_am_atomic_catalyst", count: 1 } }
+				{ id: "5A00000000000037" type: "checkmark" title: "Reach Eminence and cast with R" }
 			]
 			title: "\"I Am Atomic\" Ultimate"
 			x: 0d
@@ -329,17 +329,17 @@
 			]
 			shape: "pentagon"
 			size: 1.5d
-			icon: "kubejs:slime_suit_chestplate"
+			icon: "tensura_abyss:slime_suit_chestplate"
 			id: "5A0000000000000F"
 			rewards: [
-				{ id: "5A0000000000003A" type: "item" item: { id: "kubejs:dark_aether", count: 2 } }
+				{ id: "5A0000000000003A" type: "item" item: { id: "tensura_abyss:dark_aether", count: 2 } }
 				{ id: "5A0000000000003B" type: "xp" xp: 400 }
 			]
 			tasks: [
-				{ id: "5A0000000000003C" type: "item" item: { id: "kubejs:slime_suit_helmet", count: 1 } }
-				{ id: "5A0000000000003D" type: "item" item: { id: "kubejs:slime_suit_chestplate", count: 1 } }
-				{ id: "5A0000000000003E" type: "item" item: { id: "kubejs:slime_suit_leggings", count: 1 } }
-				{ id: "5A0000000000003F" type: "item" item: { id: "kubejs:slime_suit_boots", count: 1 } }
+				{ id: "5A0000000000003C" type: "item" item: { id: "tensura_abyss:slime_suit_helmet", count: 1 } }
+				{ id: "5A0000000000003D" type: "item" item: { id: "tensura_abyss:slime_suit_chestplate", count: 1 } }
+				{ id: "5A0000000000003E" type: "item" item: { id: "tensura_abyss:slime_suit_leggings", count: 1 } }
+				{ id: "5A0000000000003F" type: "item" item: { id: "tensura_abyss:slime_suit_boots", count: 1 } }
 			]
 			title: "Slime Suit (Stealth-Ruestung) / Slime Suit"
 			x: 6d
@@ -360,7 +360,7 @@
 			icon: "minecraft:nether_star"
 			id: "5A00000000000010"
 			rewards: [
-				{ id: "5A00000000000040" type: "item" item: { id: "kubejs:dark_aether", count: 8 } }
+				{ id: "5A00000000000040" type: "item" item: { id: "tensura_abyss:dark_aether", count: 8 } }
 				{ id: "5A00000000000041" type: "item" item: { id: "minecraft:netherite_ingot", count: 4 } }
 				{ id: "5A00000000000042" type: "xp" xp: 1000 }
 			]

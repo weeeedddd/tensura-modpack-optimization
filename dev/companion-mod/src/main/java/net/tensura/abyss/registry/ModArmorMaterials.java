@@ -31,12 +31,18 @@ public final class ModArmorMaterials {
 
     // Schutzwerte pro Slot (Netherit-Niveau)
     private static final EnumMap<ArmorItem.Type, Integer> SLIME_DEFENSE = new EnumMap<>(ArmorItem.Type.class);
+    private static final EnumMap<ArmorItem.Type, Integer> ABYSSAL_DEFENSE = new EnumMap<>(ArmorItem.Type.class);
     static {
         SLIME_DEFENSE.put(ArmorItem.Type.BOOTS, 3);
         SLIME_DEFENSE.put(ArmorItem.Type.LEGGINGS, 6);
         SLIME_DEFENSE.put(ArmorItem.Type.CHESTPLATE, 8);
         SLIME_DEFENSE.put(ArmorItem.Type.HELMET, 3);
         SLIME_DEFENSE.put(ArmorItem.Type.BODY, 11);
+        ABYSSAL_DEFENSE.put(ArmorItem.Type.BOOTS, 4);
+        ABYSSAL_DEFENSE.put(ArmorItem.Type.LEGGINGS, 7);
+        ABYSSAL_DEFENSE.put(ArmorItem.Type.CHESTPLATE, 9);
+        ABYSSAL_DEFENSE.put(ArmorItem.Type.HELMET, 4);
+        ABYSSAL_DEFENSE.put(ArmorItem.Type.BODY, 12);
     }
 
     public static final Holder<ArmorMaterial> SLIME_SUIT = ARMOR_MATERIALS.register(
@@ -50,6 +56,20 @@ public final class ModArmorMaterials {
                             ResourceLocation.fromNamespaceAndPath(TensuraAbyss.MOD_ID, "slime_suit"))),
                     3.0F,                                 // toughness
                     0.1F                                  // knockbackResistance
+            )
+    );
+
+    public static final Holder<ArmorMaterial> ABYSSAL_NETHERITE = ARMOR_MATERIALS.register(
+            "abyssal_netherite",
+            () -> new ArmorMaterial(
+                    ABYSSAL_DEFENSE,
+                    18,
+                    SoundEvents.ARMOR_EQUIP_NETHERITE,
+                    () -> Ingredient.of(ModItems.ABYSSAL_NETHERITE_INGOT.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(
+                            TensuraAbyss.MOD_ID, "abyssal_netherite"))),
+                    4.0F,
+                    0.15F
             )
     );
 }

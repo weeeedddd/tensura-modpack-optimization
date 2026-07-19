@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": { "all": "tensura_abyss:block/magicule_spire_crystal" }
+}

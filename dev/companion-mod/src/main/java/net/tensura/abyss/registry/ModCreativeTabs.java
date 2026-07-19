@@ -24,7 +24,14 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.DARK_AETHER.get());
                         output.accept(ModItems.SLIME_SWORD.get());
                         output.accept(ModItems.FALSE_EMINENCE_INSIGNIA.get());
-                        output.accept(ModItems.I_AM_ATOMIC_CATALYST.get());
+                        output.accept(ModItems.MAGICULE_SPIRE_CRYSTAL.get());
+                        output.accept(ModItems.CONDENSED_DARK_MATTER.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_INGOT.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_SWORD.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_HELMET.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_CHESTPLATE.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_LEGGINGS.get());
+                        output.accept(ModItems.ABYSSAL_NETHERITE_BOOTS.get());
                         output.accept(ModItems.SIGNATURE_RECORD.get());
                         output.accept(ModItems.CULT_INSIGNIA.get());
                         output.accept(ModItems.MITSUGOSHI_LEDGER.get());

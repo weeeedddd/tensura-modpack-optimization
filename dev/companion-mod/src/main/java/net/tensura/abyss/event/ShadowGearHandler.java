@@ -41,9 +41,13 @@ public final class ShadowGearHandler {
     /** Call once from the mod constructor. */
     public static void init() {
         RaceEvents.SET_RACE.register((oldRace, entity, newRace, resetSkills, cancelled, message) -> {
+            // Parameter 3 is the new race; parameter 5 is the mutable cancel flag.
+            if (cancelled.isPresent() && Boolean.TRUE.equals(cancelled.get())) return EventResult.pass();
             if (entity instanceof Player player && !player.level().isClientSide() && newRace != null) {
+                ResourceLocation oldId = oldRace == null ? null : oldRace.getRaceId();
                 ResourceLocation raceId = newRace.getRaceId();
-                if (SHADOW_PATH.contains(raceId) && !hasFlag(player)) {
+                boolean enteredShadowPath = SHADOW_PATH.contains(raceId) && !SHADOW_PATH.contains(oldId);
+                if (enteredShadowPath && !hasFlag(player)) {
                     setFlag(player);
                     ItemStack sword = new ItemStack(ModItems.SLIME_SWORD.get());
                     if (!player.getInventory().add(sword)) {

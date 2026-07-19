@@ -5,6 +5,7 @@ import io.github.manasmods.manascore.race.api.RaceAPI;
 import io.github.manasmods.manascore.race.api.Races;
 import io.github.manasmods.manascore.storage.api.StorageHolder;
 import io.github.manasmods.tensura.storage.ep.ExistenceStorage;
+import io.github.manasmods.tensura.util.EnergyHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -117,6 +118,25 @@ public final class TensuraBridge {
     /** Adds magicules (e.g. Refined Dark Slime: +10,000). */
     public static void addMagicules(Player player, double delta) {
         setMagicules(player, getMagicules(player) + delta);
+    }
+
+    /** Live Tensura capacity used by percentage costs and Abyssal gear scaling. */
+    public static double getMaxMagicules(Player player) {
+        try {
+            return Math.max(0, EnergyHelper.getMaxMagicule(player));
+        } catch (Throwable t) {
+            logDegradeOnce(t);
+            return Math.max(getMagicules(player), readScore(player, MAXEP_OBJ));
+        }
+    }
+
+    /** Atomically consumes a percentage of capacity without partially draining on failure. */
+    public static boolean consumeMagiculeFraction(Player player, double fraction) {
+        double cost = getMaxMagicules(player) * Math.max(0, Math.min(1, fraction));
+        double current = getMagicules(player);
+        if (current < cost) return false;
+        setMagicules(player, current - cost);
+        return true;
     }
 
     /** Total Existence Points (the "I Am Atomic" gate). Fallback: sg_maxep. */
