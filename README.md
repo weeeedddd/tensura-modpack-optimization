@@ -1,174 +1,160 @@
-# Tensura Abyss — Modpack Optimization Repo
+# Tensura Abyss — v4.0.0 "Grand Rework"
 
-Optimization guide, configs, and KubeJS scripts for the **Tensura Abyss** modpack
-(Minecraft 1.21.1 · NeoForge · v3.5.0).
+A story-driven **"That Time I Got Reincarnated as a Slime" × "The Eminence in Shadow"**
+modpack for **Minecraft 1.21.1 · NeoForge 21.1.222** — now at **371 mods**, every
+single one verified for 1.21.1 + NeoForge.
 
 > **CurseForge:** https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss
+> **Pack site:** served from this repo via GitHub Pages (`index.html`)
 
 ---
 
-## Repository Structure
+## What's in the Rework (v4.0.0)
 
-This repo is laid out so it can be exported to CurseForge directly: only
-`manifest.json` + the `overrides/` folder are part of the pack. Everything
-else (`dev/`, `docs/`) is source and documentation that stays out of the export.
+### ⚙️ Create & Automation — 8 mods
+| Mod | Purpose |
+|-----|---------|
+| Create | Core kinetic automation |
+| Create: Steam 'n' Rails | Railway network across the realms |
+| Create Crafts & Additions | Electrical age bridge |
+| Create Deco | Decorative Create blocks |
+| Create: Connected | Seamless contraption extensions *(new)* |
+| Create Ore Excavation | Automated ore drilling *(new)* |
+| Create Confectionery | Chocolate & sweets *(new)* |
+| Create: Copycats+ | Copycat block variants *(new)* |
 
-```
-manifest.json            ← CurseForge mod list (projectID + fileID per mod)
-index.html               ← Landing page, served via GitHub Pages
-overrides/               ← Instance files shipped to players (the pack payload)
-├── config/
-│   ├── ftbquests/…      ← Shadow Garden quest chapter
-│   └── tensura/ascension-races.toml   ← Ascensions race stats (template — verify keys)
-├── kubejs/
-│   ├── assets/…         ← Item/block textures (KubeJS namespace)
-│   ├── data/…           ← Shadow Abyss dimension + worldgen datapack
-│   ├── server_scripts/  ← Recipes, balancing, events
-│   └── startup_scripts/ ← Item/block/armor registration
-└── resourcepacks/TensuraAbyss_ShadowGarden/
-dev/                     ← Source & tooling (NOT shipped in the pack)
-├── companion-mod/       ← NeoForge companion mod (Gradle source)
-├── java_templates/      ← Optional Java snippets (e.g. TerraBlender region)
-└── tools/               ← Python/PowerShell asset & quest generators
-docs/                    ← Setup guides & notes (NOT shipped in the pack)
-```
+### 🐉 Tensura & Addons — 13+ mods
+Tensura: Reincarnated as the core, plus **Magic Growth, Not Enough Bosses,
+Better Subordinates, Boss Structures, Ice & Fire Compat, Iron's Spells Compat,
+MineColonies Compat, OPAC Compat, Trepu, Blensura, Nightmare's Tensura Utils**
+— and our own **Tensura Abyss Companion** mod (see below).
 
-> **Custom companion mod:** it lives as source in `dev/companion-mod/`. Its
-> compiled `.jar` is **not** on CurseForge, so for the pack to include it the
-> built jar must be dropped into `overrides/mods/` (or it is already present in
-> your local instance, in which case a CurseForge-app export picks it up).
+### 🌍 World & Biomes
+**Oh The Biomes We've Gone** + **Terralith** *(new)* layered via Lithostitched,
+**Alex's Caves**, Enderscape, Nullscape, Darker Depths, Nether Depths Upgrade,
+The Bumblezone, Dynamic Trees, Serene Seasons, and 60+ structure mods
+(Moog's, YUNG's, Towns & Towers, Formations, …) plus the custom
+**Shadow Abyss dimension** with three bespoke biomes.
+
+### 🏠 Decoration & Building — big push in v4
+**Macaw's suite ×10** *(new: Furniture, Doors, Trapdoors, Windows, Fences &
+Walls, Roofs, Paths & Pavings, Lights & Lamps, Paintings — plus Bridges)*,
+**Supplementaries + Amendments** *(new)*, **Handcrafted** *(new)*,
+**Chipped** *(new)*, Fetzi's Asian Deco, Domum Ornamentum, MineColonies
+style packs.
+
+### ✨ Cosmetics & Immersion
+3D Skin Layers, **Not Enough Animations** *(new)*, **First-person Model**
+*(new)*, **Visuality: Reforged** *(new)*, **AmbientSounds 6** *(new)*, Falling
+Leaves, Item Physic, Player Animator, Cosmetic Armor Reworked, Melody, Simple
+Voice Chat, dynamic lights.
+
+### 🚀 Performance stack
+Sodium + Iris (+ Sodium Extras), Lithium, ModernFix, FerriteCore,
+EntityCulling, BadOptimizations, ScalableLux, ServerCore, Noisium,
+Structure Layout Optimizer — **no OptiFine, ever.**
+
+---
+
+## The Companion Mod (`tensura_abyss`)
+
+Custom NeoForge mod (source in `dev/companion-mod/`) that wires our content
+natively into Tensura/ManasCore:
+
+- **37 custom races** in 4 evolution paths (Shadow Slime · Shadow Demon ·
+  Ancient Shadow Hero · Progenitor Vampire), 9 stages each, registered in the
+  **native Tensura menu** with full descriptions, stats and EP-gated
+  evolution chains — plus a secret 38th race earned through a hidden quest.
+- **Shadow Garden guild system** — `/shadowguild` opens the obsidian-styled
+  guild GUI; parties, commissions, invites, the Mitsugoshi black market.
+- **Slime Sword** — auto-granted on entering the Shadow path. Shadow Step
+  blink (darkness only) + Form Shift: Aegis defensive stance.
+- **Rank sight & deception** — only shadow races see faction ranks over
+  heads; the *Insignia of False Eminence* forges or masks them.
+- **I Am Atomic** — the ultimate skill, gated behind Eminence of the Abyss.
+- **Cult of Diablos** — challenge events, raids, insignia drops.
+- **Dark violet UI reskin** of the Tensura reincarnation menu (bundled
+  always-on resource pack).
+
+> The compiled companion jar is **not** on CurseForge: build it with
+> `dev/companion-mod/gradlew build` and ship it in `overrides/mods/`.
 
 ---
 
 ## Quick Start
 
-### 1 — Install
-1. Install [CurseForge App](https://curseforge.com)
+1. Install the [CurseForge App](https://curseforge.com)
 2. Search **"Tensura Abyss"** → Install
-3. Set RAM to **6 GB** (Profile Settings → Java Settings → 6144 MB)
-4. Use **Java 21**
+3. RAM: **8 GB** recommended (Profile Settings → Java Settings → 8192 MB)
+4. **Java 21** (bundled with the launcher for 1.21.1)
+5. First launch takes a while (371 mods) — later launches are much faster
+   thanks to ModernFix.
 
-### 2 — Performance (after install, inside the instance mods/ folder)
-- **Required:** Embeddium + Oculus (already included via pack)
-- **Never install:** OptiFine — causes sensitivity bugs + conflicts with Embeddium
-
-### 3 — Mouse Fix (if sensitivity resets)
-Copy `docs/options_optimized.txt` into your instance folder as `options.txt`,
-then set the file **read-only** (right-click → Properties → Read-only).
-
-### 4 — KubeJS Balancing (optional, for customization)
-The scripts ship in `overrides/kubejs/`. To tweak them, edit the files there,
-find your item IDs with `/kubejs hand` in-game, then uncomment the relevant lines.
+**Never install OptiFine** — the pack renders through Sodium + Iris.
+Shaders: any Iris-compatible pack (Complementary works great).
 
 ---
 
-## Building the CurseForge Pack
+## Repository Structure
 
-The repo is already in CurseForge layout, so a release zip is just
-`manifest.json` + `overrides/` (do **not** include `dev/`, `docs/`, `index.html`
-or `README.md`):
-
-```bash
-zip -r tensura-abyss-3.5.0.zip manifest.json overrides
+```
+manifest.json            ← CurseForge mod list (371 × projectID + fileID)
+index.html               ← Landing page (GitHub Pages)
+overrides/               ← Instance payload shipped to players
+├── config/
+│   ├── tensura/reincarnation_config.toml  ← adds Abyss starter races to the menu
+│   ├── tensura/ascension-races.toml
+│   └── ftbquests/…
+├── kubejs/
+│   ├── data/…           ← Shadow Abyss dimension, biomes, worldgen features
+│   ├── server_scripts/  ← recipes, faction systems, chat, quests
+│   └── startup_scripts/ ← auxiliary item registration
+└── resourcepacks/
+dev/                     ← Source & tooling (NOT shipped)
+├── companion-mod/       ← the tensura_abyss NeoForge mod (Gradle)
+└── tools/               ← generators
+docs/                    ← guides & notes (NOT shipped)
 ```
 
-Then upload the zip in the **CurseForge Console** (console.curseforge.com →
-your project → Files → Upload File). Alternatively, export straight from the
-CurseForge app (••• → Export) — that regenerates `manifest.json` from your
-installed mods automatically.
+---
+
+## Building a Release
+
+```bash
+zip -r tensura-abyss-4.0.0.zip manifest.json overrides
+```
+
+Upload via [console.curseforge.com](https://console.curseforge.com) → your
+project → Files. (Remember: build the companion jar into `overrides/mods/`
+first.)
 
 ---
 
-## Modpack Summary
+## Compatibility Notes (v4.0.0)
 
-| Property | Value |
-|----------|-------|
-| MC Version | 1.21.1 |
-| Modloader | NeoForge |
-| Pack Version | v3.5.0 |
-| Quests | 500+ (15 chapters, in development) |
-| Focus | Hardcore survival RPG + colony building + automation |
-
-### Core Mods
-
-| Mod | Purpose |
-|-----|---------|
-| Tensura: Magic Growth | Skill system, race evolution, Demon Lord progression |
-| EP Scaling | Dynamic enemy scaling with player progress |
-| MineColonies | Colony building with AI citizens |
-| MCA Reborn | NPC interaction, trade, family system |
-| Create + Steam 'n' Rails | Automation + railway network |
-| Ice and Fire CE | Dragons, griffins, sea serpents |
-| Gateways to Eternity | Summon portal boss challenges |
-| Cataclysm Loot | Boss drop system |
-| Serene Seasons | Season system |
-| RUNIC: Enchants | Rune-based enchanting overhaul |
-| YDM's Weapon Master | Weapon mastery leveling |
-
----
-
-## Recommended Tensura Add-ons (1.21.1)
-
-| Tier | Addon | Highlight |
-|------|-------|-----------|
-| S | [Tensura: Mysticism](https://www.curseforge.com/minecraft/mc-mods/tensura-mysticism) | 9+ races, 29 Ultimate Skills — must have |
-| S | [SlimeThrone Extras](https://www.curseforge.com/minecraft/mc-mods/tensura-slimethrone-extras) | Skill locking, prestige system, auto config patcher |
-| S | [Not Enough Bosses](https://www.curseforge.com/minecraft/mc-mods/tensura-not-enough-bosses) | Rimuru, Carrion, Luminous boss fights (official) |
-| A | [Better Subordinates](https://www.curseforge.com/minecraft/mc-mods/tensura-better-subordinates) | Train subordinates, transfer skills |
-| A | [Reincarnated Addon](https://www.curseforge.com/minecraft/mc-mods/tr-addon) | Slime → Dark → Abyss → Eldritch Slime evolution |
-| A | [Tensura: Ascension](https://www.curseforge.com/minecraft/mc-mods/tensura-ascensions) | 10 race lines, Hyperbolic Chamber dimension |
-
----
-
-## Recommended Magic Mods (thematic fit, 1.21.1 NeoForge)
-
-| Mod | Why it fits |
-|-----|-------------|
-| **Ars Nouveau** | Skill-based spellcrafting mirrors Rimuru's skill absorption |
-| **Iron's Spells 'n Spellbooks** | Class magic + leveling fits Tensura's evolution system |
-| **Malum** | Dark ritual magic + soul system fits the "Abyss" theme |
-
----
-
-## Performance Stack
-
-| Mod | Function | Priority |
-|-----|----------|----------|
-| Embeddium | Rendering engine (replaces OptiFine/Rubidium) | Required |
-| Oculus / NeOculus | Shader support | Recommended |
-| FerriteCore | RAM usage −50% | Recommended |
-| ModernFix | Startup time + RAM patches | Recommended |
-| Entity Culling | Skip invisible entities | Recommended |
-| ImmediatelyFast | GUI/text/entity rendering | Optional |
-| Clumps | Group XP orbs | Optional |
-
-**RAM:** 6–8 GB · **Java:** 21 · **Shaders:** Complementary Unbound (best balance)
-
----
-
-## Known Conflicts
-
-| Mod | Issue | Fix |
-|-----|-------|-----|
-| Oh The Biomes You'll Go | Feature order cycle crash | Tensura-BYG Patch (1.19.2 only) |
-| Eldritch End | Duplicate registry key | Remove mod or wait for update |
-| Epic Fight Mod | Armor rendering conflict | Tensura Epic Fight Compatibility Datapack |
-| Apotheosis | Mixin conflict with CombatRules | Load order: Apotheosis before Tensura |
-| OptiFine | Sensitivity bugs, rendering conflicts | Remove completely, use Embeddium + Oculus |
+- Every mod in the manifest was resolved against CurseForge for an explicit
+  **1.21.1 NeoForge** build — no Fabric/legacy-Forge jars.
+- **Terralith + Oh The Biomes We've Gone** coexist via Lithostitched (both
+  inject, neither overwrites the other).
+- **Moonlight Lib** is included as the required dependency for
+  Supplementaries/Amendments; Chipped's deps (Resourceful Lib, Athena) and
+  AmbientSounds' dep (CreativeCore) were already in the pack.
+- The Shadow Abyss dimension runs on vanilla noise (`minecraft:overworld`) —
+  independent of any terrain mod, so worldgen mods can't break it.
+- **Do not add:** OptiFine (breaks Sodium), Tectonic (conflicts with the
+  layered worldgen stack).
 
 ---
 
 ## Testing Checklist
 
-- [ ] Check `crash-reports/` after a fresh launch
-- [ ] Filter `logs/latest.log` for ERROR and WARN
-- [ ] F3 screen: TPS ≥ 18.0
-- [ ] Test new world in Superflat (fastest world gen)
-- [ ] Run `/kill @e` → TPS improvement = entity lag
-- [ ] RAM monitor: ≤ 80% after 30 min of play
-- [ ] After mod updates: check crash log for Mixin errors
-- [x] **NEVER install OptiFine** (conflicts with Embeddium)
+- [ ] Fresh launch → `crash-reports/` empty
+- [ ] `logs/latest.log` → no `RegistryDataLoader` errors, KubeJS loads 9/9 scripts
+- [ ] New world → Reincarnation menu shows the 4 Abyss starter races
+- [ ] Evolution menu shows next stages with EP bars (no dead ends)
+- [ ] `/shadowguild` opens the guild GUI
+- [ ] Shadow Abyss portal → terrain has abyssal ground/flora (new chunks only)
 
 ---
 
-*Last Updated: July 2026 · MC 1.21.1 · NeoForge · Pack v3.5.0*
+*Last updated: July 2026 · MC 1.21.1 · NeoForge 21.1.222 · Pack v4.0.0 · 371 mods*
