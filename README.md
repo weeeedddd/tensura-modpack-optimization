@@ -1,15 +1,18 @@
-# Tensura Abyss — v4.0.0 "Grand Rework"
+# Tensura Abyss — v5.0.0 "Reborn from the Abyss"
 
 A story-driven **"That Time I Got Reincarnated as a Slime" × "The Eminence in Shadow"**
-modpack for **Minecraft 1.21.1 · NeoForge 21.1.222** — now at **371 mods**, every
-single one verified for 1.21.1 + NeoForge.
+modpack for **Minecraft 1.21.1 · NeoForge 21.1.222** — **rebuilt from the ground
+up in v5**: every one of the **366 mods** was individually resolved by name,
+categorized, curated (junk cut, gaps filled) and pinned to a verified
+1.21.1 NeoForge build. The complete categorized list lives in
+[`docs/MODLIST.md`](docs/MODLIST.md).
 
 > **CurseForge:** https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss
 > **Pack site:** served from this repo via GitHub Pages (`index.html`)
 
 ---
 
-## What's in the Rework (v4.0.0)
+## What's in the Rebuild (v5.0.0)
 
 ### ⚙️ Create & Automation — 8 mods
 | Mod | Purpose |
@@ -98,7 +101,7 @@ Shaders: any Iris-compatible pack (Complementary works great).
 ## Repository Structure
 
 ```
-manifest.json            ← CurseForge mod list (371 × projectID + fileID)
+manifest.json            ← CurseForge mod list (366 mods, category-ordered)
 index.html               ← Landing page (GitHub Pages)
 overrides/               ← Instance payload shipped to players
 ├── config/
@@ -121,7 +124,7 @@ docs/                    ← guides & notes (NOT shipped)
 ## Building a Release
 
 ```bash
-zip -r tensura-abyss-4.0.0.zip manifest.json overrides
+zip -r tensura-abyss-5.0.0.zip manifest.json overrides
 ```
 
 Upload via [console.curseforge.com](https://console.curseforge.com) → your
@@ -130,7 +133,14 @@ first.)
 
 ---
 
-## Compatibility Notes (v4.0.0)
+## Removed in the v5 Rebuild
+
+Cut on purpose (see `docs/MODLIST.md` for the full table): Gemini Live
+Library, BisectHosting menu, Server Country Flags, TownTalk, and four
+redundant shader packs (Complementary Unbound + Reimagined stay).
+New in v5: **Farmer's Delight**, **Waystones**, **Sound Physics Remastered**.
+
+## Compatibility Notes (v5.0.0)
 
 - Every mod in the manifest was resolved against CurseForge for an explicit
   **1.21.1 NeoForge** build — no Fabric/legacy-Forge jars.
@@ -157,4 +167,4 @@ first.)
 
 ---
 
-*Last updated: July 2026 · MC 1.21.1 · NeoForge 21.1.222 · Pack v4.0.0 · 371 mods*
+*Last updated: July 2026 · MC 1.21.1 · NeoForge 21.1.222 · Pack v5.0.0 · 366 mods*
