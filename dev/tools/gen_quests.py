@@ -85,23 +85,23 @@ add('possessed', title="Der Besessene / The Possessed",
     rewards=[reward_xp(50)])
 
 add('heal', title="Heilung durch Schleim-Magie / Slime Healing",
-    x=-4.5, y=0, icon="kubejs:dark_slime",
+    x=-4.5, y=0, icon="tensura_abyss:dark_slime",
     desc=["§7Veredle den Schleim zu §5Dunklem Schleim§7 und heile die Besessenheit.",
           "Refine slime into §5Dark Slime§7 to cure the possession."],
     deps=[Q['possessed']['id']],
-    tasks=[task_item("kubejs:dark_slime", 2)],
-    rewards=[reward_item("kubejs:dark_slime", 2), reward_xp(80)])
+    tasks=[task_item("tensura_abyss:dark_slime", 2)],
+    rewards=[reward_item("tensura_abyss:dark_slime", 2), reward_xp(80)])
 
 add('join', title="Beitritt zum Shadow Garden / Join the Shadow Garden",
-    x=-3, y=0, icon="kubejs:shadow_pledge_note", shape="diamond", size=1.25,
+    x=-3, y=0, icon="tensura_abyss:shadow_pledge_note", shape="diamond", size=1.25,
     desc=["§7Schwoere dem §3Shadow Garden§7 die Treue.",
           "Pledge your loyalty to the §3Shadow Garden§7.",
           "",
           "§8Loese eine Pledge ein, um deinen ersten Rang [Shadow] zu erhalten.",
           "§8Redeem a pledge to earn your first rank [Shadow]."],
     deps=[Q['heal']['id']],
-    tasks=[task_item("kubejs:shadow_pledge_note", 1)],
-    rewards=[reward_item("kubejs:shadow_pledge_note", 4), reward_xp(100)])
+    tasks=[task_item("tensura_abyss:shadow_pledge_note", 1)],
+    rewards=[reward_item("tensura_abyss:shadow_pledge_note", 4), reward_xp(100)])
 
 # ── Klassen-Verzweigungen ──
 add('alpha', title="Klasse: Alpha / Class: Alpha",
@@ -123,7 +123,7 @@ add('beta_eta', title="Klasse: Beta / Eta / Class: Beta / Eta",
           "Dokumentiere & erforsche: stelle das Mitsugoshi Trade Ledger her.",
           "Document & research: craft the Mitsugoshi Trade Ledger."],
     deps=[Q['join']['id']],
-    tasks=[task_item("kubejs:mitsugoshi_ledger", 1)],
+    tasks=[task_item("tensura_abyss:mitsugoshi_ledger", 1)],
     rewards=[reward_item("minecraft:experience_bottle", 8), reward_xp(150)])
 
 add('gamma', title="Klasse: Gamma / Class: Gamma",
@@ -169,7 +169,7 @@ add('market', title="Marktplatz & Gilde / Marketplace & Guild",
     rewards=[reward_item("minecraft:emerald", 12), reward_xp(200)])
 
 add('activate', title="Tarnung aktivieren / Activate the Disguise",
-    x=3, y=1, icon="kubejs:mitsugoshi_ledger", shape="diamond",
+    x=3, y=1, icon="tensura_abyss:mitsugoshi_ledger", shape="diamond",
     desc=["§7Aktiviere das Trade Ledger am Kolonie-Zentrum.",
           "Activate the Trade Ledger at your colony core.",
           "",
@@ -177,7 +177,7 @@ add('activate', title="Tarnung aktivieren / Activate the Disguise",
           "§cWarning: The Cult of Diablos will now start raids!"],
     deps=[Q['market']['id']],
     tasks=[task_check("Rechtsklick mit dem Mitsugoshi Trade Ledger / Right-click the Ledger")],
-    rewards=[reward_item("kubejs:dark_aether", 1), reward_xp(250)])
+    rewards=[reward_item("tensura_abyss:dark_aether", 1), reward_xp(250)])
 
 # ── Diablos-Kult-Verteidigung ──
 add('defend', title="Verteidige gegen den Diablos-Kult / Defend vs. the Cult",
@@ -188,32 +188,32 @@ add('defend', title="Verteidige gegen den Diablos-Kult / Defend vs. the Cult",
           "Schlage die Raids zurueck und sammle §5Kult-Insignien§7.",
           "Repel the raids and collect §5Cult Insignia§7."],
     deps=[Q['activate']['id']],
-    tasks=[task_item("kubejs:cult_insignia", 6)],
-    rewards=[reward_item("kubejs:cult_insignia", 2), reward_xp(300)])
+    tasks=[task_item("tensura_abyss:cult_insignia", 6)],
+    rewards=[reward_item("tensura_abyss:cult_insignia", 2), reward_xp(300)])
 
 # ── Endgame: Dark Aether Kette ──
 add('aether', title="Dunkler Aether / Dark Aether",
-    x=-1.5, y=-5, icon="kubejs:dark_aether", shape="hexagon", size=1.25,
+    x=-1.5, y=-5, icon="tensura_abyss:dark_aether", shape="hexagon", size=1.25,
     desc=["§7Die ultimative Endgame-Ressource. Ersetzt alle Diamanten-Upgrades.",
           "The ultimate endgame resource. Replaces all diamond upgrades.",
           "",
           "§86x Dunkler Schleim + 2x Echo-Scherbe + Netherstern.",
           "§86x Dark Slime + 2x Echo Shard + Nether Star."],
     deps=[Q['join']['id']],
-    tasks=[task_item("kubejs:dark_aether", 1)],
-    rewards=[reward_item("kubejs:dark_aether", 2), reward_xp(300)])
+    tasks=[task_item("tensura_abyss:dark_aether", 1)],
+    rewards=[reward_item("tensura_abyss:dark_aether", 2), reward_xp(300)])
 
 add('atomic', title="\"I Am Atomic\" Ultimate",
-    x=0, y=-5, icon="kubejs:i_am_atomic_catalyst", shape="gear", size=1.5,
+    x=0, y=-5, icon="tensura_abyss:dark_aether", shape="gear", size=1.5,
     desc=["§b§lI... AM... ATOMIC.",
           "",
-          "§7Crafte den Katalysator und entfessle die neon-blaue Explosion.",
-          "Craft the catalyst and unleash the neon-blue blast.",
+          "§7Erreiche Eminence of the Abyss und druecke R.",
+          "Reach Eminence of the Abyss and press R.",
           "§8Massiver AoE-Schaden, zerstoert KEINE Bloecke.",
           "§8Massive AoE damage, destroys NO blocks."],
     deps=[Q['aether']['id']],
-    tasks=[task_item("kubejs:i_am_atomic_catalyst", 1)],
-    rewards=[reward_item("kubejs:dark_aether", 3), reward_xp(500)])
+    tasks=[task_check("Reach Eminence and cast with R")],
+    rewards=[reward_item("tensura_abyss:dark_aether", 3), reward_xp(500)])
 
 add('breath', title="Breath-System freischalten / Unlock the Breath System",
     x=0, y=-6.5, icon="minecraft:dragon_breath",
@@ -228,7 +228,7 @@ add('breath', title="Breath-System freischalten / Unlock the Breath System",
 
 # ── Slime Suit ──
 add('suit', title="Slime Suit (Stealth-Ruestung) / Slime Suit",
-    x=6, y=1, icon="kubejs:slime_suit_chestplate", shape="pentagon", size=1.5,
+    x=6, y=1, icon="tensura_abyss:slime_suit_chestplate", shape="pentagon", size=1.5,
     desc=["§7Craft das komplette §3Slime Suit§7 aus Netherit, Dunklem Schleim",
           "§7und Kult-Insignien.",
           "Craft the full §3Slime Suit§7 from Netherite, Dark Slime and Cult Insignia.",
@@ -236,9 +236,9 @@ add('suit', title="Slime Suit (Stealth-Ruestung) / Slime Suit",
           "§8Set-Bonus: Speed II + Resistance II + Unsichtbarkeit (Stealth).",
           "§8Set bonus: Speed II + Resistance II + Invisibility (stealth)."],
     deps=[Q['defend']['id'], Q['alpha']['id']],
-    tasks=[task_item("kubejs:slime_suit_helmet",1), task_item("kubejs:slime_suit_chestplate",1),
-           task_item("kubejs:slime_suit_leggings",1), task_item("kubejs:slime_suit_boots",1)],
-    rewards=[reward_item("kubejs:dark_aether", 2), reward_xp(400)])
+    tasks=[task_item("tensura_abyss:slime_suit_helmet",1), task_item("tensura_abyss:slime_suit_chestplate",1),
+           task_item("tensura_abyss:slime_suit_leggings",1), task_item("tensura_abyss:slime_suit_boots",1)],
+    rewards=[reward_item("tensura_abyss:dark_aether", 2), reward_xp(400)])
 
 # ── Finaler Rang ──
 add('lord', title="Aufstieg zum Shadow Lord / Ascend to Shadow Lord",
@@ -251,7 +251,7 @@ add('lord', title="Aufstieg zum Shadow Lord / Ascend to Shadow Lord",
           "Master the I-Am-Atomic skill, the Slime Suit, and reach [Shadow Lord] (50 pledges)."],
     deps=[Q['atomic']['id'], Q['suit']['id'], Q['breath']['id']],
     tasks=[task_check("Rang [Shadow Lord] erreichen / Reach rank [Shadow Lord]")],
-    rewards=[reward_item("kubejs:dark_aether", 8), reward_item("minecraft:netherite_ingot",4), reward_xp(1000)])
+    rewards=[reward_item("tensura_abyss:dark_aether", 8), reward_item("minecraft:netherite_ingot",4), reward_xp(1000)])
 
 # ── Chapter-Datei zusammensetzen ──
 chapter_id = nid()
@@ -261,7 +261,7 @@ out = f'''{{
 	default_quest_shape: "circle"
 	filename: "shadow_garden"
 	group: ""
-	icon: "kubejs:dark_aether"
+	icon: "tensura_abyss:dark_aether"
 	id: "{chapter_id}"
 	order_index: 0
 	quest_links: [ ]
@@ -273,7 +273,8 @@ out = f'''{{
 }}
 '''
 
-dst = "kubejs_ftbquests/config/ftbquests/quests/chapters/shadow_garden.snbt"
+repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+dst = os.path.join(repo, "overrides", "config", "ftbquests", "quests", "chapters", "shadow_garden.snbt")
 os.makedirs(os.path.dirname(dst), exist_ok=True)
 with open(dst, "w", encoding="utf-8") as f:
     f.write(out)

@@ -12,8 +12,8 @@
 //     Name » message                        (everyone else — LP prefix intact
 //                                            via the player's display name)
 //
-// The scoreboard teams KEEP their prefixes for NAMETAGS above the head —
-// those don't stack with chat anymore because chat never uses them again.
+// Team prefixes are blank. ShadowSightHandler renders one structured badge
+// for authorized viewers, while this script emits one compact chat prefix.
 
 const SHADOW_TEAM_RANKS = {
   sg_lord:    { label: 'Shadow Lord',   color: '§5' },

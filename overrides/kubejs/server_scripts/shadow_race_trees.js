@@ -13,7 +13,7 @@
 //       Stufe 8: Shadow-Abyss-Dimension betreten (sgEnteredAbyss)
 //   - Es vergibt die Skript-PERKS: Fallschaden-Immunitaet (Slime ab Stufe 1),
 //     Void-Immunitaet (alle Baeume ab Stufe 8), "I Am Atomic"-Unlock (Slime
-//     Stufe 9), Vampir-Nachtregeneration/Lifesteal/Nebelgestalt.
+//     Stufe 9 as a native race ability), Vampir-Nachtregeneration/Lifesteal/Nebelgestalt.
 //
 // TRIGGER der Evolution: SNEAK + Rechtsklick mit Dunklem Aether
 //   (identisch zum alten System — Spieler kennen den Handgriff schon).
@@ -241,12 +241,12 @@ function applyPerks(p, treeKey, idx) {
   }
   // Alle Baeume: Void-Immunitaet ab Stufe 8 (Index 7) — Tick-Rettung unten.
   if (idx >= 7) p.persistentData.putBoolean('sgVoidImmune', true)
-  // Slime Stufe 9: "I Am Atomic" freischalten + Katalysator schenken.
+  // Slime stage 9: announce the native race ability. Tensura's default R key
+  // and client-to-server race packet are used; there is no consumable item.
   if (treeKey === 'slime' && idx === 8 && !flag(p, 'sgAtomicUnlocked')) {
     p.persistentData.putBoolean('sgAtomicUnlocked', true)
-    p.runCommandSilent(`give @s ${NS_TREE}:i_am_atomic_catalyst 1`)
     p.runCommandSilent('title @s title {"text":"I AM ATOMIC","color":"aqua","bold":true}')
-    p.runCommandSilent('title @s subtitle {"text":"The final skill has been unleashed.","color":"dark_aqua"}')
+    p.runCommandSilent('title @s subtitle {"text":"Press R — costs 35% of maximum Magicules.","color":"dark_aqua"}')
     p.runCommandSilent('playsound minecraft:entity.warden.sonic_boom master @s ~ ~ ~ 3 0.5')
   }
 }

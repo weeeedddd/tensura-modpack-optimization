@@ -22,16 +22,16 @@ import net.tensura.abyss.network.ServerboundMarketActionPacket;
 public class GuildMainScreen extends Screen {
 
     // ── Palette ──
-    private static final int GOLD       = 0xFFD4AF37;
-    private static final int GOLD_DIM   = 0xFF8A6E24;
-    private static final int VIOLET     = 0xFFB56BE0;
-    private static final int VIOLET_DIM = 0xFF6B3F94;
-    private static final int LABEL      = 0xFF8C86A0;
-    private static final int VALUE      = 0xFFEFEAFF;
+    private static final int SILVER     = AbyssGuiTheme.SILVER;
+    private static final int SILVER_DIM = AbyssGuiTheme.SILVER_DIM;
+    private static final int VIOLET     = AbyssGuiTheme.VIOLET;
+    private static final int VIOLET_DIM = AbyssGuiTheme.VIOLET_DIM;
+    private static final int LABEL      = AbyssGuiTheme.MUTED;
+    private static final int VALUE      = AbyssGuiTheme.TEXT;
     private static final int CRACK      = 0xFF14101E;
     private static final int CARD_BG    = 0xC8120C1E;
-    private static final int CARD_EDGE  = 0xFF241634;
-    private static final int SLIME_RGB  = 0x7A2FBF;
+    private static final int CARD_EDGE  = AbyssGuiTheme.EDGE;
+    private static final int SLIME_RGB  = AbyssGuiTheme.SLIME_RGB;
 
     // Obsidian gradient bands (top -> bottom)
     private static final int[] OBSIDIAN = { 0xF80A0612, 0xF80C0716, 0xF80F091C, 0xF8110A20, 0xF80D081A };
@@ -56,15 +56,15 @@ public class GuildMainScreen extends Screen {
         int bx = left + (PANEL_W - btnW) / 2;
         int by = top + PANEL_H - 3 * btnH - 2 * gap - 12;
 
-        addRenderableWidget(Button.builder(Component.literal("§5◆ §dInvite to the Shadows §5◆"), b ->
+        addRenderableWidget(Button.builder(Component.literal("Invite to the Shadows"), b ->
                 Minecraft.getInstance().setScreen(new GuildInviteScreen(this)))
                 .bounds(bx, by, btnW, btnH).build());
 
-        addRenderableWidget(Button.builder(Component.literal("§6◆ §eMitsugoshi Black Market §6◆"), b ->
+        addRenderableWidget(Button.builder(Component.literal("Mitsugoshi Black Market"), b ->
                 PacketDistributor.sendToServer(new ServerboundMarketActionPacket(ServerboundMarketActionPacket.OPEN)))
                 .bounds(bx, by + btnH + gap, btnW, btnH).build());
 
-        addRenderableWidget(Button.builder(Component.literal("§8Withdraw into darkness"), b -> this.onClose())
+        addRenderableWidget(Button.builder(Component.literal("Withdraw into darkness"), b -> this.onClose())
                 .bounds(bx, by + (btnH + gap) * 2, btnW, btnH).build());
     }
 
@@ -111,10 +111,10 @@ public class GuildMainScreen extends Screen {
         g.fill(left - 1, top, left, y2, VIOLET_DIM);
         g.fill(x2, top, x2 + 1, y2, VIOLET_DIM);
         // gold hairline inlay
-        g.fill(left + 5, top + 5, x2 - 5, top + 6, GOLD_DIM);
-        g.fill(left + 5, y2 - 6, x2 - 5, y2 - 5, GOLD_DIM);
-        g.fill(left + 5, top + 5, left + 6, y2 - 5, GOLD_DIM);
-        g.fill(x2 - 6, top + 5, x2 - 5, y2 - 5, GOLD_DIM);
+        g.fill(left + 5, top + 5, x2 - 5, top + 6, SILVER_DIM);
+        g.fill(left + 5, y2 - 6, x2 - 5, y2 - 5, SILVER_DIM);
+        g.fill(left + 5, top + 5, left + 6, y2 - 5, SILVER_DIM);
+        g.fill(x2 - 6, top + 5, x2 - 5, y2 - 5, SILVER_DIM);
         // corner studs
         stud(g, left + 3, top + 3);
         stud(g, x2 - 5, top + 3);
@@ -123,7 +123,7 @@ public class GuildMainScreen extends Screen {
     }
 
     private void stud(GuiGraphics g, int x, int y) {
-        g.fill(x, y, x + 2, y + 2, GOLD);
+        g.fill(x, y, x + 2, y + 2, SILVER);
     }
 
     private void crack(GuiGraphics g, int x1, int y1, int x2, int y2) {
@@ -160,7 +160,7 @@ public class GuildMainScreen extends Screen {
     private void drawTexts(GuiGraphics g) {
         int cx = left + PANEL_W / 2;
         int y = top + 16;
-        g.drawCenteredString(this.font, Component.literal("S H A D O W  G A R D E N"), cx, y, GOLD);
+        g.drawCenteredString(this.font, Component.literal("S H A D O W  G A R D E N"), cx, y, SILVER);
         y += 13;
         g.drawCenteredString(this.font, Component.literal("§5◆ §d" + data.guildName() + " §5◆"), cx, y, VIOLET);
         y += 14;
@@ -169,7 +169,7 @@ public class GuildMainScreen extends Screen {
         g.fill(cx - 2, y - 1, cx + 2, y + 2, VIOLET_DIM);
         y += 8;
 
-        card(g, y,      "Adventurer Rank", data.adventurerRank(), GOLD);
+        card(g, y,      "Adventurer Rank", data.adventurerRank(), SILVER);
         card(g, y + 19, "Your Standing",   data.memberRank(), VALUE);
         card(g, y + 38, "Member Number",   "#" + data.memberNumber(), VALUE);
         card(g, y + 57, "Sworn Shadows",   data.memberCount() + " / " + data.memberLimit(), VIOLET);

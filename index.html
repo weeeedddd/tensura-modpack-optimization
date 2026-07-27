@@ -1,1173 +1,143 @@
-<!DOCTYPE html>
-<html lang="de">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Tensura Abyss — Minecraft 1.21.1 NeoForge Modpack. Hardcore Anime-RPG basierend auf 'That Time I Got Reincarnated as a Slime'. 348 Mods, 500+ Quests.">
-<title>Tensura Abyss — Modpack v3.5.0</title>
-<style>
-/* ══════════════════════════════════════════
-   TENSURA ABYSS — Anime RPG Design System
-   Dark void + slime-magic teal + arcane purple
-   ══════════════════════════════════════════ */
-:root{
-  --void:#060a10;--deep:#0c1220;--dark:#111928;--card:#141d2e;--card-h:#1a2540;
-  --brd:#1d2b45;--brd-h:#2a3f6a;
-  --teal:#2cf5e8;--teal-d:rgba(44,245,232,.18);--teal-g:rgba(44,245,232,.07);
-  --teal-glow:0 0 28px rgba(44,245,232,.3);
-  --purple:#a070ff;--purple-g:rgba(160,112,255,.08);--purple-brd:rgba(160,112,255,.25);
-  --gold:#f0c060;--gold-g:rgba(240,192,96,.08);
-  --green:#48e080;--green-g:rgba(72,224,128,.08);
-  --red:#e04060;--red-g:rgba(224,64,96,.08);
-  --txt:#c4d0e8;--txt-s:#6a7d96;--txt-m:#3d4f65;
-  --r:8px;--shd:0 2px 20px rgba(0,0,0,.5);
-}
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-  background:var(--void);color:var(--txt);
-  line-height:1.65;-webkit-font-smoothing:antialiased;
-  min-height:100vh;
-}
-a{color:var(--teal);text-decoration:none}
-a:hover{text-decoration:underline}
-
-/* ── Grid overlay ── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(44,245,232,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(44,245,232,.025) 1px,transparent 1px);
-  background-size:48px 48px;pointer-events:none;z-index:0;
-}
-
-/* ── Layout ── */
-.wrap{max-width:1080px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
-
-/* ════════════ NAV ════════════ */
-nav{
-  position:sticky;top:0;z-index:200;
-  background:rgba(6,10,16,.92);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--brd);
-}
-.nav-i{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.65rem 1.5rem;max-width:1080px;margin:0 auto;
-}
-.nav-brand{
-  font-weight:900;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--teal);text-shadow:var(--teal-glow);
-}
-/* ── Dropdown-Navigation ── */
-.nav-menu{display:flex;gap:.35rem;align-items:center}
-.nav-item{position:relative}
-.nav-trigger{
-  display:flex;align-items:center;gap:.35rem;cursor:pointer;
-  font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--txt-s);background:none;border:1px solid transparent;border-radius:6px;
-  padding:.35rem .6rem;transition:color .15s,border-color .15s,background .15s;
-}
-.nav-trigger::after{content:'▾';font-size:.6rem;opacity:.7;transition:transform .2s}
-.nav-item:hover .nav-trigger,.nav-item:focus-within .nav-trigger{
-  color:var(--teal);border-color:var(--brd-h);background:var(--teal-g);
-}
-.nav-item:hover .nav-trigger::after,.nav-item:focus-within .nav-trigger::after{transform:rotate(180deg)}
-.nav-dropdown{
-  position:absolute;top:calc(100% + 6px);left:0;min-width:236px;z-index:210;
-  background:var(--deep);border:1px solid var(--brd-h);border-radius:10px;
-  padding:.4rem;box-shadow:0 10px 34px rgba(0,0,0,.55),0 0 22px rgba(44,245,232,.06);
-  opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s,transform .18s,visibility .18s;
-}
-.nav-item:hover .nav-dropdown,.nav-item:focus-within .nav-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
-.nav-dropdown::before{
-  content:'';position:absolute;top:-5px;left:18px;width:9px;height:9px;
-  background:var(--deep);border-left:1px solid var(--brd-h);border-top:1px solid var(--brd-h);
-  transform:rotate(45deg);
-}
-.nav-dd-link{display:block;padding:.5rem .65rem;border-radius:7px;border-left:2px solid transparent;transition:background .15s,border-color .15s}
-.nav-dd-link:hover{background:var(--teal-g);border-left-color:var(--teal);text-decoration:none}
-.nav-dd-de{display:block;font-size:.74rem;font-weight:700;color:var(--txt);letter-spacing:.02em}
-.nav-dd-en{display:block;font-size:.64rem;font-style:italic;color:var(--txt-m);margin-top:.05rem}
-.nav-dd-link:hover .nav-dd-de{color:var(--teal)}
-.nav-cta{
-  font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--void);background:var(--teal);border-radius:6px;padding:.4rem .7rem;
-  box-shadow:0 0 16px rgba(44,245,232,.25);transition:transform .15s,box-shadow .15s;
-}
-.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 24px rgba(44,245,232,.45);text-decoration:none}
-.nav-badge{
-  font-size:.6rem;font-weight:800;letter-spacing:.07em;
-  color:var(--teal);background:var(--teal-g);
-  border:1px solid rgba(44,245,232,.25);border-radius:3px;
-  padding:.18rem .5rem;
-}
-
-/* ════════════ HERO ════════════ */
-.hero{
-  text-align:center;padding:6rem 1rem 4.5rem;
-  position:relative;overflow:hidden;
-}
-.hero::after{
-  content:'';position:absolute;
-  top:50%;left:50%;transform:translate(-50%,-55%);
-  width:700px;height:400px;
-  background:radial-gradient(ellipse,rgba(44,245,232,.07) 0%,transparent 68%);
-  pointer-events:none;
-}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:1.3rem;
-}
-.hero-eyebrow::before,.hero-eyebrow::after{
-  content:'';width:36px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--teal));
-}
-.hero-eyebrow::after{transform:scaleX(-1)}
-h1.hero-title{
-  font-size:clamp(2.8rem,9vw,5rem);font-weight:900;
-  letter-spacing:-.025em;line-height:1.05;
-  color:#ddeeff;margin-bottom:.4rem;
-}
-h1.hero-title .glow{
-  color:var(--teal);
-  text-shadow:0 0 45px rgba(44,245,232,.5),0 0 90px rgba(44,245,232,.18);
-}
-.hero-ver{
-  font-size:.65rem;font-weight:700;letter-spacing:.14em;
-  color:var(--txt-m);text-transform:uppercase;margin-bottom:2.2rem;
-}
-
-/* ── Dual subtitle ── */
-.hero-langs{
-  display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;
-  max-width:700px;margin:0 auto 2.5rem;
-}
-.h-lang{
-  flex:1;min-width:230px;max-width:310px;
-  background:var(--card);border:1px solid var(--brd);
-  border-radius:var(--r);padding:1.1rem 1.3rem;text-align:left;
-}
-.h-lang.de{border-left:3px solid var(--teal)}
-.h-lang.en{border-left:3px solid var(--purple)}
-.lang-lbl{
-  display:inline-block;font-size:.54rem;font-weight:800;
-  letter-spacing:.13em;text-transform:uppercase;
-  padding:.12rem .4rem;border-radius:2px;margin-bottom:.55rem;
-}
-.lbl-de{color:var(--teal);background:var(--teal-g);border:1px solid rgba(44,245,232,.25)}
-.lbl-en{color:var(--purple);background:var(--purple-g);border:1px solid var(--purple-brd)}
-.h-lang p{font-size:.85rem;color:var(--txt-s);line-height:1.62}
-.h-lang strong{color:var(--txt);font-weight:600}
-
-/* ── Pills ── */
-.pills{display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap}
-.pill{font-size:.62rem;font-weight:700;letter-spacing:.05em;padding:.22rem .65rem;border-radius:20px}
-.p-t{background:var(--teal-g);color:var(--teal);border:1px solid rgba(44,245,232,.25)}
-.p-p{background:var(--purple-g);color:var(--purple);border:1px solid var(--purple-brd)}
-.p-g{background:var(--green-g);color:var(--green);border:1px solid rgba(72,224,128,.25)}
-.p-gold{background:var(--gold-g);color:var(--gold);border:1px solid rgba(240,192,96,.25)}
-
-/* ════════════ SECTION ════════════ */
-section{padding:3.5rem 0;border-top:1px solid var(--brd)}
-.sec-head{display:flex;align-items:center;gap:.65rem;margin-bottom:2rem}
-.sec-num{
-  font-size:.54rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--teal);background:var(--teal-g);
-  border:1px solid rgba(44,245,232,.2);border-radius:3px;padding:.18rem .48rem;
-  flex-shrink:0;
-}
-.sec-title{
-  font-size:1.5rem;font-weight:800;
-  color:#ddeeff;letter-spacing:-.01em;
-}
-.sec-sub{font-size:.8rem;color:var(--txt-s);margin-top:.3rem}
-
-/* ════════════ FEATURE CARDS ════════════ */
-.feat-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1rem;margin-bottom:1.5rem;
-}
-.feat-card{
-  background:var(--card);border:1px solid var(--brd);
-  border-radius:var(--r);padding:1.3rem;
-  position:relative;overflow:hidden;
-  transition:border-color .2s,box-shadow .2s;
-}
-.feat-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--teal),transparent);
-  opacity:0;transition:opacity .2s;
-}
-.feat-card:hover{border-color:rgba(44,245,232,.35);box-shadow:0 0 24px rgba(44,245,232,.05)}
-.feat-card:hover::after{opacity:1}
-.feat-icon{font-size:1.6rem;margin-bottom:.65rem;display:block}
-.feat-card h3{font-size:.9rem;font-weight:700;color:#ddeeff;margin-bottom:.45rem}
-.feat-de{font-size:.8rem;color:var(--txt-s);line-height:1.58;margin-bottom:.55rem}
-.feat-en{
-  font-size:.72rem;color:var(--txt-m);line-height:1.55;
-  font-style:italic;border-top:1px solid var(--brd);
-  padding-top:.5rem;margin-top:.3rem;
-}
-
-/* ════════════ BILINGUAL TWO-COL ════════════ */
-.bi-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:1.2rem;margin-bottom:1.5rem;
-}
-.bi-col{
-  background:var(--card);border:1px solid var(--brd);
-  border-radius:var(--r);padding:1.4rem;
-}
-.bi-col.de{border-left:3px solid var(--teal)}
-.bi-col.en{border-left:3px solid var(--purple)}
-.bi-col-head{
-  display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;
-  padding-bottom:.6rem;border-bottom:1px solid var(--brd);
-}
-.bi-col h3{font-size:.88rem;font-weight:700;color:var(--txt)}
-.bi-col p{font-size:.8rem;color:var(--txt-s);line-height:1.62;margin-bottom:.45rem}
-.bi-col p:last-child{margin-bottom:0}
-.bi-col strong{color:var(--txt);font-weight:600}
-
-/* ════════════ TABLE ════════════ */
-.tbl-wrap{overflow-x:auto;margin:.5rem 0}
-table{width:100%;border-collapse:collapse;font-size:.79rem}
-th{
-  text-align:left;font-size:.6rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--txt-m);
-  padding:.5rem .75rem;border-bottom:1px solid var(--brd);
-}
-td{
-  padding:.48rem .75rem;border-bottom:1px solid rgba(29,43,69,.4);
-  color:var(--txt-s);vertical-align:middle;
-}
-tr:hover td{background:var(--card-h)}
-td strong{color:var(--txt)}
-.td-bi{font-size:.72rem;color:var(--txt-m);font-style:italic;margin-top:.15rem}
-
-/* ── Tags ── */
-.tag{
-  display:inline-block;font-size:.57rem;font-weight:700;
-  padding:.1rem .35rem;border-radius:3px;letter-spacing:.04em;vertical-align:middle;
-}
-.tag-t{background:var(--teal-g);color:var(--teal);border:1px solid rgba(44,245,232,.25)}
-.tag-p{background:var(--purple-g);color:var(--purple);border:1px solid var(--purple-brd)}
-.tag-g{background:var(--green-g);color:var(--green);border:1px solid rgba(72,224,128,.25)}
-.tag-r{background:var(--red-g);color:var(--red);border:1px solid rgba(224,64,96,.25)}
-.tag-gold{background:var(--gold-g);color:var(--gold);border:1px solid rgba(240,192,96,.25)}
-.tier-s{background:#f0c040;color:#1a0e00;font-weight:900}
-.tier-a{background:#90a8c0;color:#080f18;font-weight:800}
-
-/* ════════════ INSTALL STEPS ════════════ */
-.steps{display:flex;flex-direction:column;gap:.75rem}
-.step{
-  display:flex;gap:1rem;
-  background:var(--card);border:1px solid var(--brd);
-  border-radius:var(--r);padding:1.1rem 1.3rem;
-  transition:border-color .2s;
-}
-.step:hover{border-color:rgba(44,245,232,.3)}
-.step-n{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  background:var(--teal-g);border:1.5px solid rgba(44,245,232,.4);
-  color:var(--teal);font-size:.68rem;font-weight:800;
-  display:flex;align-items:center;justify-content:center;margin-top:.1rem;
-}
-.step-body{flex:1}
-.step-de strong{font-size:.88rem;color:#ddeeff;display:block;margin-bottom:.12rem}
-.step-de p{font-size:.8rem;color:var(--txt-s)}
-.step-en{
-  margin-top:.5rem;padding-top:.5rem;
-  border-top:1px solid rgba(29,43,69,.6);
-}
-.step-en strong{font-size:.8rem;color:var(--txt-s);display:block;margin-bottom:.1rem}
-.step-en p{font-size:.73rem;color:var(--txt-m);font-style:italic}
-
-/* ════════════ CALLOUT ════════════ */
-.callout{
-  display:flex;gap:.7rem;align-items:flex-start;
-  padding:.9rem 1.1rem;border-radius:var(--r);
-  margin:.9rem 0;font-size:.79rem;line-height:1.58;
-  border-left:3px solid;
-}
-.callout-i{flex-shrink:0;font-size:1rem;margin-top:.05rem}
-.cl-t{background:var(--teal-g);border-color:var(--teal)}
-.cl-r{background:var(--red-g);border-color:var(--red)}
-.cl-g{background:var(--green-g);border-color:var(--green)}
-.cl-gold{background:var(--gold-g);border-color:var(--gold)}
-
-/* ════════════ CODE ════════════ */
-.code-block{
-  background:#040710;border:1px solid var(--brd);border-radius:6px;
-  padding:.9rem 1.1rem;font-family:'Cascadia Code','Fira Code',Consolas,monospace;
-  font-size:.73rem;line-height:1.85;overflow-x:auto;
-  color:var(--txt);white-space:pre;margin:.6rem 0;
-}
-.cm{color:var(--txt-m)}.ck{color:var(--teal)}.cv{color:var(--gold)}
-
-/* ════════════ DIVIDER ════════════ */
-.divider{border:none;border-top:1px solid var(--brd);margin:1.8rem 0}
-
-/* ════════════ FOOTER ════════════ */
-footer{
-  padding:3rem 1rem;border-top:1px solid var(--brd);
-  text-align:center;position:relative;z-index:1;
-}
-.footer-brand{
-  font-size:1.2rem;font-weight:900;letter-spacing:.08em;
-  color:var(--teal);text-shadow:var(--teal-glow);margin-bottom:.6rem;
-}
-footer p{font-size:.66rem;color:var(--txt-m);margin-bottom:.35rem}
-footer a{color:var(--teal)}
-
-/* ════════════ RESPONSIVE ════════════ */
-@media(max-width:900px){
-  .nav-i{flex-wrap:wrap;gap:.5rem;padding:.55rem 1rem}
-  .nav-menu{order:3;width:100%;overflow-x:auto;justify-content:flex-start;gap:.2rem;-webkit-overflow-scrolling:touch}
-  .nav-trigger{white-space:nowrap;padding:.3rem .5rem}
-  .nav-dropdown{position:fixed;left:1rem;right:1rem;min-width:0;top:auto}
-  .nav-dropdown::before{display:none}
-}
-@media(max-width:768px){
-  .feat-grid{grid-template-columns:1fr 1fr}
-  .bi-grid{grid-template-columns:1fr}
-  .hero-title{font-size:2.5rem}
-}
-@media(max-width:500px){
-  .feat-grid{grid-template-columns:1fr}
-  .hero{padding:3.5rem .5rem 3rem}
-  .wrap{padding:0 1rem}
-  .nav-cta{font-size:.6rem;padding:.35rem .55rem}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08060d">
+  <meta name="description" content="Tensura Abyss: a server-authoritative Minecraft RPG expansion with nine-stage race evolution, the Shadow Abyss, and I Am Atomic.">
+  <title>Tensura Abyss — The Abyss Update</title>
+  <style>
+    :root {
+      --bg:#08060d;--surface:#100b18;--surface-2:#171022;--fg:#f2eff7;--dim:#a49dac;
+      --accent:#a85bd3;--accent-hot:#d49aef;--silver:#dedbe5;--cyan:#75dbea;--line:rgba(222,219,229,.16);
+      --shadow:rgba(0,0,0,.62);--glow:rgba(168,91,211,.34);--safe:rgba(117,219,234,.12);
+      --font-display:Georgia,"Times New Roman",serif;--font-body:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      --ease-reveal:cubic-bezier(.16,1,.3,1);--ease-exit:cubic-bezier(.7,0,.84,0);--ease-cut:cubic-bezier(.87,0,.13,1);
+      --space-1:.5rem;--space-2:1rem;--space-3:1.5rem;--space-4:2.5rem;--space-5:4rem;--space-6:7rem;
+      --max:1180px;--radius:1.25rem;
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:var(--bg);color:var(--fg);font:400 1rem/1.7 var(--font-body);overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.11;background-image:radial-gradient(circle at 20% 10%,var(--silver) 0 1px,transparent 1px),radial-gradient(circle at 80% 60%,var(--accent) 0 1px,transparent 1px);background-size:9rem 11rem,13rem 15rem}
+    a{color:inherit}button,a{outline-offset:.3rem}a:focus-visible{outline:2px solid var(--cyan)}
+    .skip{position:fixed;left:1rem;top:1rem;z-index:100;transform:translateY(-160%);padding:.7rem 1rem;background:var(--silver);color:var(--bg);transition:transform .3s var(--ease-reveal)}.skip:focus{transform:none}
+    .nav{position:fixed;z-index:30;inset:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:1rem clamp(1rem,4vw,4rem);background:linear-gradient(to bottom,var(--bg),transparent);pointer-events:none}
+    .brand,.nav-links{pointer-events:auto}.brand{text-decoration:none;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase}.brand span{color:var(--accent-hot)}
+    .nav-links{display:flex;gap:1.4rem}.nav-links a{text-decoration:none;color:var(--dim);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s var(--ease-reveal)}.nav-links a:hover{color:var(--fg)}
+    .hero{height:240vh;position:relative}.hero-stage{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center;perspective:1200px;background:radial-gradient(circle at 50% 48%,var(--surface-2),var(--bg) 58%)}
+    .depth{position:absolute;inset:-12%;will-change:transform;transform:translate3d(0,0,0)}
+    .depth-void{background:radial-gradient(circle at 50% 50%,transparent 0 8%,var(--glow) 9%,transparent 28%),radial-gradient(circle at 50% 50%,var(--surface-2),transparent 62%)}
+    .depth-grid{inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:8vw 8vw;mask-image:radial-gradient(circle,black,transparent 68%);opacity:.25;transform:rotateX(62deg) translateY(34%)}
+    .orbit{position:absolute;left:50%;top:50%;border:1px solid var(--line);border-radius:50%;transform:translate(-50%,-50%)}.orbit-a{width:min(68vw,52rem);aspect-ratio:1}.orbit-b{width:min(48vw,36rem);aspect-ratio:1;border-color:var(--accent);opacity:.4}.orbit-c{width:min(25vw,19rem);aspect-ratio:1;border-color:var(--silver);opacity:.2}
+    .spire{position:absolute;left:50%;top:50%;width:clamp(7rem,14vw,12rem);height:clamp(18rem,40vw,31rem);clip-path:polygon(50% 0,82% 23%,70% 78%,50% 100%,24% 76%,17% 22%);background:linear-gradient(110deg,var(--bg) 5%,var(--accent) 44%,var(--silver) 48%,var(--surface-2) 52%,var(--accent) 88%);box-shadow:0 0 8rem var(--glow);transform:translate(-50%,-45%)}
+    .spire::after{content:"";position:absolute;inset:8% 42% 12%;background:var(--cyan);opacity:.45;box-shadow:0 0 2rem var(--cyan)}
+    .hero-copy{position:relative;z-index:4;width:min(90vw,var(--max));align-self:end;padding-bottom:8vh;display:grid;grid-template-columns:1.35fr .65fr;gap:var(--space-4);align-items:end}
+    .kicker,.chapter-no{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-hot)}h1,h2,h3,p{margin-top:0}h1,h2{font-family:var(--font-display);font-weight:400;line-height:.92}
+    h1{font-size:clamp(4.2rem,11vw,10rem);letter-spacing:-.065em;margin:.15em 0}.hero-copy h1 span{display:block;color:transparent;-webkit-text-stroke:1px var(--silver)}
+    .hero-deck{max-width:34rem;font-size:clamp(1rem,1.6vw,1.28rem);color:var(--dim)}.hero-note{border-left:1px solid var(--accent);padding-left:var(--space-3);color:var(--dim);max-width:25rem}.hero-note strong{display:block;color:var(--fg);font-weight:500}
+    .scroll-mark{position:absolute;right:4vw;bottom:4vh;z-index:6;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);writing-mode:vertical-rl}
+    .release{min-height:90vh;display:grid;align-items:center;padding:var(--space-6) max(5vw,1.2rem)}.release-inner{width:min(100%,var(--max));margin:auto;display:grid;grid-template-columns:.7fr 1.3fr;gap:clamp(2rem,8vw,9rem);align-items:start}
+    .release h2,.section-head h2{font-size:clamp(3rem,7vw,6.6rem);letter-spacing:-.045em;margin-bottom:var(--space-3)}.release-copy{max-width:42rem;color:var(--dim)}.release-copy strong{color:var(--fg);font-weight:500}
+    .spec-line{display:grid;grid-template-columns:7rem 1fr;gap:1rem;padding:1rem 0;border-top:1px solid var(--line)}.spec-line span:first-child{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-hot)}
+    .evolution{height:320vh;position:relative;background:linear-gradient(var(--bg),var(--surface),var(--bg))}.evo-stage{position:sticky;top:0;height:100vh;display:grid;grid-template-columns:minmax(18rem,.75fr) 1.25fr;gap:5vw;align-items:center;width:min(92vw,var(--max));margin:auto;overflow:hidden}
+    .evo-intro h2{font-size:clamp(3.2rem,7vw,7rem);letter-spacing:-.05em}.evo-intro p{color:var(--dim);max-width:31rem}.evo-progress{height:2px;background:var(--line);margin-top:var(--space-4);transform-origin:left}.evo-progress-fill{display:block;width:100%;height:100%;background:var(--accent-hot);transform:scaleX(0);transform-origin:left}
+    .evo-rail{position:relative;height:70vh}.evo-card{position:absolute;inset:50% 0 auto;display:grid;grid-template-columns:5rem 1fr;gap:var(--space-3);align-items:center;padding:var(--space-3);border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(135deg,var(--surface-2),var(--surface));box-shadow:0 2rem 7rem var(--shadow);opacity:0;transform:translate3d(0,5rem,0) scale(.94);transition:opacity .55s var(--ease-reveal),transform .55s var(--ease-reveal)}
+    .evo-card.is-active{opacity:1;transform:translate3d(0,-50%,0) scale(1)}.evo-card.is-past,.evo-card.is-next{opacity:0;pointer-events:none}.evo-card.is-near-past{opacity:.1;transform:translate3d(-4rem,-150%,0) scale(.88)}.evo-card.is-near-next{opacity:.1;transform:translate3d(4rem,50%,0) scale(.88)}
+    .stage-mark{font:400 3.2rem/1 var(--font-display);color:var(--accent-hot);text-align:center}.evo-card small{display:block;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase}.evo-card h3{font:400 clamp(1.6rem,3vw,2.8rem)/1.05 var(--font-display);margin:.15rem 0 .4rem}.evo-card p{margin:0;color:var(--dim);font-size:.9rem}
+    .chapter{padding:var(--space-6) max(5vw,1.2rem);min-height:100vh}.section-head{width:min(100%,var(--max));margin:0 auto var(--space-5);display:grid;grid-template-columns:.7fr 1.3fr;gap:8vw;align-items:end}.section-head p{color:var(--dim);max-width:38rem}
+    .biome-grid,.site-grid{width:min(100%,var(--max));margin:auto;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-3)}.biome{grid-column:span 7;min-height:24rem;padding:var(--space-4);display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}.biome:nth-child(2){grid-column:span 5;margin-top:7rem}.biome:nth-child(3){grid-column:3/span 8}
+    .biome::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,var(--glow),transparent 34%),linear-gradient(155deg,transparent,var(--surface-2));transform:scale(1.08);transition:transform .9s var(--ease-reveal)}.biome:hover::before{transform:scale(1.02)}.biome>*{position:relative}.biome small,.site small{color:var(--accent-hot);letter-spacing:.15em;text-transform:uppercase}.biome h3,.site h3,.gear-copy h2{font:400 clamp(2rem,4vw,4rem)/1 var(--font-display);margin:.3rem 0}.biome p,.site p{color:var(--dim);max-width:34rem}
+    .sites{background:var(--silver);color:var(--bg)}.sites .section-head p,.sites .site p{color:#4e4856}.sites .chapter-no{color:#6d238e}.site{grid-column:span 6;min-height:22rem;padding:var(--space-4);border:1px solid rgba(8,6,13,.16);border-radius:var(--radius);display:flex;flex-direction:column;justify-content:flex-end}.site:first-child{background:linear-gradient(145deg,#dedbe5,#b8b0c4)}.site:last-child{background:linear-gradient(145deg,#cfc9da,#eeeaf3);transform:translateY(4rem)}
+    .gear{min-height:110vh;display:grid;place-items:center;padding:var(--space-6) max(5vw,1.2rem);background:radial-gradient(circle at 72% 50%,var(--glow),transparent 30%),var(--bg)}.gear-inner{width:min(100%,var(--max));display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:center}.gear-object{aspect-ratio:1;position:relative;display:grid;place-items:center}.gear-object::before,.gear-object::after{content:"";position:absolute;border:1px solid var(--accent);border-radius:50%;inset:8%;transform:rotateX(68deg) rotateZ(12deg)}.gear-object::after{inset:22%;border-color:var(--silver);transform:rotateY(66deg) rotateZ(-18deg)}.blade{width:6rem;height:25rem;clip-path:polygon(45% 0,65% 0,72% 72%,60% 82%,60% 100%,40% 100%,40% 82%,28% 72%);background:linear-gradient(90deg,var(--surface),var(--accent-hot),var(--silver),var(--surface-2));transform:rotate(35deg);box-shadow:0 0 5rem var(--glow)}.gear-copy p{color:var(--dim)}.caps{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:var(--space-4)}.cap{background:var(--bg);padding:var(--space-3)}.cap strong{display:block;font:400 2.2rem/1 var(--font-display);color:var(--accent-hot)}.cap span{font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+    .atomic{min-height:100vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle,var(--safe),transparent 24%),var(--surface)}.atomic::before,.atomic::after{content:"";position:absolute;border:1px solid var(--cyan);border-radius:50%;width:55vw;aspect-ratio:1;opacity:.25}.atomic::after{width:32vw;border-color:var(--accent-hot)}.atomic-inner{position:relative;z-index:2;max-width:58rem;padding:2rem}.atomic h2{font-size:clamp(4rem,12vw,11rem);letter-spacing:-.07em;margin:.1em 0;color:transparent;-webkit-text-stroke:1px var(--cyan)}.atomic p{max-width:38rem;margin:0 auto;color:var(--dim)}.key{display:inline-grid;place-items:center;width:3rem;height:3rem;border:1px solid var(--silver);border-radius:.6rem;color:var(--silver);margin-top:var(--space-3);box-shadow:inset 0 -4px 0 var(--line)}
+    footer{padding:var(--space-5) max(5vw,1.2rem);border-top:1px solid var(--line)}.footer-inner{width:min(100%,var(--max));margin:auto;display:flex;justify-content:space-between;gap:2rem;color:var(--dim)}.footer-inner strong{color:var(--fg);font-weight:500}
+    [data-reveal]{opacity:0;transform:translate3d(0,2rem,0);transition:opacity .7s var(--ease-reveal),transform .7s var(--ease-reveal)}[data-reveal].is-in{opacity:1;transform:none}
+    @media(max-width:780px){.nav{background:linear-gradient(to bottom,var(--bg) 0 58%,transparent)}.nav-links{display:none}.hero{height:auto}.hero-stage{position:relative;height:100svh;min-height:42rem}.depth{will-change:auto}.hero-copy{grid-template-columns:1fr;padding:0 1rem 9vh}.hero-note{display:none}.scroll-mark{display:none}h1{font-size:clamp(4rem,20vw,6.2rem)}.release,.chapter,.gear{padding-block:5rem}.release-inner,.section-head,.gear-inner{grid-template-columns:1fr}.evolution{height:auto;padding:5rem 1rem}.evo-stage{position:relative;height:auto;display:block;width:100%}.evo-rail{height:auto;display:grid;gap:1rem;margin-top:2rem}.evo-card,.evo-card.is-active,.evo-card.is-past,.evo-card.is-next,.evo-card.is-near-past,.evo-card.is-near-next{position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto}.biome,.biome:nth-child(2),.biome:nth-child(3),.site{grid-column:1/-1;margin:0;transform:none;min-height:19rem}.site:last-child{transform:none}.gear-object{order:2}.footer-inner{display:block}.orbit-a{width:92vw}.orbit-b{width:68vw}.orbit-c{width:38vw}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero{height:auto}.hero-stage,.evo-stage{position:relative}.evolution{height:auto;padding-block:5rem}.evo-stage{height:auto}.evo-rail{height:auto;display:grid;gap:1rem}.evo-card,.evo-card.is-active,.evo-card.is-past,.evo-card.is-next{position:relative;inset:auto;opacity:1;transform:none}.depth,[data-reveal]{opacity:1!important;transform:none!important;transition:none!important;will-change:auto}.spire{transform:translate(-50%,-45%)!important}}
+  </style>
 </head>
 <body>
-
-<!-- ════ NAV ════ -->
-<nav>
-  <div class="nav-i">
-    <div class="nav-brand">&#9889; Tensura Abyss</div>
-    <div class="nav-menu">
-
-      <div class="nav-item">
-        <span class="nav-trigger" tabindex="0">Gameplay &amp; Lore</span>
-        <div class="nav-dropdown">
-          <a class="nav-dd-link" href="#features"><span class="nav-dd-de">Key Features</span><span class="nav-dd-en">Overview &amp; core systems</span></a>
-          <a class="nav-dd-link" href="#shadow"><span class="nav-dd-de">Tensura-Evolutionen</span><span class="nav-dd-en">Evolution ladder &amp; ranks</span></a>
-          <a class="nav-dd-link" href="#shadow"><span class="nav-dd-de">&bdquo;I am Atomic&ldquo;-Skill</span><span class="nav-dd-en">Ultimate AoE skill</span></a>
-          <a class="nav-dd-link" href="#abyss"><span class="nav-dd-de">Shadow Abyss Dimension</span><span class="nav-dd-en">Custom worldgen dimension</span></a>
+  <a class="skip" href="#main">Skip to content</a>
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top">Tensura <span>Abyss</span></a>
+    <div class="nav-links"><a href="#evolution">Evolution</a><a href="#world">World</a><a href="#gear">Gear</a><a href="#atomic">Atomic</a></div>
+  </nav>
+  <header class="hero" id="top">
+    <div class="hero-stage">
+      <div class="depth depth-void" data-depth=".08" aria-hidden="true"></div>
+      <div class="depth depth-grid" data-depth=".13" aria-hidden="true"></div>
+      <div class="depth" data-depth=".21" aria-hidden="true"><span class="orbit orbit-a"></span></div>
+      <div class="depth" data-depth=".32" aria-hidden="true"><span class="orbit orbit-b"></span></div>
+      <div class="depth" data-depth=".47" aria-hidden="true"><span class="orbit orbit-c"></span></div>
+      <div class="depth" data-depth=".62" aria-hidden="true"><span class="spire"></span></div>
+      <div class="hero-copy">
+        <div><div class="kicker">The Abyss Update · Minecraft 1.21.1</div><h1>Descend.<span>Evolve.</span></h1><p class="hero-deck">Four bloodlines. Nine transformations each. One dimension that measures power by what you are willing to become.</p></div>
+        <p class="hero-note"><strong>Server-authoritative systems.</strong> Native Tensura races, live Magicule capacity, guarded packets, and no block-breaking spectacle.</p>
+      </div>
+      <div class="scroll-mark">Scroll to breach the veil</div>
+    </div>
+  </header>
+  <main id="main">
+    <section class="release" aria-labelledby="update-title">
+      <div class="release-inner">
+        <div><div class="chapter-no">Chapter 01 · The Contract</div><h2 id="update-title">Power with a price.</h2></div>
+        <div class="release-copy" data-reveal><p>The Abyss Update replaces inflated stat walls with legible choices. Every race is impactful, every ultimate consumes a percentage of your real capacity, and every endgame item carries a hard ceiling.</p><div class="spec-line"><span>Races</span><strong>37 native forms across four complete paths and one secret.</strong></div><div class="spec-line"><span>Passives</span><strong>Low-light speed and sight; higher forms gain restrained shadow defense.</strong></div><div class="spec-line"><span>Authority</span><strong>Combat and resource checks execute on the server.</strong></div></div>
+      </div>
+    </section>
+    <section class="evolution" id="evolution" aria-labelledby="evo-title">
+      <div class="evo-stage">
+        <div class="evo-intro"><div class="chapter-no">Chapter 02 · Shadow Slime</div><h2 id="evo-title">Nine lives in one body.</h2><p>From vulnerable slime to the Eminence itself. Each stage names its next evolution, exact stat gains, and the passive it earns.</p><div class="evo-progress" aria-hidden="true"><span class="evo-progress-fill"></span></div></div>
+        <div class="evo-rail" aria-label="Nine-stage Shadow Slime evolution">
+          <article class="evo-card is-active"><div class="stage-mark">01</div><div><small>Origin</small><h3>Shadow Slime</h3><p>A formless survivor learns to wear darkness as a second skin.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">02</div><div><small>Resonance</small><h3>Magicule Slime</h3><p>Energy threads through a fluid body and gives every ripple intent.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">03</div><div><small>Descent</small><h3>Abyss Slime</h3><p>It returns from the deep carrying a fragment of its silence.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">04</div><div><small>Oath</small><h3>Shadow Garden Guard</h3><p>A sentinel without fixed shape is entrusted with hidden doors.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">05</div><div><small>Dominion</small><h3>Dark Slime Sovereign</h3><p>Living shadow answers as armor, blade, and loyal familiar.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">06</div><div><small>Command</small><h3>Shadow Lord</h3><p>A quiet commander whose presence turns torchlight thin.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">07</div><div><small>Awakening</small><h3>Awakened Shadow Lord</h3><p>Every shadow cast in the court bends toward one will.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">08</div><div><small>Crown</small><h3>Abyss Monarch</h3><p>The deep recognizes a monarch and releases its crushing pressure.</p></div></article>
+          <article class="evo-card"><div class="stage-mark">09</div><div><small>Final Form</small><h3>Eminence of the Abyss</h3><p>A world of power compresses into one atomic refrain.</p></div></article>
         </div>
       </div>
-
-      <div class="nav-item">
-        <span class="nav-trigger" tabindex="0">Shadow Garden</span>
-        <div class="nav-dropdown">
-          <a class="nav-dd-link" href="#guild"><span class="nav-dd-de">Gilden-System</span><span class="nav-dd-en">Guild &amp; commission backend</span></a>
-          <a class="nav-dd-link" href="#guild"><span class="nav-dd-de">R&auml;nge: Numbers / Seven Shadows</span><span class="nav-dd-en">Adventurer ranks F&ndash;S</span></a>
-          <a class="nav-dd-link" href="#shadow"><span class="nav-dd-de">Mitsugoshi &amp; Kult-Invasionen</span><span class="nav-dd-en">Trade empire &amp; raids</span></a>
-          <a class="nav-dd-link" href="#progression"><span class="nav-dd-de">Super Diamond System</span><span class="nav-dd-en">Endgame upgrade resource</span></a>
-        </div>
+    </section>
+    <section class="chapter" id="world" aria-labelledby="world-title">
+      <div class="section-head"><div><div class="chapter-no">Chapter 03 · The World Below</div><h2 id="world-title">The Abyss is not empty.</h2></div><p data-reveal>It has weather, ecology, memory—and veins of Magicule Spire Crystal that refuse to form anywhere else.</p></div>
+      <div class="biome-grid">
+        <article class="biome" data-reveal><small>Biome 01</small><h3>Whispering Void</h3><p>Black glass shelves hang above the deep while violet reeds repeat fragments of nearby speech.</p></article>
+        <article class="biome" data-reveal><small>Biome 02</small><h3>Ruined Sanctuary</h3><p>Broken cult architecture shelters elite patrols and the oldest ritual scars.</p></article>
+        <article class="biome" data-reveal><small>Resource Stratum</small><h3>Magicule Spires</h3><p>Luminous crystal veins anchor the entire Abyssal Netherite progression to exploration.</p></article>
       </div>
-
-      <div class="nav-item">
-        <span class="nav-trigger" tabindex="0">Files &amp; Tech</span>
-        <div class="nav-dropdown">
-          <a class="nav-dd-link" href="#install"><span class="nav-dd-de">Installation</span><span class="nav-dd-en">Setup guide</span></a>
-          <a class="nav-dd-link" href="#perf"><span class="nav-dd-de">Performance &amp; RTP</span><span class="nav-dd-en">Server optimization</span></a>
-          <a class="nav-dd-link" href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank"><span class="nav-dd-de">Download (CurseForge)</span><span class="nav-dd-en">Get the modpack &#8599;</span></a>
-          <a class="nav-dd-link" href="https://github.com/weeeedddd/tensura-modpack-optimization" target="_blank"><span class="nav-dd-de">GitHub &amp; Changelog</span><span class="nav-dd-en">Source &amp; commit history &#8599;</span></a>
-        </div>
-      </div>
-
-    </div>
-    <a class="nav-cta" href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">v3.5.0 &middot; Download</a>
-  </div>
-</nav>
-
-<div class="wrap">
-
-<!-- ════ HERO ════ -->
-<header class="hero">
-  <div class="hero-eyebrow">Minecraft Modpack</div>
-  <h1 class="hero-title">Tensura <span class="glow">Abyss</span></h1>
-  <div class="hero-ver">MC 1.21.1 &middot; NeoForge 21.1.222 &middot; 348 Mods &middot; v3.5.0</div>
-
-  <div class="hero-langs">
-    <div class="h-lang de">
-      <span class="lang-lbl lbl-de">DE &mdash; Deutsch</span>
-      <p><strong>&#220;berlebe. Baue dein Reich. Entwickle dich.</strong><br>
-      Werde ein echter D&auml;monenlord &mdash; basierend auf dem Anime
-      <em>Der Zeitreisende Schleim</em>. Hardcore RPG trifft Slime-Magie,
-      Kolonien, Industrie und 500+ Quests.</p>
-    </div>
-    <div class="h-lang en">
-      <span class="lang-lbl lbl-en">EN &mdash; English</span>
-      <p><strong>Survive. Build your empire. Evolve.</strong><br>
-      Become a true Demon Lord &mdash; based on the anime
-      <em>That Time I Got Reincarnated as a Slime</em>. Hardcore RPG meets
-      slime magic, colony building, industry, and 500+ quests.</p>
-    </div>
-  </div>
-
-  <div class="pills">
-    <span class="pill p-t">MC 1.21.1</span>
-    <span class="pill p-t">NeoForge</span>
-    <span class="pill p-t">348 Mods</span>
-    <span class="pill p-g">500+ Quests</span>
-    <span class="pill p-p">15 Chapters</span>
-    <span class="pill p-gold">In Development</span>
-  </div>
-</header>
-
-<!-- ════ 01 FEATURES ════ -->
-<section id="features">
-  <div class="sec-head">
-    <span class="sec-num">01</span>
-    <div>
-      <h2 class="sec-title">Key Features</h2>
-      <p class="sec-sub">Was Tensura Abyss einzigartig macht &mdash; What makes Tensura Abyss unique</p>
-    </div>
-  </div>
-
-  <div class="feat-grid">
-
-    <div class="feat-card">
-      <span class="feat-icon">&#9889;</span>
-      <h3>Tensura Skill-System</h3>
-      <p class="feat-de">Erlerne Unique &amp; Ultimate Skills, w&auml;hle deine Rasse (Slime, Dämonenlord, Beastman &hellip;) und entwickle dich mit jedem Kill weiter. Alle Tensura-Addons inklusive.</p>
-      <p class="feat-en">Learn Unique &amp; Ultimate Skills, choose your race (Slime, Demon Lord, Beastman &hellip;) and evolve with every kill. All Tensura add-ons included.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#127984;</span>
-      <h3>Reich &amp; Kolonien / Empire &amp; Colonies</h3>
-      <p class="feat-de">Gr&uuml;nde Kolonien mit MineColonies, rekrutiere KI-B&uuml;rger, verwalte Ressourcen und f&uuml;hre ein ganzes Territorium als D&auml;monenlord.</p>
-      <p class="feat-en">Found colonies with MineColonies, recruit AI citizens, manage resources and rule your territory as Demon Lord.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#9881;</span>
-      <h3>Industrie &amp; Automation / Industry</h3>
-      <p class="feat-de">Create-Maschinen und Steam &lsquo;n&rsquo; Rails Eisenbahn f&uuml;r vollautomatische Ressourcen-Verarbeitung. Zahnr&auml;der, F&ouml;rderanlagen, Turbinen.</p>
-      <p class="feat-en">Create machines and Steam &lsquo;n&rsquo; Rails trains for fully automated resource processing. Gears, conveyors, turbines.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#10024;</span>
-      <h3>Magie-Systeme / Magic Systems</h3>
-      <p class="feat-de">Ars Nouveau, Iron&rsquo;s Spells &lsquo;n&rsquo; Spellbooks, Malum und RUNIC Enchants bieten ein tiefes, anime-inspiriertes Magie-System mit Klassen und Skills.</p>
-      <p class="feat-en">Ars Nouveau, Iron&rsquo;s Spells, Malum and RUNIC Enchants deliver deep, anime-inspired magic with classes, spellcasting and skills.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#128122;</span>
-      <h3>Epische Bosse / Epic Boss Fights</h3>
-      <p class="feat-de">Ice-and-Fire-Drachen, Cataclysm-Bosse, Gateway-Portale und offizielle Tensura-Bosse (Rimuru, Carrion, Luminous) &mdash; m&auml;chtiger Loot wartet.</p>
-      <p class="feat-en">Ice-and-Fire dragons, Cataclysm bosses, Gateway portals and official Tensura bosses (Rimuru, Carrion, Luminous) &mdash; powerful loot awaits.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#128640;</span>
-      <h3>Optimiert / Optimized Performance</h3>
-      <p class="feat-de">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stabile FPS auch mit 348 Mods und Shadern. Keine OptiFine n&ouml;tig.</p>
-      <p class="feat-en">Embeddium, ModernFix, FerriteCore &amp; Entity Culling &mdash; stable FPS even with 348 mods and shaders. No OptiFine needed.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#128142;</span>
-      <h3>Super Diamond Rework-System</h3>
-      <p class="feat-de">Neue Endgame-Ressource: Netherstern + Diamanten craften einen Super Diamond &mdash; wertet Netherit-Waffen/-R&uuml;stungen auf und schaltet das Breath-System frei.</p>
-      <p class="feat-en">New endgame resource: Nether Star + Diamonds craft a Super Diamond &mdash; upgrades Netherite weapons/armor and unlocks the Breath system.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#127760;</span>
-      <h3>Server-freundliches RTP</h3>
-      <p class="feat-de">SimpleRTP begrenzt Random-Teleports auf 6.000 Blocks mit Sicherheits-Scan (kein Lava/Ozean) &mdash; verhindert Server-Crashes durch extreme Chunk-Generierung.</p>
-      <p class="feat-en">SimpleRTP caps random teleports at 6,000 blocks with a safety scan (no lava/ocean) &mdash; prevents server crashes from extreme chunk generation.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#127761;</span>
-      <h3>Eminence in Shadow System <span class="tag tag-p">NEU</span></h3>
-      <p class="feat-de">Neues Fraktions-System: Werde Teil des Shadow Garden, farme Dunklen &Auml;ther, entfessle den &bdquo;I Am Atomic&ldquo;-Skill, trage Slime Suits und verteidige dein Mitsugoshi-Imperium gegen den Kult von Diablos.</p>
-      <p class="feat-en">New faction system: join the Shadow Garden, farm Dark Aether, unleash the &ldquo;I Am Atomic&rdquo; skill, wear Slime Suits, and defend your Mitsugoshi empire against the Cult of Diablos.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#127756;</span>
-      <h3>Shadow Abyss Dimension <span class="tag tag-p">NEU</span></h3>
-      <p class="feat-de">Eine eigene Dimension mit 3 d&uuml;steren Biomen (Schleim-Sumpf, fl&uuml;sternde Leere, Ruinen-Heiligtum). Erbt Tectonics episches Gel&auml;nde &mdash; betreten &uuml;ber ein Aether-Portal.</p>
-      <p class="feat-en">A custom dimension with 3 dark biomes (slime marsh, whispering void, ruined sanctuary). Inherits Tectonic&rsquo;s epic terrain &mdash; entered via an Aether portal.</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- ════ 02 KERN-MODS ════ -->
-<section id="mods">
-  <div class="sec-head">
-    <span class="sec-num">02</span>
-    <div>
-      <h2 class="sec-title">Kern-Mods &mdash; Core Mods</h2>
-      <p class="sec-sub">Die wichtigsten Mods des Packs &mdash; The most important mods in the pack</p>
-    </div>
-  </div>
-
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Mod</th>
-          <th>DE &mdash; Funktion</th>
-          <th>EN &mdash; Function</th>
-          <th>Typ</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Tensura: Magic Growth</strong></td>
-          <td>Skill-System, Rassen-Evolution, D&auml;monenlord-Progression</td>
-          <td>Skill system, race evolution, Demon Lord progression</td>
-          <td><span class="tag tag-t">Core</span></td>
-        </tr>
-        <tr>
-          <td><strong>Tensura: Mysticism</strong></td>
-          <td>9+ Rassen, 29 Ultimate Skills, 18 Unique Skills</td>
-          <td>9+ races, 29 Ultimate Skills, 18 Unique Skills</td>
-          <td><span class="tag tag-t">Addon S</span></td>
-        </tr>
-        <tr>
-          <td><strong>SlimeThrone Extras</strong></td>
-          <td>Skill-Locking, Prestige-System, Boss-Kill-Mechanik</td>
-          <td>Skill locking, prestige system, boss-kill mechanic</td>
-          <td><span class="tag tag-t">Addon S</span></td>
-        </tr>
-        <tr>
-          <td><strong>Not Enough Bosses</strong></td>
-          <td>Tensura-Bosse: Rimuru, Carrion, Luminous (offiziell)</td>
-          <td>Tensura bosses: Rimuru, Carrion, Luminous (official)</td>
-          <td><span class="tag tag-t">Addon S</span></td>
-        </tr>
-        <tr>
-          <td><strong>EP Scaling</strong></td>
-          <td>Gegner skalieren dynamisch mit dem Spieler-Fortschritt</td>
-          <td>Enemies scale dynamically with player progression</td>
-          <td><span class="tag tag-gold">Balance</span></td>
-        </tr>
-        <tr>
-          <td><strong>MineColonies</strong></td>
-          <td>Koloniebau mit KI-B&uuml;rgern und kompletten Geb&auml;ude-Systemen</td>
-          <td>Colony building with AI citizens and full building systems</td>
-          <td><span class="tag tag-p">Siedlung</span></td>
-        </tr>
-        <tr>
-          <td><strong>Create + Steam 'n' Rails</strong></td>
-          <td>Vollautomatische Industrie, Zahnr&auml;der, Z&uuml;ge</td>
-          <td>Fully automated industry, gears, trains</td>
-          <td><span class="tag tag-p">Industrie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Ice and Fire CE</strong></td>
-          <td>Drachen, Greifen, Seeungeheuer aus der Wildnis</td>
-          <td>Dragons, griffins, sea serpents in the wild</td>
-          <td><span class="tag tag-r">Boss</span></td>
-        </tr>
-        <tr>
-          <td><strong>Ars Nouveau</strong></td>
-          <td>Skill-basierte Zauberei &mdash; spiegelt Rimurus Absorption wider</td>
-          <td>Skill-based spellcasting &mdash; mirrors Rimuru&rsquo;s absorption</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Iron's Spells 'n Spellbooks</strong></td>
-          <td>Klassen-Magie mit Leveln &mdash; passt zur Tensura-Evolution</td>
-          <td>Class magic with leveling &mdash; fits the Tensura evolution</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Malum</strong></td>
-          <td>Dunkle Ritual-Magie &mdash; perfekt f&uuml;r das Abyss-Theme</td>
-          <td>Dark ritual magic &mdash; perfect for the Abyss theme</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Serene Seasons</strong></td>
-          <td>Jahreszeiten: Auswirkungen auf Crops, Biome &amp; Welt</td>
-          <td>Seasons: effects on crops, biomes &amp; the world</td>
-          <td><span class="tag tag-p">Welt</span></td>
-        </tr>
-        <tr>
-          <td><strong>Embeddium + Oculus</strong></td>
-          <td>Performance-Rendering-Engine + Shader-Unterst&uuml;tzung</td>
-          <td>Performance rendering engine + shader support</td>
-          <td><span class="tag tag-g">Perf.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Ars Elemental</strong></td>
-          <td>Ars-Nouveau-Addon: Elementarmagie (Feuer, Eis, Blitz) mit neuen Glyphen</td>
-          <td>Ars Nouveau addon: elemental magic (fire, ice, lightning) with new glyphs</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Occultism</strong></td>
-          <td>Dunkle Ritual- &amp; Geister-Magie &mdash; passt zu Malum und dem Abyss-Theme</td>
-          <td>Dark ritual &amp; spirit magic &mdash; complements Malum and the Abyss theme</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>Tensura: No Game No Life</strong></td>
-          <td>Cross-Anime-Addon: Ex-Machina, Fl&uuml;gel, Dragonia + Ultimate Skills</td>
-          <td>Cross-anime addon: Ex-Machina, wings, Dragonia + Ultimate Skills</td>
-          <td><span class="tag tag-t">Addon A</span></td>
-        </tr>
-        <tr>
-          <td><strong>Paladins &amp; Priests</strong></td>
-          <td>Iron&rsquo;s-Spells-Addon: heilige Klassen, Segen &amp; neue Sprüche</td>
-          <td>Iron&rsquo;s Spells addon: holy classes, blessings &amp; new spells</td>
-          <td><span class="tag tag-g">Magie</span></td>
-        </tr>
-        <tr>
-          <td><strong>SimpleRTP</strong></td>
-          <td>Random-Teleport mit Safe-Landing-Scan, auf 6.000 Blocks begrenzt</td>
-          <td>Random teleport with safe-landing scan, capped at 6,000 blocks</td>
-          <td><span class="tag tag-gold">Server</span></td>
-        </tr>
-        <tr>
-          <td><strong>Shadow Garden (KubeJS)</strong></td>
-          <td>Eigenes Fraktions-System: Dunkler &Auml;ther, I-Am-Atomic-Skill, Slime Suits, Kult-Raids, Ränge</td>
-          <td>Custom faction system: Dark Aether, I-Am-Atomic skill, Slime Suits, cult raids, ranks</td>
-          <td><span class="tag tag-p">System</span></td>
-        </tr>
-        <tr>
-          <td><strong>Shadow Abyss (Dimension)</strong></td>
-          <td>Eigene Dimension: erbt Tectonic-Gel&auml;nde, 3 Abyss-Biome, Aether-Portal</td>
-          <td>Custom dimension: inherits Tectonic terrain, 3 abyss biomes, Aether portal</td>
-          <td><span class="tag tag-p">Worldgen</span></td>
-        </tr>
-        <tr>
-          <td><strong>Tectonic + Terralith</strong></td>
-          <td>Worldgen-Overhaul: riesige Schluchten, Klippen &amp; realistische Biome</td>
-          <td>Worldgen overhaul: huge canyons, cliffs &amp; realistic biomes</td>
-          <td><span class="tag tag-g">Worldgen</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ════ 03 INSTALLATION ════ -->
-<section id="install">
-  <div class="sec-head">
-    <span class="sec-num">03</span>
-    <div>
-      <h2 class="sec-title">Installation</h2>
-      <p class="sec-sub">Schritt-f&uuml;r-Schritt &mdash; Step by step</p>
-    </div>
-  </div>
-
-  <div class="steps">
-
-    <div class="step">
-      <div class="step-n">1</div>
-      <div class="step-body">
-        <div class="step-de">
-          <strong>CurseForge App installieren</strong>
-          <p>Lade die <strong>CurseForge App</strong> von <a href="https://curseforge.com" target="_blank">curseforge.com</a> herunter und installiere sie auf deinem PC.</p>
-        </div>
-        <div class="step-en">
-          <strong>Install CurseForge App</strong>
-          <p>Download the <strong>CurseForge App</strong> from <a href="https://curseforge.com" target="_blank">curseforge.com</a> and install it on your PC.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-n">2</div>
-      <div class="step-body">
-        <div class="step-de">
-          <strong>Tensura Abyss suchen &amp; installieren</strong>
-          <p>In der App: Minecraft &rarr; Suchfeld &rarr; <strong>&bdquo;Tensura Abyss&ldquo;</strong> &rarr; Pack ausw&auml;hlen &rarr; <em>Install</em> klicken. Alle 348 Mods werden automatisch heruntergeladen.</p>
-        </div>
-        <div class="step-en">
-          <strong>Search &amp; install Tensura Abyss</strong>
-          <p>In the app: Minecraft &rarr; search field &rarr; <strong>&ldquo;Tensura Abyss&rdquo;</strong> &rarr; select pack &rarr; click <em>Install</em>. All 348 mods download automatically.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-n">3</div>
-      <div class="step-body">
-        <div class="step-de">
-          <strong>RAM auf 6&ndash;8 GB setzen</strong>
-          <p>CurseForge App &rarr; Profil-Einstellungen &rarr; Java-Einstellungen &rarr; <strong>6144 MB</strong> (Minimum) bis <strong>8192 MB</strong>. Java 21 verwenden.</p>
-        </div>
-        <div class="step-en">
-          <strong>Set RAM to 6&ndash;8 GB</strong>
-          <p>CurseForge App &rarr; Profile Settings &rarr; Java Settings &rarr; <strong>6144 MB</strong> (minimum) up to <strong>8192 MB</strong>. Use Java 21.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-n">4</div>
-      <div class="step-body">
-        <div class="step-de">
-          <strong>Pack starten</strong>
-          <p>Pack &uuml;ber die CurseForge App starten. Der <strong>erste Start dauert 3&ndash;8 Minuten</strong> (Mods werden geladen). Danach l&auml;dt das Spiel schnell. Viel Spa&szlig;!</p>
-        </div>
-        <div class="step-en">
-          <strong>Launch the pack</strong>
-          <p>Launch via the CurseForge App. The <strong>first launch takes 3&ndash;8 minutes</strong> (mods loading). After that the game loads quickly. Enjoy!</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-n">5</div>
-      <div class="step-body">
-        <div class="step-de">
-          <strong>Maus-Fix (falls Sensitivity resettet)</strong>
-          <p>Falls die Sensitivit&auml;t nach Updates auf 0 springt: <code>options.txt</code> im Instanz-Ordner bearbeiten und die Datei danach <strong>schreibgesch&uuml;tzt</strong> setzen.</p>
-        </div>
-        <div class="step-en">
-          <strong>Mouse fix (if sensitivity resets)</strong>
-          <p>If sensitivity jumps to 0 after updates: edit <code>options.txt</code> in the instance folder, then set the file to <strong>read-only</strong>.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="code-block">
-<span class="cm"># options.txt — Instanz-Ordner / Instance folder: .../Tensura Abyss/options.txt</span>
-<span class="ck">mouseSensitivity</span>:<span class="cv">0.5</span>        <span class="cm"># 0.5 = 100% | dann Datei Rechtsklick → Schreibgeschützt / then right-click → Read-Only</span>
-<span class="ck">rawMouseInput</span>:<span class="cv">true</span>          <span class="cm"># Bypasses OS mouse acceleration — always enable this</span></div>
-
-  <div class="callout cl-r">
-    <span class="callout-i">&#10007;</span>
-    <div>
-      <strong>OptiFine NIEMALS installieren! &mdash; NEVER install OptiFine!</strong><br>
-      <span style="font-size:.77rem">DE: OptiFine ist inkompatibel mit Embeddium und verursacht Sensitivity-Bugs + Rendering-Konflikte mit Tensura. Einzige Alternative: <strong>Embeddium + Oculus</strong>.<br>
-      EN: OptiFine is incompatible with Embeddium and causes sensitivity bugs + rendering conflicts with Tensura. Only use: <strong>Embeddium + Oculus</strong>.</span>
-    </div>
-  </div>
-</section>
-
-<!-- ════ 04 PERFORMANCE ════ -->
-<section id="perf">
-  <div class="sec-head">
-    <span class="sec-num">04</span>
-    <div>
-      <h2 class="sec-title">Performance &amp; RAM</h2>
-      <p class="sec-sub">Einstellungen f&uuml;r stabiles Gameplay &mdash; Settings for stable gameplay</p>
-    </div>
-  </div>
-
-  <div class="bi-grid">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>Performance-Einstellungen</h3>
-      </div>
-      <p><strong>RAM:</strong> 6&ndash;8 GB optimal. Mehr als 8 GB verursacht l&auml;ngere GC-Pausen und <em>verschlechtert</em> die Performance.</p>
-      <p><strong>Java:</strong> Immer Java 21 verwenden (bester Garbage Collector f&uuml;r Minecraft 1.21.1).</p>
-      <p><strong>Shader:</strong> <em>Complementary Unbound</em> ist die beste Balance. Shadow-Resolution von 4096 &rarr; 2048 spart 30&ndash;50% FPS.</p>
-      <p><strong>Grafik-Modus:</strong> <em>Fancy</em> f&uuml;r Shader, <em>Fast</em> f&uuml;r reine Performance. Simulations-Distanz auf 6&ndash;8 Chunks reduzieren bei Lag.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>Performance Settings</h3>
-      </div>
-      <p><strong>RAM:</strong> 6&ndash;8 GB optimal. More than 8 GB causes longer GC pauses and <em>worsens</em> performance.</p>
-      <p><strong>Java:</strong> Always use Java 21 (best garbage collector for Minecraft 1.21.1).</p>
-      <p><strong>Shaders:</strong> <em>Complementary Unbound</em> is the best balance. Reduce Shadow Resolution from 4096 &rarr; 2048 for 30&ndash;50% FPS savings.</p>
-      <p><strong>Graphics mode:</strong> <em>Fancy</em> for shaders, <em>Fast</em> for pure performance. Reduce simulation distance to 6&ndash;8 chunks when lagging.</p>
-    </div>
-  </div>
-
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>Mod</th><th>DE &mdash; Funktion</th><th>EN &mdash; Function</th><th>Priorität</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>Embeddium</strong></td><td>Hochperformante Rendering-Engine (Sodium-Port)</td><td>High-performance rendering engine (Sodium port)</td><td><span class="tag tag-r">Pflicht</span></td></tr>
-        <tr><td><strong>Oculus / NeOculus</strong></td><td>Shader-Unterst&uuml;tzung f&uuml;r Complementary, BSL u.a.</td><td>Shader support for Complementary, BSL, etc.</td><td><span class="tag tag-g">Empfohlen</span></td></tr>
-        <tr><td><strong>FerriteCore</strong></td><td>RAM-Nutzung um bis zu 50% reduzieren</td><td>Reduce RAM usage by up to 50%</td><td><span class="tag tag-g">Empfohlen</span></td></tr>
-        <tr><td><strong>ModernFix</strong></td><td>Startup-Zeit &amp; Code-Optimierungen</td><td>Startup time &amp; code optimizations</td><td><span class="tag tag-g">Empfohlen</span></td></tr>
-        <tr><td><strong>Entity Culling</strong></td><td>Unsichtbare Entities nicht rendern &mdash; massiver FPS-Gewinn</td><td>Skip invisible entities &mdash; massive FPS gain</td><td><span class="tag tag-g">Empfohlen</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ════ 05 BEKANNTE PROBLEME ════ -->
-<section id="compat">
-  <div class="sec-head">
-    <span class="sec-num">05</span>
-    <div>
-      <h2 class="sec-title">Bekannte Konflikte &mdash; Known Conflicts</h2>
-      <p class="sec-sub">Und wie man sie l&ouml;st &mdash; And how to fix them</p>
-    </div>
-  </div>
-
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>Mod</th><th>DE &mdash; Problem</th><th>EN &mdash; Issue</th><th>Fix</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>OptiFine</strong></td>
-          <td>Sensitivity-Bugs, Kamera-Spins, Rendering-Konflikte</td>
-          <td>Sensitivity bugs, camera spins, rendering conflicts</td>
-          <td><span class="tag tag-r">Entfernen / Remove</span></td>
-        </tr>
-        <tr>
-          <td><strong>Apotheosis</strong></td>
-          <td>Mixin-Konflikt mit CombatRules-Klasse</td>
-          <td>Mixin conflict with CombatRules class</td>
-          <td><span class="tag tag-gold">Load-Order</span></td>
-        </tr>
-        <tr>
-          <td><strong>Epic Fight Mod</strong></td>
-          <td>Armor-Rendering-Konflikt mit Tensura</td>
-          <td>Armor rendering conflict with Tensura</td>
-          <td><span class="tag tag-t">Datapack</span></td>
-        </tr>
-        <tr>
-          <td><strong>Eldritch End</strong></td>
-          <td>Duplicate Registry-Key (Chest Boat)</td>
-          <td>Duplicate registry key (Chest Boat)</td>
-          <td><span class="tag tag-gold">Warten / Wait</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout cl-t" style="margin-top:1.2rem">
-    <span class="callout-i">&#9432;</span>
-    <div>
-      <strong>DE: Test-Checkliste nach jedem Start:</strong> crash-reports/ pr&uuml;fen &rarr; logs/latest.log auf ERROR/WARN &rarr; F3-Screen: TPS &ge; 18.0 &rarr; RAM-Nutzung &le; 80%.<br>
-      <strong>EN: Test checklist after every launch:</strong> check crash-reports/ &rarr; filter logs/latest.log for ERROR/WARN &rarr; F3 screen: TPS &ge; 18.0 &rarr; RAM usage &le; 80%.
-    </div>
-  </div>
-</section>
-
-<!-- ════ 06 PROGRESSION & SERVER ════ -->
-<section id="progression">
-  <div class="sec-head">
-    <span class="sec-num">06</span>
-    <div>
-      <h2 class="sec-title">Super Diamond &amp; Server-Tools</h2>
-      <p class="sec-sub">Neues Endgame-System &amp; Server-Sicherheit &mdash; New endgame system &amp; server safety</p>
-    </div>
-  </div>
-
-  <div class="bi-grid">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>Super Diamond Rework-System</h3>
-      </div>
-      <p><strong>Craften:</strong> 8&times; Diamant + 1&times; Netherstern (Wither-Kill) &rarr; 8&times; Super Diamond. Ein Netherstern-Gate stellt sicher, dass die Ressource erst im Endgame verf&uuml;gbar ist.</p>
-      <p><strong>Waffen-Rework:</strong> Netherit-Schwert/Axt + 2&times; Super Diamond + Netherstern &rarr; garantiert Sharpness V, Mending, Unbreaking III &mdash; Kombinationen, die sonst durchs Verzauberungs-Limit nicht erreichbar sind.</p>
-      <p><strong>R&uuml;stungs-Rework:</strong> Jedes Netherit-Teil + 2&times; Super Diamond &rarr; Protection IV + Unbreaking III + Mending.</p>
-      <p><strong>Breath-System-Unlock:</strong> 4&times; Super Diamond + Totem der Unsterblichkeit &rarr; Breath Attunement Crystal. Rechtsklick verbraucht den Kristall und schaltet fortgeschrittene F&auml;higkeiten frei.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>Super Diamond Rework System</h3>
-      </div>
-      <p><strong>Crafting:</strong> 8&times; Diamond + 1&times; Nether Star (Wither kill) &rarr; 8&times; Super Diamond. A Nether Star gate ensures the resource is only available in the endgame.</p>
-      <p><strong>Weapon rework:</strong> Netherite Sword/Axe + 2&times; Super Diamond + Nether Star &rarr; guarantees Sharpness V, Mending, Unbreaking III &mdash; combinations otherwise unreachable due to enchanting limits.</p>
-      <p><strong>Armor rework:</strong> Any Netherite piece + 2&times; Super Diamond &rarr; Protection IV + Unbreaking III + Mending.</p>
-      <p><strong>Breath system unlock:</strong> 4&times; Super Diamond + Totem of Undying &rarr; Breath Attunement Crystal. Right-click consumes the crystal and unlocks advanced abilities.</p>
-    </div>
-  </div>
-
-  <div class="callout cl-gold">
-    <span class="callout-i">&#9888;</span>
-    <div>
-      <strong>DE:</strong> Das Skill-Unlock (Breath-System) ben&ouml;tigt eine Anpassung an die exakte Tensura-Command-Syntax &mdash; siehe Kommentare in <code>overrides/kubejs/server_scripts/balancing.js</code>.<br>
-      <strong>EN:</strong> The skill unlock (Breath system) needs adjustment to the exact Tensura command syntax &mdash; see comments in <code>overrides/kubejs/server_scripts/balancing.js</code>.
-    </div>
-  </div>
-
-  <div class="bi-grid" style="margin-top:1.5rem">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>RTP-Server-Sicherheit</h3>
-      </div>
-      <p><strong>Mod:</strong> SimpleRTP (natives NeoForge-1.21.1-Build, aktiv gepflegt).</p>
-      <p><strong>Reichweite:</strong> Auf <strong>6.000 Blocks</strong> begrenzt (statt Standard 10.000+) &mdash; verhindert Chunk-Generation-Spitzen und Server-Crashes.</p>
-      <p><strong>Sicherheit:</strong> Eingebauter Scan verhindert Landung in Lava, Ozean, Void oder ohne Kopffreiheit.</p>
-      <p><strong>Cooldown:</strong> 300 Sekunden zwischen zwei Teleports &mdash; verhindert RTP-Spam-Farming.</p>
-      <p>Config-Pfad: <code>config/simplertp-common.toml</code> &mdash; volle Anleitung in <code>docs/simplertp_setup.txt</code>.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>RTP Server Safety</h3>
-      </div>
-      <p><strong>Mod:</strong> SimpleRTP (native NeoForge 1.21.1 build, actively maintained).</p>
-      <p><strong>Range:</strong> Capped at <strong>6,000 blocks</strong> (instead of the default 10,000+) &mdash; prevents chunk-generation spikes and server crashes.</p>
-      <p><strong>Safety:</strong> Built-in scan prevents landing in lava, ocean, void, or without headroom.</p>
-      <p><strong>Cooldown:</strong> 300 seconds between teleports &mdash; prevents RTP-spam farming.</p>
-      <p>Config path: <code>config/simplertp-common.toml</code> &mdash; full guide in <code>docs/simplertp_setup.txt</code>.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ════ 07 EMINENCE IN SHADOW ════ -->
-<section id="shadow">
-  <div class="sec-head">
-    <span class="sec-num">07</span>
-    <div>
-      <h2 class="sec-title">The Eminence in Shadow &mdash; Fraktions-System</h2>
-      <p class="sec-sub">Neues Endgame- &amp; Fraktions-Update &mdash; New endgame &amp; faction update</p>
-    </div>
-  </div>
-
-  <div class="feat-grid">
-    <div class="feat-card">
-      <span class="feat-icon">&#127761;</span>
-      <h3>Dunkler &Auml;ther &amp; Dunkler Schleim</h3>
-      <p class="feat-de">Zwei neue Endgame-Ressourcen ersetzen Diamanten-Upgrades. Dunkler &Auml;ther (Netherstern-gated) reworkt Netherit-Waffen/-R&uuml;stung und schaltet das Tensura-Breath-System frei.</p>
-      <p class="feat-en">Two new endgame resources replace diamond upgrades. Dark Aether (Nether-Star gated) reworks Netherite gear and unlocks the Tensura Breath system.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#9889;</span>
-      <h3>&bdquo;I Am Atomic&ldquo; Ultimate</h3>
-      <p class="feat-de">Verbraucht Mana + 1x Dunklen &Auml;ther: riesige neon-blaue Partikelexplosion + massiver AoE-Schaden an allen Mobs. Zerst&ouml;rt <strong>keine Bl&ouml;cke</strong> &mdash; kein Server-Lag.</p>
-      <p class="feat-en">Consumes mana + 1 Dark Aether: huge neon-blue particle blast + massive AoE damage to all mobs. Destroys <strong>no blocks</strong> &mdash; zero server lag.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#129714;</span>
-      <h3>Slime Suits &amp; Kult-Raids</h3>
-      <p class="feat-de">Tarne deine Kolonie als Mitsugoshi-Imperium. Der Kult von Diablos startet Raids; Kult-Drops craften Slime Suits (Stealth-R&uuml;stung: Speed + Defense + Unsichtbarkeit).</p>
-      <p class="feat-en">Disguise your colony as the Mitsugoshi empire. The Cult of Diablos raids you; cult drops craft Slime Suits (stealth armor: speed + defense + invisibility).</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#128171;</span>
-      <h3>Tensura-Evolutionskopplung <span class="tag tag-p">NEU</span></h3>
-      <p class="feat-de">Die Raenge Possessed &rarr; Delta &rarr; Gamma &rarr; Beta &rarr; Alpha sind an Tensura gekoppelt: Magicule-Schwellen + Dunkler &Auml;ther/Schleim als Katalysator schalten die n&auml;chste Evolution frei.</p>
-      <p class="feat-en">Ranks Possessed &rarr; Delta &rarr; Gamma &rarr; Beta &rarr; Alpha are Tensura-coupled: magicule thresholds + Dark Aether/Slime catalysts unlock the next evolution.</p>
-    </div>
-  </div>
-
-  <div class="bi-grid">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>So funktioniert&rsquo;s</h3>
-      </div>
-      <p><strong>Ressourcen:</strong> Schleimb&auml;lle + Wither-Rose &rarr; Dunkler Schleim. 6&times; Dunkler Schleim + 2&times; Echo-Scherbe + Netherstern &rarr; Dunkler &Auml;ther.</p>
-      <p><strong>I Am Atomic:</strong> Katalysator craften (Dunkler &Auml;ther + Obsidian + Netherstern), Rechtsklick &rarr; 80 Schaden im Radius 14, 2 Min. Cooldown.</p>
-      <p><strong>Mitsugoshi:</strong> Trade Ledger craften &rarr; Rechtsklick aktiviert Tarnung + Kult-Raids (4&ndash;7 Kultisten + Ritter).</p>
-      <p><strong>R&auml;nge:</strong> Shadow-Pledges einl&ouml;sen &rarr; automatische Chat-Pr&auml;fixe <code>[Shadow]</code> &rarr; <code>[Numbers]</code> &rarr; <code>[Seven Shadows]</code> &rarr; <code>[Shadow Lord]</code>.</p>
-      <p><strong>Tensura-Evos:</strong> Sneak + Rechtsklick mit Dunklem &Auml;ther &rarr; Evolution Possessed &rarr; Delta &rarr; Gamma &rarr; Beta &rarr; Alpha, gegated durch Magicule-Schwelle + Katalysatoren. Dunkler Schleim maxt die Tensura-Schleim-Skills.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>How it works</h3>
-      </div>
-      <p><strong>Resources:</strong> Slimeballs + Wither Rose &rarr; Dark Slime. 6&times; Dark Slime + 2&times; Echo Shard + Nether Star &rarr; Dark Aether.</p>
-      <p><strong>I Am Atomic:</strong> craft the catalyst (Dark Aether + Obsidian + Nether Star), right-click &rarr; 80 damage in radius 14, 2 min cooldown.</p>
-      <p><strong>Mitsugoshi:</strong> craft the Trade Ledger &rarr; right-click enables disguise + cult raids (4&ndash;7 cultists + knight).</p>
-      <p><strong>Ranks:</strong> redeem Shadow Pledges &rarr; automatic chat prefixes <code>[Shadow]</code> &rarr; <code>[Numbers]</code> &rarr; <code>[Seven Shadows]</code> &rarr; <code>[Shadow Lord]</code>.</p>
-      <p><strong>Tensura evos:</strong> sneak + right-click Dark Aether &rarr; evolve Possessed &rarr; Delta &rarr; Gamma &rarr; Beta &rarr; Alpha, gated by magicule threshold + catalysts. Dark Slime maxes the Tensura slime skills.</p>
-    </div>
-  </div>
-
-  <div class="callout cl-gold">
-    <span class="callout-i">&#9888;</span>
-    <div>
-      <strong>DE:</strong> Das System liegt in <code>overrides/kubejs/</code> (startup + server scripts). Setup-Anleitung: <code>docs/shadow_garden_setup.txt</code>. Das Tensura-Breath-Unlock-Command muss im Spiel verifiziert werden (Kommentar in <code>shadow_garden.js</code>).<br>
-      <strong>EN:</strong> The system lives in <code>overrides/kubejs/</code> (startup + server scripts). Setup guide: <code>docs/shadow_garden_setup.txt</code>. The Tensura Breath unlock command must be verified in-game (comment in <code>shadow_garden.js</code>).
-    </div>
-  </div>
-</section>
-
-<!-- ════ 08 SHADOW ABYSS DIMENSION ════ -->
-<section id="abyss">
-  <div class="sec-head">
-    <span class="sec-num">08</span>
-    <div>
-      <h2 class="sec-title">The Shadow Abyss &mdash; Eigene Dimension</h2>
-      <p class="sec-sub">Crash-sichere Worldgen-Integration &mdash; Crash-safe worldgen integration</p>
-    </div>
-  </div>
-
-  <div class="feat-grid">
-    <div class="feat-card">
-      <span class="feat-icon">&#127807;</span>
-      <h3>Slime Rot Marshes</h3>
-      <p class="feat-de">D&uuml;sterer Schleim-Sumpf mit dunklem Wasser, giftgr&uuml;nem Nebel und Schleim-Spawns.</p>
-      <p class="feat-en">Dark slime marsh with murky water, toxic-green fog and slime spawns.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#127788;</span>
-      <h3>Whispering Void</h3>
-      <p class="feat-de">Aschfahler, unheimlicher Nadelwald &mdash; graue T&ouml;ne, Phantome und Skelette.</p>
-      <p class="feat-en">Ashen, eerie coniferous forest &mdash; grey tones, phantoms and skeletons.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#127963;</span>
-      <h3>Ruined Sanctuary</h3>
-      <p class="feat-de">Seltenes Biom mit antiken Ruinen &mdash; Heimat von Vindikatoren und Zauberern.</p>
-      <p class="feat-en">Rare biome with ancient ruins &mdash; home to vindicators and evokers.</p>
-    </div>
-  </div>
-
-  <div class="bi-grid">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>Worldgen &amp; Portal</h3>
-      </div>
-      <p><strong>Vererbung:</strong> Die Dimension nutzt den Generator <code>minecraft:noise</code> mit dem Preset <code>tectonic:overworld</code> &mdash; sie erbt Tectonics riesige Schluchten &amp; Klippen 1:1.</p>
-      <p><strong>Biome:</strong> Der <code>multi_noise</code>-biome_source generiert dort ausschlie&szlig;lich die 3 Abyss-Biome &mdash; l&uuml;ckenlose Abdeckung, kein Worldgen-Crash.</p>
-      <p><strong>Atmosph&auml;re:</strong> Kein Himmelslicht, End-Sternenhimmel, fixierte Nacht &mdash; echtes Abyss-Feeling.</p>
-      <p><strong>Portal:</strong> Rahmen craften (Obsidian + Crying Obsidian + Dunkler &Auml;ther), platzieren und mit <strong>Dunklem &Auml;ther</strong> rechtsklicken &rarr; Reise in den Abyss.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>Worldgen &amp; Portal</h3>
-      </div>
-      <p><strong>Inheritance:</strong> The dimension uses the <code>minecraft:noise</code> generator with the <code>tectonic:overworld</code> preset &mdash; it inherits Tectonic&rsquo;s huge canyons &amp; cliffs 1:1.</p>
-      <p><strong>Biomes:</strong> The <code>multi_noise</code> biome source generates only the 3 abyss biomes there &mdash; gapless coverage, no worldgen crash.</p>
-      <p><strong>Atmosphere:</strong> No skylight, End starfield sky, fixed night &mdash; true abyss feeling.</p>
-      <p><strong>Portal:</strong> craft a frame (Obsidian + Crying Obsidian + Dark Aether), place it and right-click with <strong>Dark Aether</strong> &rarr; travel to the abyss.</p>
-    </div>
-  </div>
-
-  <div class="callout cl-gold">
-    <span class="callout-i">&#9888;</span>
-    <div>
-      <strong>DE:</strong> Dateien liegen in <code>overrides/kubejs/data/tensura_abyss/</code> (Auto-Datapack). Setup + Tectonic-Fallback: <code>docs/shadow_abyss_setup.txt</code>. TerraBlender ist f&uuml;r die eigene Dimension nicht n&ouml;tig (nur f&uuml;r Overworld-Injektion &mdash; optionales Java-Template beiliegend).<br>
-      <strong>EN:</strong> Files live in <code>overrides/kubejs/data/tensura_abyss/</code> (auto datapack). Setup + Tectonic fallback: <code>docs/shadow_abyss_setup.txt</code>. TerraBlender isn&rsquo;t needed for the custom dimension (only for overworld injection &mdash; optional Java template included).
-    </div>
-  </div>
-</section>
-
-<!-- ════ 09 GUILD & COMMISSION SYSTEM ════ -->
-<section id="guild">
-  <div class="sec-head">
-    <span class="sec-num">09</span>
-    <div>
-      <h2 class="sec-title">Shadow Garden Guild &amp; Commission System</h2>
-      <p class="sec-sub">Exklusiv &mdash; nur f&uuml;r Possessed oder h&ouml;her &middot; Exclusive &mdash; Possessed rank or higher only</p>
-    </div>
-  </div>
-
-  <div class="callout cl-gold">
-    <span class="callout-i">&#128274;</span>
-    <div>
-      <strong>DE:</strong> Dieses System ist f&uuml;r Spieler ohne Tensura-Rasse komplett <strong>unsichtbar &amp; gesperrt</strong> (Commands ohne Tab-Complete, kein Zugriff).<br>
-      <strong>EN:</strong> For players without a Tensura race this system is fully <strong>invisible &amp; locked</strong> (no command tab-completion, no access).
-    </div>
-  </div>
-
-  <div class="feat-grid">
-    <div class="feat-card">
-      <span class="feat-icon">&#127983;</span>
-      <h3>Gilde &amp; Mitgliedsnummer</h3>
-      <p class="feat-de">Gilden mit R&auml;ngen (Anf&uuml;hrer/Vize/Mitglied), Mitglieder-Limit und Login-Zeitstempeln. Beim Beitritt: fortlaufende Nummer (&bdquo;Member #135&ldquo;) + signierte Gilden-Urkunde.</p>
-      <p class="feat-en">Guilds with ranks (Leader/Vice/Member), member limits and login timestamps. On join: a sequential number (&ldquo;Member #135&rdquo;) + a signed guild record.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#127894;</span>
-      <h3>Abenteurer-R&auml;nge F&ndash;S</h3>
-      <p class="feat-de">Sammle Guild-EXP und steige von Rang <strong>F</strong> bis <strong>S</strong> auf. Aufstiege werden automatisch gemeldet.</p>
-      <p class="feat-en">Earn guild EXP and climb from rank <strong>F</strong> to <strong>S</strong>. Promotions are announced automatically.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#128203;</span>
-      <h3>Auftr&auml;ge / Commissions</h3>
-      <p class="feat-de">Gathering, Crafting, Subjugation, <em>Coordinate Subjugation</em> (Boss an Zufallskoordinaten), Party-Auftr&auml;ge (geteilte EXP) und Zwergen-Auftr&auml;ge (Werkstatt-Ausbau, Lieferungen).</p>
-      <p class="feat-en">Gathering, Crafting, Subjugation, <em>Coordinate Subjugation</em> (boss at random coords), Party commissions (shared EXP) and Dwarf commissions (workshop upgrades, deliveries).</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#128737;</span>
-      <h3>Party &amp; Party-Chat</h3>
-      <p class="feat-de">Bilde Trupps mit <code>/shadow party create</code> und nutze den eigenen, farbig hervorgehobenen Party-Chat <code>/p [Nachricht]</code>.</p>
-      <p class="feat-en">Form squads with <code>/shadow party create</code> and use the dedicated, colour-highlighted party chat <code>/p [message]</code>.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#128506;</span>
-      <h3>Minimap-Radar</h3>
-      <p class="feat-de">Gildenmitglieder erscheinen als Blips f&uuml;reinander. <code>/shadow radar</code> listet Online-Positionen; Xaero/JourneyMap-Icons &uuml;ber die dokumentierte API-Schnittstelle.</p>
-      <p class="feat-en">Guild members show as blips to each other. <code>/shadow radar</code> lists online positions; Xaero/JourneyMap icons via the documented API endpoint.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-icon">&#9881;</span>
-      <h3>Java Companion Mod</h3>
-      <p class="feat-de">Eine eigene NeoForge-1.21.1-Mod registriert Items &amp; Slime-Suit-Rendering und koppelt via Attachment-/Reflection-Bridge an Tensura (Magicules, EP, Rasse) und das Ascensions-Framework.</p>
-      <p class="feat-en">A dedicated NeoForge 1.21.1 mod registers items &amp; slime-suit rendering and couples to Tensura (magicules, EP, race) and the Ascensions framework via an attachment/reflection bridge.</p>
-    </div>
-
-    <div class="feat-card">
-      <span class="feat-icon">&#128220;</span>
-      <h3>Eigenes Gilden-GUI</h3>
-      <p class="feat-de">Kein modernes UI &mdash; d&uuml;sterer Schieferstein mit Rissen, pulsierender violetter Schleim-Rand (Atem-Glow). Einladungs-Screen als altes Pergament mit Schleim-Siegel, Namensfeld mit TAB-Autocomplete &amp; Geheimbotschaft.</p>
-      <p class="feat-en">No modern UI &mdash; dark slate with cracks, a pulsing violet slime border (breathing glow). Invite screen as aged parchment with a slime seal, name field with TAB autocomplete &amp; secret note.</p>
-    </div>
-  </div>
-
-  <div class="bi-grid">
-    <div class="bi-col de">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-de">DE</span>
-        <h3>Zusammenspiel</h3>
-      </div>
-      <p>Die <strong>Java-Companion-Mod</strong> liefert das Fundament (Items, echtes Slime-Suit-Rendering, Gilden-Backend, Tensura-Bridge). <strong>Tensura Ascensions</strong> wickelt die Rassen-Evolutionen ab (Possessed &rarr; Shadow Garden Member &rarr; <strong>Seven Shadows</strong> Alpha/Beta/Gamma/Delta &rarr; Shadow).</p>
-      <p><strong>KubeJS</strong> steuert Events, Quests, Balancing und ruft die Bridge: Dunkler Schleim gibt +10.000 Magicules, Dunkler &Auml;ther triggert die Evolution. Der <strong>&bdquo;I Am Atomic&ldquo;</strong>-Skill (Rang Shadow + 5 Mio. Max EP) entfesselt ein neon-blaues Dornenfeld (30 Blocks, keine Blocksch&auml;den) &mdash; und die <strong>Shadow Abyss</strong> Dimension ist das Endgame-Reisen.</p>
-    </div>
-    <div class="bi-col en">
-      <div class="bi-col-head">
-        <span class="lang-lbl lbl-en">EN</span>
-        <h3>How it fits together</h3>
-      </div>
-      <p>The <strong>Java companion mod</strong> provides the foundation (items, real slime-suit rendering, guild backend, Tensura bridge). <strong>Tensura Ascensions</strong> handles the race evolutions (Possessed &rarr; Shadow Garden Member &rarr; <strong>Seven Shadows</strong> Alpha/Beta/Gamma/Delta &rarr; Shadow).</p>
-      <p><strong>KubeJS</strong> drives events, quests, balancing and calls the bridge: Dark Slime grants +10,000 magicules, Dark Aether triggers evolution. The <strong>&ldquo;I Am Atomic&rdquo;</strong> skill (Shadow rank + 5M max EP) unleashes a neon-blue thorn field (30 blocks, no block damage) &mdash; and the <strong>Shadow Abyss</strong> dimension is the endgame travel.</p>
-    </div>
-  </div>
-
-  <div class="callout cl-gold">
-    <span class="callout-i">&#9888;</span>
-    <div>
-      <strong>DE:</strong> Companion-Mod in <code>dev/companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura-Zugriffe laufen ueber eine <strong>crash-sichere Reflection-Bridge</strong>: findet sie die Tensura-Klassen nicht, degradiert sie <strong>lautlos &amp; lag-frei</strong> auf das <code>sg_magicule</code>-Scoreboard (kein Pack-Crash bei Tensura-Updates, kein Error-Log-Spam). Der &bdquo;I Am Atomic&ldquo;-Skill ist als echtes Java-Item umgesetzt. Minimap-Icons brauchen die Xaero/JourneyMap-API. Details: <code>dev/companion-mod/README.md</code>.<br>
-      <strong>EN:</strong> Companion mod in <code>dev/companion-mod/</code> (Gradle, NeoForge 1.21.1). Tensura access goes through a <strong>crash-safe reflection bridge</strong>: if it can&rsquo;t find the Tensura classes it degrades <strong>silently &amp; lag-free</strong> to the <code>sg_magicule</code> scoreboard (no pack crash on Tensura updates, no error-log spam). The &ldquo;I Am Atomic&rdquo; skill is a real Java item. Minimap icons need the Xaero/JourneyMap API. Details: <code>dev/companion-mod/README.md</code>.
-    </div>
-  </div>
-</section>
-
-<!-- ════ FOOTER ════ -->
-<footer>
-  <div class="footer-brand">&#9889; Tensura Abyss</div>
-  <p>Minecraft 1.21.1 &middot; NeoForge 21.1.222 &middot; 348 Mods &middot; v3.5.0 &middot; 2026</p>
-  <p style="margin:1rem 0 .5rem">
-    <a href="https://legacy.curseforge.com/minecraft/modpacks/tensura-abyss" target="_blank">CurseForge</a> &ensp;&middot;&ensp;
-    <a href="https://github.com/weeeedddd/tensura-modpack-optimization" target="_blank">GitHub</a> &ensp;&middot;&ensp;
-    <a href="https://tensura.wiki.gg/" target="_blank">Tensura Wiki</a> &ensp;&middot;&ensp;
-    <a href="https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated" target="_blank">Tensura Mod</a>
-  </p>
-  <p>Made with Minecraft &amp; Slime Magic &#129440;</p>
-</footer>
-
-</div><!-- .wrap -->
-
+    </section>
+    <section class="chapter sites" aria-labelledby="sites-title">
+      <div class="section-head"><div><div class="chapter-no">Chapter 04 · Human Traces</div><h2 id="sites-title">Ritual or refuge.</h2></div><p data-reveal>The same stone can become a gateway for the Cult or a lifeline for the Garden. Read the light before you enter.</p></div>
+      <div class="site-grid"><article class="site" data-reveal><small>Hostile Site</small><h3>Ritual Grounds</h3><p>Unstable circles amplify nearby threats. Break the focus stones before the rite completes.</p></article><article class="site" data-reveal><small>Safe Site</small><h3>Shadow Safehouses</h3><p>Silver-marked chambers suppress corruption, offer contracts, and reconnect separated parties.</p></article></div>
+    </section>
+    <section class="gear" id="gear" aria-labelledby="gear-title"><div class="gear-inner"><div class="gear-object" data-parallax=".11" aria-hidden="true"><span class="blade"></span></div><div class="gear-copy" data-reveal><div class="chapter-no">Chapter 05 · Capacity Resonance</div><h2 id="gear-title">Abyssal Netherite.</h2><p>Super Diamond is gone. Refine Dark Matter from Slime, Aether, and Spire Crystal; bind it to Netherite; let the result resonate with your maximum Magicule capacity.</p><div class="caps"><div class="cap"><strong>+8</strong><span>Max sword scaling</span></div><div class="cap"><strong>+6 / +4</strong><span>Armor / toughness caps</span></div></div></div></div></section>
+    <section class="atomic" id="atomic" aria-labelledby="atomic-title"><div class="atomic-inner" data-reveal><div class="chapter-no">Final Chapter · Native Ultimate</div><h2 id="atomic-title">Atomic.</h2><p>No catalyst. No inventory exploit. The Eminence presses Tensura's native Race Ability key, pays 35% of maximum Magicules, charges for two seconds, and strikes hostile entities across a 30-block field without touching terrain.</p><span class="key" aria-label="Default key R">R</span></div></section>
+  </main>
+  <footer><div class="footer-inner"><div><strong>Tensura Abyss</strong><br>The Abyss Update</div><div>NeoForge 1.21.1 · Tensura / ManasCore integration<br>Designed for readable power, not runaway numbers.</div></div></footer>
+  <script>
+    (()=>{
+      const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const touch=matchMedia('(pointer: coarse)').matches;
+      const layers=[...document.querySelectorAll('[data-depth]')];
+      const cards=[...document.querySelectorAll('.evo-card')];
+      const progress=document.querySelector('.evo-progress-fill');
+      const hero=document.querySelector('.hero');
+      const evo=document.querySelector('.evolution');
+      let target=scrollY,current=scrollY,running=false,heroRange=1,evoTop=0,evoRange=1;
+      const measure=()=>{heroRange=Math.max(1,hero.offsetHeight-innerHeight);evoTop=evo.offsetTop;evoRange=Math.max(1,evo.offsetHeight-innerHeight)};
+      const draw=()=>{
+        current+=(target-current)*.14;
+        if(!touch){const hp=Math.max(0,Math.min(1,current/heroRange));layers.forEach((el,i)=>{const d=Number(el.dataset.depth);el.style.transform=`translate3d(0,${(hp*d*150).toFixed(2)}px,${(-i*8).toFixed(2)}px) scale(${(1+hp*d*.08).toFixed(4)})`})}
+        const ep=Math.max(0,Math.min(.999,(current-evoTop)/evoRange));
+        if(!touch){const active=Math.min(cards.length-1,Math.floor(ep*cards.length));cards.forEach((card,i)=>{card.classList.toggle('is-active',i===active);card.classList.toggle('is-past',i<active);card.classList.toggle('is-next',i>active);card.classList.toggle('is-near-past',i===active-1);card.classList.toggle('is-near-next',i===active+1)});progress.style.transform=`scaleX(${ep.toFixed(4)})`}
+        if(Math.abs(target-current)>.1){requestAnimationFrame(draw)}else{running=false}
+      };
+      if(!reduce){addEventListener('scroll',()=>{target=scrollY;if(!running){running=true;requestAnimationFrame(draw)}},{passive:true});addEventListener('resize',measure,{passive:true});measure();draw()}
+      const reveals=document.querySelectorAll('[data-reveal]');
+      if(reduce){reveals.forEach(el=>el.classList.add('is-in'))}else{const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-in');io.unobserve(entry.target)}}),{threshold:.18,rootMargin:'0px 0px -8%'});reveals.forEach(el=>io.observe(el))}
+      if(!reduce&&touch){const movers=[...document.querySelectorAll('[data-parallax]')].map(el=>({el,center:el.offsetTop+el.offsetHeight/2,cur:0}));let mobileRun=false;const mobileFrame=()=>{let settling=false;movers.forEach(m=>{const goal=(scrollY+innerHeight/2-m.center)*.11;m.cur+=(goal-m.cur)*.12;m.el.style.transform=`translate3d(0,${m.cur.toFixed(2)}px,0)`;if(Math.abs(goal-m.cur)>.1)settling=true});if(settling)requestAnimationFrame(mobileFrame);else mobileRun=false};addEventListener('scroll',()=>{if(!mobileRun){mobileRun=true;requestAnimationFrame(mobileFrame)}},{passive:true})}
+    })();
+  </script>
 </body>
 </html>

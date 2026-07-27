@@ -4,6 +4,7 @@ import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.race.api.RaceAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -37,15 +38,15 @@ import java.util.Optional;
 public final class ShadowSightHandler {
     private ShadowSightHandler() {}
 
-    /** team name -> [colored rank badge]. */
-    private static final Map<String, String> RANK_BADGES = Map.of(
-            "sg_lord",    "§8[§5Shadow Lord§8]",
-            "sg_seven",   "§8[§dSeven Shadows§8]",
-            "sg_numbers", "§8[§bNumbers§8]",
-            "sg_shadow",  "§8[§7Shadow§8]"
+    private static final Map<String, ChatFormatting> RANK_COLORS = Map.of(
+            "sg_lord", ChatFormatting.DARK_PURPLE,
+            "sg_seven", ChatFormatting.LIGHT_PURPLE,
+            "sg_numbers", ChatFormatting.AQUA,
+            "sg_shadow", ChatFormatting.GRAY
     );
-
-    private static final String FORGED_BADGE = "§8[§5Shadow Lord§8]";
+    private static final Map<String, String> RANK_LABELS = Map.of(
+            "sg_lord", "Shadow Lord", "sg_seven", "Seven Shadows",
+            "sg_numbers", "Numbers", "sg_shadow", "Shadow");
 
     @SubscribeEvent
     public static void onRenderNameTag(RenderNameTagEvent event) {
@@ -65,16 +66,22 @@ public final class ShadowSightHandler {
         // Only shadow seers may perceive faction ranks at all.
         if (!hasShadowRace(viewer)) return;
 
-        String badge;
+        String teamName = target.getTeam() == null ? null : target.getTeam().getName();
+        String label;
+        ChatFormatting color;
         if (bearingInsignia) {
-            badge = FORGED_BADGE; // the impostor's forged aura
+            label = "Shadow Lord";
+            color = ChatFormatting.DARK_PURPLE;
         } else {
-            var team = target.getTeam();
-            badge = team == null ? null : RANK_BADGES.get(team.getName());
+            label = RANK_LABELS.get(teamName);
+            color = RANK_COLORS.get(teamName);
         }
-        if (badge == null) return;
+        if (label == null || color == null) return;
 
-        event.setContent(Component.literal(badge + " ").append(event.getContent()));
+        event.setContent(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY)
+                .append(Component.literal(label).withStyle(color))
+                .append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY))
+                .append(event.getContent().copy().withStyle(ChatFormatting.WHITE)));
     }
 
     /** Best-effort race check (ManasCore race storage syncs to trackers). */

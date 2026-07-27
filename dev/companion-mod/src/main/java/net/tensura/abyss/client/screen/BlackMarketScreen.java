@@ -16,12 +16,12 @@ import net.tensura.abyss.network.ServerboundMarketActionPacket;
  */
 public class BlackMarketScreen extends Screen {
 
-    private static final int GOLD       = 0xFFD4AF37;
-    private static final int GOLD_DIM   = 0xFFB8912E;
-    private static final int VIOLET     = 0xFFB56BE0;
-    private static final int SLATE      = 0xF00B0B10;
-    private static final int SLATE_EDGE = 0xFF16161F;
-    private static final int SLIME_RGB  = 0x7A2FBF;
+    private static final int SILVER     = AbyssGuiTheme.SILVER;
+    private static final int SILVER_DIM = AbyssGuiTheme.SILVER_DIM;
+    private static final int VIOLET     = AbyssGuiTheme.VIOLET;
+    private static final int SLATE      = AbyssGuiTheme.OBSIDIAN;
+    private static final int SLATE_EDGE = AbyssGuiTheme.EDGE;
+    private static final int SLIME_RGB  = AbyssGuiTheme.SLIME_RGB;
 
     private static final int PANEL_W = 264;
     private static final int PANEL_H = 244;
@@ -47,19 +47,19 @@ public class BlackMarketScreen extends Screen {
         int rowY = top + 66;
         for (int i = 0; i < MarketManager.OFFERS.size(); i++) {
             final int index = i;
-            addRenderableWidget(Button.builder(Component.literal("§5Buy"), b ->
+        addRenderableWidget(Button.builder(Component.literal("Buy"), b ->
                     send(ServerboundMarketActionPacket.BUY_BASE + index))
                     .bounds(left + PANEL_W - 78, rowY, 60, 18).build());
             rowY += ROW_H;
         }
 
         // Erzeugnisse -> Muenzen
-        addRenderableWidget(Button.builder(Component.literal("§6» Convert Trade Goods «"), b ->
+        addRenderableWidget(Button.builder(Component.literal("Convert Trade Goods"), b ->
                 send(ServerboundMarketActionPacket.CONVERT))
                 .bounds(left + 24, top + PANEL_H - 52, PANEL_W - 48, 20).build());
 
         // zurueck
-        addRenderableWidget(Button.builder(Component.literal("§8Back"), b -> this.onClose())
+        addRenderableWidget(Button.builder(Component.literal("Back"), b -> this.onClose())
                 .bounds(left + 24, top + PANEL_H - 28, PANEL_W - 48, 20).build());
     }
 
@@ -98,15 +98,15 @@ public class BlackMarketScreen extends Screen {
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
         int cx = left + PANEL_W / 2;
-        g.drawCenteredString(this.font, Component.literal("M I T S U G O S H I"), cx, top + 14, GOLD);
+        g.drawCenteredString(this.font, Component.literal("M I T S U G O S H I"), cx, top + 14, SILVER);
         g.drawCenteredString(this.font, Component.literal("§oBlack Market of the Shadows"), cx, top + 28, VIOLET);
-        g.drawString(this.font, "Coins:", left + 24, top + 46, GOLD_DIM, false);
-        g.drawString(this.font, String.valueOf(coins), left + 82, top + 46, GOLD, false);
+        g.drawString(this.font, "Coins:", left + 24, top + 46, SILVER_DIM, false);
+        g.drawString(this.font, String.valueOf(coins), left + 82, top + 46, SILVER, false);
 
         int rowY = top + 66;
         for (MarketManager.Offer offer : MarketManager.OFFERS) {
             g.drawString(this.font, offer.count() + "x " + offer.label(), left + 24, rowY + 5, VIOLET, false);
-            g.drawString(this.font, offer.cost() + "◆", left + 158, rowY + 5, GOLD_DIM, false);
+            g.drawString(this.font, offer.cost() + " coins", left + 150, rowY + 5, SILVER_DIM, false);
             rowY += ROW_H;
         }
     }

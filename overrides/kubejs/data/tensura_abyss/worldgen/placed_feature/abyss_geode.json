@@ -1,9 +1,9 @@
 {
-  "feature": "minecraft:amethyst_geode",
+  "feature": "tensura_abyss:magicule_spire_ore",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 30
+      "chance": 12
     },
     {
       "type": "minecraft:in_square"

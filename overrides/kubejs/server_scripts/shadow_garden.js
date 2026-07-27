@@ -15,7 +15,7 @@
 let SG_TICK = 0
 let SG_SERVER = null
 
-// Central balancing values ("I Am Atomic" now lives in IAmAtomicItem.java)
+// Central balancing values ("I Am Atomic" is a native Eminence race ability)
 const RAID_INTERVAL_TICKS = 1200  // check every 60s
 const RAID_CHANCE = 0.5           // 50% per interval (only with active Mitsugoshi cover)
 const SUIT_INTERVAL_TICKS = 40    // refresh set bonus every 2s
@@ -42,17 +42,6 @@ ServerEvents.recipes(event => {
     E: 'minecraft:echo_shard',
     N: 'minecraft:nether_star'
   }).id('tensurapack:dark_aether')
-
-  // "I Am Atomic" Katalysator: 1x Dark Aether + Obsidian-Rahmen + Netherstern
-  event.shaped('tensura_abyss:i_am_atomic_catalyst', [
-    'ONO',
-    'OAO',
-    'OOO'
-  ], {
-    O: 'minecraft:obsidian',
-    N: 'minecraft:nether_star',
-    A: 'tensura_abyss:dark_aether'
-  }).id('tensurapack:i_am_atomic_catalyst')
 
   // Shadow-Garden-Pledge (Rang-Aufstieg-Token, guenstig)
   event.shapeless('4x tensura_abyss:shadow_pledge_note', [
@@ -115,11 +104,8 @@ ServerEvents.recipes(event => {
 
 // ═════════════════════════════════════════════════════════════════════════════
 // 2) ULTIMATE SKILL "I AM ATOMIC"
-//    Handled ENTIRELY by the companion mod (IAmAtomicItem.java) — the Java item
-//    checks the live race (eminence_of_the_abyss) + EP gate, spawns the thorn
-//    field, applies AoE damage and the cooldown. The old KubeJS duplicate
-//    handler was removed because it double-fired and produced conflicting
-//    action-bar/chat requirement messages.
+//    Native race ability on Eminence of the Abyss. Tensura's R key and packet
+//    activate a server-authoritative 35%-capacity cast; no item recipe exists.
 // ═════════════════════════════════════════════════════════════════════════════
 
 // ═════════════════════════════════════════════════════════════════════════════

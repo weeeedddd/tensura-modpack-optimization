@@ -14,9 +14,12 @@ package net.tensura.abyss.race;
  */
 public record AbyssRaceDef(
         String id,
+        String path,
+        int stage,
         double baseHealth,
         double attackDamage,
         double movementSpeed,
         double aura,
-        double magiculeBase
+        double magiculeBase,
+        double armorToughness
 ) {}

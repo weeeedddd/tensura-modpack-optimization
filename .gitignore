@@ -12,6 +12,10 @@ Thumbs.db
 # Temp
 .temp/
 *.tmp
+__pycache__/
+*.pyc
+.page-proof/
+.page-proof-runtime/
 
 # Gradle build output (companion mod)
 dev/companion-mod/.gradle/

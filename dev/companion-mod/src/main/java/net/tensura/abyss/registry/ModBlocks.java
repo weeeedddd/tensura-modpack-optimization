@@ -26,4 +26,13 @@ public final class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> 6)            // schwaches Glimmen (~0.4)
     );
+
+    public static final DeferredBlock<Block> MAGICULE_SPIRE_CRYSTAL = BLOCKS.registerSimpleBlock(
+            "magicule_spire_crystal",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_PURPLE)
+                    .strength(8.0F, 18.0F)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> 10)
+    );
 }

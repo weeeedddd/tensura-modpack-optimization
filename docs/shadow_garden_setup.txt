@@ -1,143 +1,56 @@
-═══════════════════════════════════════════════════════════
-  TENSURA ABYSS — "THE EMINENCE IN SHADOW" SYSTEM (SETUP)
-═══════════════════════════════════════════════════════════
+TENSURA ABYSS — SHADOW GARDEN SYSTEM
+=====================================
 
-Ein KubeJS-basiertes Fraktions- & Endgame-Progressions-System,
-inspiriert von "The Eminence in Shadow". Komplett server-seitig
-ueber stabile Vanilla-Commands realisiert (kein Java-Addon noetig).
+Architecture
+------------
+The companion mod owns registered items, armor materials, races, guild screens,
+the server-authoritative Atomic cast, and live Tensura storage access. KubeJS
+owns recipes, ritual/evolution gates, raids, world interaction, and chat format.
 
-DATEIEN (in die Instanz kopieren)
-───────────────────────────────
-  kubejs/startup_scripts/shadow_garden_items.js   (Item-Registry)
-  kubejs/server_scripts/shadow_garden.js          (gesamte Logik)
+Core progression
+----------------
+1. Choose one of four nine-stage race paths.
+2. Meet native EP gates plus the Cult, catalyst, and Shadow Abyss milestones.
+3. Mine Magicule Spire Crystal inside the Shadow Abyss.
+4. Refine Condensed Dark Matter and Abyssal Netherite Ingots.
+5. Upgrade Netherite gear into capacity-resonant Abyssal Netherite.
 
-Nach dem Kopieren: Spiel EINMAL neu starten (Item-Registry laedt
-nur beim Start). Danach ist server_scripts hot-reloadbar via
-  /kubejs reload server_scripts
+I Am Atomic
+-----------
+Atomic is not craftable and consumes no item. Only the active race
+`tensura_abyss:eminence_of_the_abyss` can cast it through Tensura's native
+Race/Mount Ability key (default R). The server consumes 35% of maximum
+Magicules, charges for two seconds, damages hostile entities in a 30-block
+field with distance falloff, never damages blocks, and applies a 120-second
+race cooldown.
 
-─────────────────────────────────────────────────────────
-NEUE ITEMS & IDs
-───────────────────────────────
-  kubejs:dark_slime            Veredelter Dunkler Schleim (Mid-Tier)
-  kubejs:dark_aether           Dunkler Aether (Endgame-Kern)
-  kubejs:i_am_atomic_catalyst  Ultimate-Skill "I Am Atomic" (1x nutzbar)
-  kubejs:cult_insignia         Kult-Drop (Slime-Suit-Material)
-  kubejs:mitsugoshi_ledger     Toggle fuer Tarnung + Kult-Raids
-  kubejs:shadow_pledge_note    Rang-Aufstieg-Token
-  kubejs:slime_suit_helmet     Stealth-Ruestung (Set-Bonus)
-  kubejs:slime_suit_chestplate
-  kubejs:slime_suit_leggings
-  kubejs:slime_suit_boots
+Race traits
+-----------
+Every custom race gains Night Vision and Speed below light level 7. Stages 5–9
+gain capped damage absorption and a small evasion chance. The four paths use
+different balanced health, attack, movement, and toughness curves; the secret
+race is strong but no longer grants four-digit bonus health.
 
-─────────────────────────────────────────────────────────
-1) RESSOURCEN-KETTE
-───────────────────────────────
-  Slimeballs + Wither-Rose + Ink Sac  -> Dark Slime
-  6x Dark Slime + 2x Echo Shard + Netherstern -> Dark Aether
-  (Netherstern = Wither-Kill -> echtes Endgame-Gate)
+Abyssal Netherite
+------------------
+Required IDs:
+  tensura_abyss:magicule_spire_crystal
+  tensura_abyss:condensed_dark_matter
+  tensura_abyss:abyssal_netherite_ingot
+  tensura_abyss:abyssal_netherite_sword
+  tensura_abyss:abyssal_netherite_<helmet|chestplate|leggings|boots>
 
-  Dark Aether ERSETZT Diamanten-Upgrades:
-    Netherit-Waffe/-Ruestung + 1x Dark Aether -> garantiertes
-    Endgame-Enchant-Paket (Sharpness/Protection-Vollausbau).
+The sword scales to +8 attack damage. A full armor set scales to +6 armor and
++4 toughness. Both curves use live maximum Magicule capacity and hard caps.
 
-2) ULTIMATE SKILL "I AM ATOMIC"
-───────────────────────────────
-  Katalysator craften: 1x Dark Aether + Obsidian-Rahmen + Netherstern.
-  Rechtsklick:
-    - verbraucht 30 XP-Level (Mana-Proxy) + den Katalysator
-    - riesige neon-blaue Partikelexplosion (soul_fire_flame / end_rod /
-      electric_spark / sonic_boom)
-    - 80 Magie-Schaden an ALLEN Nicht-Spieler-Mobs im Radius 14
-    - Cooldown: 2 Minuten
-  WICHTIG: Nutzt /damage + /particle -> ZERSTOERT KEINE BLOECKE.
-  Kein Chunk-/Explosions-Lag auf dem Server.
+Guild presentation
+------------------
+Guild and market screens share an obsidian, violet, and silver palette. Team
+prefixes remain blank; ShadowSightHandler renders one viewer-gated nameplate
+badge, and shadow_chat.js emits one compact chat prefix for faction members.
 
-  Mana-Hinweis: Iron's-Spells-Mana ist per KubeJS nicht zuverlaessig
-  lesbar; daher XP-Level als Mana-Kosten. Wert in shadow_garden.js
-  anpassbar (ATOMIC_MANA_COST).
-
-3) MITSUGOSHI CO. & KULT-INVASIONEN
-───────────────────────────────
-  Mitsugoshi Trade Ledger craften -> Rechtsklick = Tarnung AN/AUS.
-  Bei aktiver Tarnung: alle 60s eine 50%-Chance auf einen Raid des
-  "Kult von Diablos" (4-7 Kultisten + 1 Diablos-Ritter) nahe dem
-  Spieler. Kult-Mobs droppen Cult Insignia -> Slime-Suit-Material.
-
-  MineColonies-Verknuepfung: Baue deine Kolonie sichtbar als
-  "Mitsugoshi-Handelsimperium" (Marktplatz, Gilde, Lager) und aktiviere
-  am Kolonie-Zentrum den Ledger. Die Kolonie farmt so "im Hintergrund"
-  Ressourcen, waehrend die Raids die geheime Shadow-Basis bedrohen.
-  (Die Raids skalieren nicht mit MineColonies-Wachen — Kolonie-Verteidigung
-   uebernimmt MineColonies selbst; die Kult-Mobs sind zusaetzliche Bedrohung.)
-
-4) SLIME SUIT (STEALTH-RUESTUNG)
-───────────────────────────────
-  4 Teile: Netherit-Basis + 2x Dark Slime + 1x Cult Insignia je Teil.
-  Set-Bonus (nur mit allen 4 Teilen), automatisch alle 2s erneuert:
-    - Speed II
-    - Resistance II
-    - Invisibility (Partikel versteckt = echter Stealth)
-  Erkennung via /execute if items (Vanilla 1.21) -> keine NBT-Tricks.
-
-5) SERVER-RAENGE / CHAT-PRAEFIXE
-───────────────────────────────
-  Umgesetzt ueber Vanilla-Scoreboard-Teams (treiben Chat + Nametag):
-    [Shadow]         ab 1 Pledge   (grau)
-    [Numbers]        ab 10 Pledges (aqua)
-    [Seven Shadows]  ab 25 Pledges (dark_aqua)
-    [Shadow Lord]    ab 50 Pledges (dark_purple)
-  Pledge einloesen: Shadow-Garden-Pledge craften -> Rechtsklick.
-  Die Teams werden bei Serverstart automatisch angelegt.
-
-  Alternative mit LuckPerms: Wenn LuckPerms installiert ist, koennen
-  die Praefixe stattdessen ueber Permission-Gruppen gesetzt werden
-  (lp group <rang> meta setprefix "..."). Das KubeJS-Team-System
-  funktioniert aber ohne Zusatz-Mod.
-
-─────────────────────────────────────────────────────────
-OFFENER PUNKT (im Spiel verifizieren)
-───────────────────────────────
-  Das Freischalten des Tensura-"Breath"-Systems ueber Dark Aether
-  (Punkt in shadow_garden.js, Abschnitt 3) enthaelt eine
-  auskommentierte Zeile:
-      // player.runCommandSilent('tensura skill unlock @s breath_of_the_abyss')
-  Die EXAKTE Tensura-Command-Syntax kenne ich nicht zuverlaessig.
-  Pruefe im Spiel /tensura help bzw. das Tensura-Wiki, trage den
-  korrekten Command ein und entferne das Kommentarzeichen.
-  Bis dahin zaehlt Dark-Aether-Rechtsklick eine Breath-Stufe hoch
-  und gibt Feedback (Sound/Partikel/Nachricht).
-
-─────────────────────────────────────────────────────────
-TEXTUREN (bereits enthalten)
-───────────────────────────────
-  Basis-Item-Icons (16x16) liegen unter:
-    kubejs/assets/kubejs/textures/item/<id>.png
-  fuer alle 10 Items (dark_slime, dark_aether, i_am_atomic_catalyst,
-  cult_insignia, mitsugoshi_ledger, shadow_pledge_note und die 4
-  slime_suit-Teile). KubeJS nutzt sie automatisch (kein Model-JSON noetig).
-  Neu erzeugen/anpassen: python3 tools/gen_textures.py
-
-  Getragene Slime-Suit-Optik (AKTIV):
-    kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_1.png
-    kubejs/assets/kubejs/textures/models/armor/slime_suit_layer_2.png
-  Diese 64x32-Layer sind das 1.21.1-Format fuer Ruestung am Koerper.
-  Der eigene Armor-Tier ist bereits registriert in
-    kubejs/startup_scripts/shadow_garden_armor_tiers.js
-  und die Items nutzen .tier('slime_suit'). KubeJS loest die Layer ueber
-  den Tier-Namen auf (kubejs:.../armor/slime_suit_layer_1.png) -> die
-  Slime-Optik wird am Koerper gerendert, KEINE Netherit-Optik mehr.
-
-  Falls dein KubeJS-Build die Layer nicht ueber den Tier-Namen findet,
-  pruefe in shadow_garden_armor_tiers.js, ob ein expliziter Textur-/
-  assetId-Setter verfuegbar ist, und setze ihn auf 'kubejs:slime_suit'.
-
-─────────────────────────────────────────────────────────
-FTB QUESTS KAPITEL
-───────────────────────────────
-  Ein fertiges Quest-Kapitel liegt bei:
-    ftbquests/config/ftbquests/quests/chapters/shadow_garden.snbt
-  Den config/-Ordner ins Instanz-Root kopieren -> erscheint als Kapitel
-  "The Eminence in Shadow" im Questbuch. Details: ftbquests/README.md
-  (Benoetigt FTB Quests + FTB Library fuer NeoForge 1.21.1.)
-
-═══════════════════════════════════════════════════════════
+Deployment
+----------
+Build the companion mod from `dev/companion-mod` with `gradlew.bat clean build`,
+then include its jar and the `overrides/` tree in the modpack export. Restart is
+required after registry changes; server scripts can be hot-reloaded afterward.

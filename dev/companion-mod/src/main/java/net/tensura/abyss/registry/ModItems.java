@@ -8,7 +8,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.tensura.abyss.TensuraAbyss;
 import net.tensura.abyss.item.AbyssLoreItem;
 import net.tensura.abyss.item.CultInsigniaItem;
-import net.tensura.abyss.item.IAmAtomicItem;
+import net.tensura.abyss.item.AbyssalNetheriteArmorItem;
+import net.tensura.abyss.item.AbyssalNetheriteSwordItem;
 import net.tensura.abyss.item.SignatureRecordItem;
 import net.tensura.abyss.item.SlimeSuitArmorItem;
 import net.tensura.abyss.item.SlimeSwordItem;
@@ -72,11 +73,33 @@ public final class ModItems {
             props -> new AbyssLoreItem(props.rarity(Rarity.EPIC).stacksTo(1).fireResistant())
     );
 
-    // ── Ultimate-Skill-Katalysator "I Am Atomic" ──
-    public static final DeferredItem<Item> I_AM_ATOMIC_CATALYST = ITEMS.registerItem(
-            "i_am_atomic_catalyst",
-            props -> new IAmAtomicItem(props.rarity(Rarity.EPIC).stacksTo(1).fireResistant())
-    );
+    public static final DeferredItem<net.minecraft.world.item.BlockItem> MAGICULE_SPIRE_CRYSTAL =
+            ITEMS.registerSimpleBlockItem("magicule_spire_crystal", ModBlocks.MAGICULE_SPIRE_CRYSTAL);
+
+    public static final DeferredItem<Item> CONDENSED_DARK_MATTER = ITEMS.registerItem(
+            "condensed_dark_matter",
+            props -> new AbyssLoreItem(props.rarity(Rarity.EPIC).stacksTo(64).fireResistant()));
+
+    public static final DeferredItem<Item> ABYSSAL_NETHERITE_INGOT = ITEMS.registerItem(
+            "abyssal_netherite_ingot",
+            props -> new AbyssLoreItem(props.rarity(Rarity.EPIC).stacksTo(64).fireResistant()));
+
+    public static final DeferredItem<Item> ABYSSAL_NETHERITE_SWORD = ITEMS.registerItem(
+            "abyssal_netherite_sword",
+            props -> new AbyssalNetheriteSwordItem(props.rarity(Rarity.EPIC)));
+
+    public static final DeferredItem<ArmorItem> ABYSSAL_NETHERITE_HELMET = ITEMS.registerItem(
+            "abyssal_netherite_helmet", props -> new AbyssalNetheriteArmorItem(ArmorItem.Type.HELMET,
+                    props.rarity(Rarity.EPIC).fireResistant().durability(ArmorItem.Type.HELMET.getDurability(45))));
+    public static final DeferredItem<ArmorItem> ABYSSAL_NETHERITE_CHESTPLATE = ITEMS.registerItem(
+            "abyssal_netherite_chestplate", props -> new AbyssalNetheriteArmorItem(ArmorItem.Type.CHESTPLATE,
+                    props.rarity(Rarity.EPIC).fireResistant().durability(ArmorItem.Type.CHESTPLATE.getDurability(45))));
+    public static final DeferredItem<ArmorItem> ABYSSAL_NETHERITE_LEGGINGS = ITEMS.registerItem(
+            "abyssal_netherite_leggings", props -> new AbyssalNetheriteArmorItem(ArmorItem.Type.LEGGINGS,
+                    props.rarity(Rarity.EPIC).fireResistant().durability(ArmorItem.Type.LEGGINGS.getDurability(45))));
+    public static final DeferredItem<ArmorItem> ABYSSAL_NETHERITE_BOOTS = ITEMS.registerItem(
+            "abyssal_netherite_boots", props -> new AbyssalNetheriteArmorItem(ArmorItem.Type.BOOTS,
+                    props.rarity(Rarity.EPIC).fireResistant().durability(ArmorItem.Type.BOOTS.getDurability(45))));
 
     // ── Slime Suit (eigenes Armor-Material -> Slime-Layer am Koerper) ──
     public static final DeferredItem<ArmorItem> SLIME_SUIT_HELMET = ITEMS.registerItem(
